@@ -52,8 +52,9 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex('Users', ['firstName', 'lastName']);
     options.tableName = "Users";
-    return queryInterface.dropTable(options);
+    await queryInterface.removeIndex(options, ['firstName', 'lastName']);
+    await queryInterface.dropTable(options);
+    return;
   }
 };
