@@ -11,7 +11,31 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await User.bulkCreate([
+  //   await User.bulkCreate([
+  //     {
+  //       email: 'demo@user.io',
+  //       username: 'Demo-lition',
+  //       hashedPassword: bcrypt.hashSync('password'),
+  //       firstName: 'DemoFirstName',
+  //       lastName: 'DemoLastName'
+  //     },
+  //     {
+  //       email: 'user1@user.io',
+  //       username: 'FakeUser1',
+  //       hashedPassword: bcrypt.hashSync('password2'),
+  //       firstName: 'User1FirstName',
+  //       lastName: 'User1LastName'
+  //     },
+  //     {
+  //       email: 'user2@user.io',
+  //       username: 'FakeUser2',
+  //       hashedPassword: bcrypt.hashSync('password3'),
+  //       firstName: 'User2FirstName',
+  //       lastName: 'User2LastName'
+  //     }
+  //   ], { validate: true });
+  
+    await queryInterface.bulkInsert(options, [
       {
         email: 'demo@user.io',
         username: 'Demo-lition',
@@ -33,8 +57,9 @@ module.exports = {
         firstName: 'User2FirstName',
         lastName: 'User2LastName'
       }
-    ], { validate: true });
+    ]);
   },
+
 
   async down (queryInterface, Sequelize) {
     const Op = Sequelize.Op;
