@@ -19,15 +19,18 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING(256),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       username: {
         type: Sequelize.STRING(256),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       password: {
         type: Sequelize.STRING(256),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
@@ -44,6 +47,8 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
+
+    await queryInterface.addIndex('User', ['firstName', 'lastName'], {unique: true});
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
