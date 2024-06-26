@@ -1,8 +1,15 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+options.tableName = "Users";
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA; // define your schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable(options, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -48,11 +55,11 @@ module.exports = {
       }
     });
 
-    await queryInterface.addIndex('Users', ['firstName', 'lastName'], {unique: true});
+    await queryInterface.addIndex(options, ['firstName', 'lastName'], {unique: true});
   },
-  
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex('Users', ['firstName', 'lastName']);
-    await queryInterface.dropTable('Users');
+    await queryInterface.removeIndex(options, ['firstName', 'lastName']);
+    await queryInterface.dropTable(options);
   }
 };
