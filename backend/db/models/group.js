@@ -14,14 +14,40 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Group.init({
-    id: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    about: DataTypes.STRING,
-    type: DataTypes.STRING,
-    private: DataTypes.BOOLEAN,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    numMembers: DataTypes.INTEGER
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    name: {
+      type: DataTypes.STRING(256),
+      allowNull: false,
+      unique: true
+    },
+    about: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    type: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    private: {
+      type: DataTypes.BOOLEAN
+    },
+    city: {
+      type: DataTypes.STRING(256),
+      allowNull: false
+    },
+    state: {
+      type: DataTypes.STRING(256),
+      allowNull: false
+    },
+    numMembers: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Group',

@@ -14,10 +14,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Attendant.init({
-    id: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    eventId: DataTypes.INTEGER,
-    status: DataTypes.STRING
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    eventId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Attendant',

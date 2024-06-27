@@ -14,10 +14,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Member.init({
-    id: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    groupId: DataTypes.INTEGER,
-    status: DataTypes.STRING
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: true
+    },
+    groupId: {
+      type: DataTypese.INTEGER,
+      allowNull: false,
+      onDelete: true
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Member',

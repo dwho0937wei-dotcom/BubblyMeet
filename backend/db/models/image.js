@@ -14,11 +14,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Image.init({
-    id: DataTypes.INTEGER,
-    url: DataTypes.STRING,
-    preview: DataTypes.BOOLEAN,
-    groupId: DataTypes.INTEGER,
-    eventId: DataTypes.INTEGER
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    preview: {
+      type: DataTypes.BOOLEAN
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    eventId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Image',
