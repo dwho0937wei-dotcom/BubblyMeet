@@ -23,12 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      onDelete: true
+      onDelete: 'CASCADE'
     },
     groupId: {
       type: DataTypese.INTEGER,
       allowNull: false,
-      onDelete: true
+      onDelete: 'CASCADE'
     },
     status: {
       type: DataTypes.STRING,
