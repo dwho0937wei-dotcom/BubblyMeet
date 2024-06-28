@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Image.belongsTo(models.Group, {
+        foreignKey: 'groupId'
+      });
+      Image.belongsTo(models.Event, {
+        foreignKey: 'eventId'
+      });
     }
   }
   Image.init({
@@ -29,11 +35,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: 'CASCADE'
     },
     eventId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: 'SET NULL'
     }
   }, {
     sequelize,
