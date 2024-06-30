@@ -10,20 +10,8 @@ const { setTokenCookie, restoreUser } = require('../../utils/auth');
 
 const router = express.Router();
 
-// get the currently login user
-router.get('/', async (req, res) => {
-    const { token } = req.cookies;
-    if (!token) {
-        return res.json({ user: null });
-    }
-
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const user = decodedToken.data;
-    return res.json({ user });
-});
-
 // login
-router.post('/', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -66,7 +54,43 @@ router.post('/', async (req, res, next) => {
     });
 });
 
+// get the currently login user
+router.get('/', async (req, res) => {
+    const { token } = req.cookies;
+    if (!token) {
+        return res.json({ user: null });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = decodedToken.data;
+    return res.json({ user });
+});
+
 // sign up
-// router.post()
+router.post('/', async (req, res) => {
+    const { firstName, lastName, email, username, password } = req.body;
+    console.log(firstName);
+
+    const user = await User.create({
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+        hashedPassword: bcrypt.hashSync(password)
+    });
+
+    user.save();
+
+    return res.json({
+        user: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username
+        }
+    });
+})
 
 module.exports = router;
