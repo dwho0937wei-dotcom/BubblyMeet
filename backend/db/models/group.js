@@ -37,15 +37,23 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING(256),
       allowNull: false,
-      unique: true
+      validate: {
+        len: [0, 60]
+      }
     },
     about: {
       type: DataTypes.STRING(256),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        len: [50, Infinity]
+      }
     },
     type: {
       type: DataTypes.STRING(256),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isIn: [['Online', 'In person']]
+      }
     },
     private: {
       type: DataTypes.BOOLEAN

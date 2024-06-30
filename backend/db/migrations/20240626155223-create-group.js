@@ -20,24 +20,15 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING(256),
-        allowNull: false,
-        validate: {
-          len: [0, 60]
-        }
+        allowNull: false
       },
       about: {
         type: Sequelize.STRING(256),
-        allowNull: true,
-        validate: {
-          len: [50, Infinity]
-        }
+        allowNull: true
       },
       type: {
         type: Sequelize.STRING(256),
-        allowNull: true,
-        validate: {
-          isIn: [['Online', 'In person']]
-        }
+        allowNull: true
       },
       private: {
         type: Sequelize.BOOLEAN
