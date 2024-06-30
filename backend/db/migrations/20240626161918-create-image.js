@@ -30,7 +30,6 @@ module.exports = {
       },
       eventId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         onDelete: 'SET NULL'
       },
       createdAt: {

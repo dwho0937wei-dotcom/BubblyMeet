@@ -6,7 +6,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-options.tableName = 'Groups';
+options.tableName = 'Members';
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -19,18 +19,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-
-    await queryInterface.bulkInsert(options, [{
-      "name": "Evening Tennis on the Water",
-      "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
-      "type": "In person",
-      "private": true,
-      "city": "New York",
-      "state": "NY",
-      "createdAt": "2021-11-19 20:39:36",
-      "updatedAt": "2021-11-19 20:39:36",
-      "numMembers": 10
-    }]);
+   await queryInterface.bulkInsert(options, [{
+    userId: 1,
+    groupId: 1,
+    status: 'organizer',
+    createdAt: "2021-11-19 20:39:36",
+    updatedAt: "2021-11-19 20:39:36",
+   }])
   },
 
   async down (queryInterface, Sequelize) {
@@ -42,7 +37,7 @@ module.exports = {
      */
     const Op = Sequelize.Op;
     return await queryInterface.bulkDelete(options, {
-      name: "Evening Tennis on the Water"
+      userId: 1
     });
   }
 };
