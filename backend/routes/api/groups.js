@@ -1,9 +1,44 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const { Group, Member, Image, User } = require('../../db/models');
+const { Group, Member, Image, User, Venue } = require('../../db/models');
 
 const router = express.Router();
+
+// Get deails of a Group from an id
+router.get('/:groupId/details', async (req, res) => {
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId, {
+        include: [
+            {
+                model: Image,
+                attributes: ['id', 'url', 'preview']
+            },
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName'],
+                through: {
+                    model: Member,
+                    where: { status: 'organizer' }
+                }
+            },
+            {
+                model: Venue
+            }
+        ]
+    });
+
+    const groupJson = group.toJSON();
+    groupJson.GroupImages = groupJson.Images;
+    delete groupJson.Images;
+    groupJson.Organizer = groupJson.Users[0];
+    delete groupJson.Users;
+    groupJson.organizerId = groupJson.Organizer.id;
+    // console.log('organizerId:', groupJson.organizerId);
+
+    res.status(200);
+    res.json(groupJson);
+})
 
 // Get all groups joined or organized by current user
 router.get('/currentUser', async (req, res) => {
