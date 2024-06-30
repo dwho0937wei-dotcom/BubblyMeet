@@ -149,4 +149,11 @@ router.get('/', async (_req, res) => {
     });
 });
 
+// Create a new group
+router.post('/', async (req, res) => {
+    const { name, about, type, private, city, state } = req.body;
+
+    return res.json({});
+})
+
 module.exports = router;

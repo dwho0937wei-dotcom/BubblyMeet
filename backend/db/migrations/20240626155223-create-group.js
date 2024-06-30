@@ -1,6 +1,8 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 
+const { Op } = require('sequelize');
+
 let options = {};
 options.tableName = "Groups";
 if (process.env.NODE_ENV === 'production') {
@@ -19,15 +21,23 @@ module.exports = {
       name: {
         type: Sequelize.STRING(256),
         allowNull: false,
-        unique: true
+        validate: {
+          len: [0, 60]
+        }
       },
       about: {
         type: Sequelize.STRING(256),
-        allowNull: true
+        allowNull: true,
+        validate: {
+          len: [50, Infinity]
+        }
       },
       type: {
         type: Sequelize.STRING(256),
-        allowNull: true
+        allowNull: true,
+        validate: {
+          isIn: [['Online', 'In person']]
+        }
       },
       private: {
         type: Sequelize.BOOLEAN
