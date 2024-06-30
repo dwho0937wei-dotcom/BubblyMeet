@@ -40,7 +40,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     eventId: {
       type: DataTypes.INTEGER,
-      onDelete: 'SET NULL'
+      onDelete: 'SET NULL',
+      defaultValue: null
     }
   }, {
     sequelize,

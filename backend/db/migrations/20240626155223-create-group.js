@@ -31,7 +31,8 @@ module.exports = {
         allowNull: true
       },
       private: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       city: {
         type: Sequelize.STRING(256),
