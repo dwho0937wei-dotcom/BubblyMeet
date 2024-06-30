@@ -2,11 +2,25 @@
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { User } = require('../../db/models');
+const { setTokenCookie, restoreUser } = require('../../utils/auth');
 
 
 const router = express.Router();
+
+// get the currently login user
+router.get('/', async (req, res) => {
+    const { token } = req.cookies;
+    if (!token) {
+        return res.json({ user: null });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = decodedToken.data;
+    return res.json({ user });
+})
 
 // login
 router.post('/', async (req, res, next) => {
@@ -34,6 +48,9 @@ router.post('/', async (req, res, next) => {
         username: user.username
     };
 
+    await setTokenCookie(res, safeUser);
+
+    res.status(200);
     return res.json({
         user: safeUser
     });
