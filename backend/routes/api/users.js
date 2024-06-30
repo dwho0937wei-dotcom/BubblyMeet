@@ -20,11 +20,22 @@ router.get('/', async (req, res) => {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const user = decodedToken.data;
     return res.json({ user });
-})
+});
 
 // login
 router.post('/', async (req, res, next) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        res.status(400);
+        return res.json({
+            message: "Bad Request",
+            errors: {
+                email: "Email is required",
+                password: "Password is required"
+            }
+        })
+    }
 
     const user = await User.findOne({
         where: {
@@ -33,11 +44,10 @@ router.post('/', async (req, res, next) => {
     });
 
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error('Login failed');
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided email was invalid.' };
-        return next(err);
+        res.status(401);
+        return res.json({
+            message: "Invalid credentials"
+        })
     }
 
     const safeUser = {
@@ -54,6 +64,9 @@ router.post('/', async (req, res, next) => {
     return res.json({
         user: safeUser
     });
-})
+});
+
+// sign up
+// router.post()
 
 module.exports = router;
