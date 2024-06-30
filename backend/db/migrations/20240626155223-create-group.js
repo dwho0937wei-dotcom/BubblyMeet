@@ -43,7 +43,8 @@ module.exports = {
       },
       numMembers: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,

@@ -68,7 +68,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     numMembers: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,
