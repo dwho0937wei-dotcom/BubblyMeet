@@ -69,8 +69,53 @@ router.get('/', async (req, res) => {
 // sign up
 router.post('/', async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
-    console.log(firstName);
 
+    // Body validation error
+    if (!firstName || !lastName || !email) {
+        res.status(400);
+        return res.json({
+            message: "Bad Request",
+            errors: {
+                email: "Invalid email",
+                firstName: "First Name is required",
+                lastName: "Last Name is required"
+            }
+        })
+    }
+
+    // Does email already exists?
+    const dupEmail = User.findOne({
+        where: {
+            email
+        }
+    });
+    if (dupEmail) {
+        res.status(500);
+        return res.json({
+            message: "User already exists",
+            errors: {
+                email: "User with that email already exists"
+            }
+        })
+    }
+
+    // Does user already exists?
+    const dupUser = User.findOne({
+        where: {
+            username
+        }
+    });
+    if (dupUser) {
+        res.status(500);
+        return res.json({
+            message: "User already exists",
+            errors: {
+                username: "User with that username already exists"
+            }
+        });
+    }
+
+    // Creating new user
     const user = await User.create({
         firstName,
         lastName,
@@ -79,9 +124,7 @@ router.post('/', async (req, res) => {
         password,
         hashedPassword: bcrypt.hashSync(password)
     });
-
     user.save();
-
     return res.json({
         user: {
             id: user.id,
