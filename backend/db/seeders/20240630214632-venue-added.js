@@ -6,7 +6,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-options.tableName = 'Images';
+options.tableName = 'Venues';
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -19,24 +19,16 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await queryInterface.bulkInsert(options, [
-    {
-      url: 'image url',
-      preview: true,
+    await queryInterface.bulkInsert(options, [{
       groupId: 1,
-      eventId: null,
+      address: "123 Disney Lane",
+      city: "New York",
+      state: "NY",
+      lat: 37.7645358,
+      lng: -122.4730327,
       createdAt: "2021-11-19 20:39:36",
-      updatedAt: "2021-11-19 20:39:36",
-   },
-   {
-      url: 'image url',
-      preview: false,
-      groupId: 1,
-      eventId: null,
-      createdAt: "2021-11-19 20:39:36",
-      updatedAt: "2021-11-19 20:39:36",
-   }
-  ]);
+      updatedAt: "2021-11-19 20:39:36"
+    }]);
   },
 
   async down (queryInterface, Sequelize) {
@@ -47,7 +39,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options, {
-      url: 'image url'
-    })
+      address: '123 Disney Lane'
+    });
   }
 };

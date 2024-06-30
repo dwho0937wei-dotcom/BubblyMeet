@@ -23,10 +23,18 @@ router.get('/:groupId/details', async (req, res) => {
                 }
             },
             {
-                model: Venue
+                model: Venue,
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
             }
         ]
     });
+    // console.log(group);
+
+    if (!group) {
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
 
     const groupJson = group.toJSON();
     groupJson.GroupImages = groupJson.Images;
