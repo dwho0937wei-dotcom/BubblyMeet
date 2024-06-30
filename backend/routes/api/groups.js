@@ -158,7 +158,7 @@ router.post('/', async (req, res) => {
     // console.log(token);
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decodedToken);
-    // const userId = decodedToken.data.
+    const userId = decodedToken.data.id;
 
     try {
         const group = await Group.create({
@@ -171,6 +171,14 @@ router.post('/', async (req, res) => {
         });
         const groupJson = group.toJSON();
         delete groupJson.numMembers;
+        
+        const member = await Member.create({
+            userId: userId,
+            groupId: groupJson.id,
+            status: 'organizer'
+        });
+        groupJson.organizerId = member.userId;
+
         res.status(201);
         return res.json(groupJson);
     } 
@@ -191,5 +199,7 @@ router.post('/', async (req, res) => {
         });
     }
 })
+
+
 
 module.exports = router;
