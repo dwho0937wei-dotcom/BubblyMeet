@@ -128,6 +128,47 @@ router.post('/:groupId', async (req, res) => {
     }
 })
 
+// Delete a group
+router.delete('/:groupId', async (req, res) => {
+    const { token } = req.cookies;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.data.id;
+
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId, {
+        include: {
+            model: User,
+            through: {
+                model: Member,
+                where: { status: 'organizer' }
+            }
+        }
+    });
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        });
+    }
+
+    const groupJson = group.toJSON();
+    const organizerId = groupJson.Users[0].id;
+
+    if (userId === organizerId) {
+        await group.destroy();
+        res.status(200);
+        return res.json({
+            message: "Successfully deleted"
+        });
+    }
+    else {
+        res.status(400);
+        return res.json({
+            message: "Invalid Authorization"
+        })
+    }
+})
+
 // Get all groups joined or organized by current user
 router.get('/currentUser', async (req, res) => {
     const { token } = req.cookies;
