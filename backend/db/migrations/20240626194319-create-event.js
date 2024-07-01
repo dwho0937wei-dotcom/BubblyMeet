@@ -1,4 +1,7 @@
 'use strict';
+
+const { Model } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
@@ -18,7 +21,8 @@ module.exports = {
       },
       groupId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {Model: "Groups"}
       },
       venueId: {
         type: Sequelize.INTEGER,

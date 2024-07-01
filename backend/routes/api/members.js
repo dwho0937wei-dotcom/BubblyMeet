@@ -5,6 +5,9 @@ const { Group, Member, Image, User, Venue } = require('../../db/models');
 
 const router = express.Router();
 
+// Request a new membership
+
+
 // Get all members of a group specified by its id
 router.get('/groupId/:groupId', async (req, res) => {
     const groupId = +req.params.groupId;
