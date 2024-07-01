@@ -78,14 +78,20 @@ const requireAuth = function (req, _res, next) {
 // If the user is logged in, return true
 const userLoggedIn = function (req) {
   const { token } = req.cookies;
+  let loggedIn = false;
   if (token) {
-    return true;
+    loggedIn = jwt.verify(token, process.env.JWT_SECRET, (err) => {
+      if (!err) {
+        return true;
+      }
+    })
   }
-  return false;
+  return loggedIn;
 };
 
 // Error Response: Require Authentication
 const requireAuth2 = function (res) {
+  res.status(401);
   return res.json({
     message: "Authentication required"
   });
@@ -94,6 +100,7 @@ const requireAuth2 = function (res) {
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
 
 const requireProperAuth = function (res) {
+  res.status(403);
   return res.json({
     message: "Forbidden"
   });
