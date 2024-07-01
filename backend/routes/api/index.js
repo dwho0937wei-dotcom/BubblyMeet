@@ -2,11 +2,12 @@
 const router = require('express').Router();
 const usersRouter = require('./users.js');
 const groupsRouter = require('./groups.js');
+const venuesRouter = require('./venues.js');
 const { restoreUser } = require("../../utils/auth.js");
 
 router.use('/users', usersRouter);
-
 router.use('/groups', groupsRouter);
+router.use('/venues', venuesRouter);
 
 // Connect restoreUser middleware to the API router
   // If current user session is valid, set req.user to the user in the database
