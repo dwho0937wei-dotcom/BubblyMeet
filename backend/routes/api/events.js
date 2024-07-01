@@ -13,7 +13,7 @@ const requireAuth = async (res) => {
     })
 }
 
-const propAuth = async (res) => {
+const properAuth = async (res) => {
     res.status(403);
     return res.json({
         message: 'Forbidden'
@@ -70,7 +70,7 @@ router.post('/groupId/:groupId', async (req, res) => {
         }
     });
     if (!hasAuthorization) {
-        return requireAuth(res);
+        return properAuth(res);
     }
 
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
