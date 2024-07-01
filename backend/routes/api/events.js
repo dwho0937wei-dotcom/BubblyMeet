@@ -291,6 +291,54 @@ router.put('/:eventId', async (req, res) => {
     
 })
 
+// Delete an event specified by its id
+router.delete('/:eventId', async (req, res) => {
+    // Authentication
+    const { token } = req.cookies;
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return requireAuth();
+    }
+    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodeToken.data.id;
+
+    // Event Existence
+    const eventId = +req.params.eventId;
+    const event = await Event.findByPk(eventId, {attributes: {exclude: ['eventId']}});
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+
+    // Authorization
+    const group = await event.getGroup();
+    const members = await group.getUsers();
+    let hasAuthorization = false;
+    members.forEach(user => {
+        const userJson = user.toJSON();
+        if (userJson.id === userId) {
+            const status = userJson.Member.status;
+            if (['organizer', 'co-host'].includes(status)) {
+                hasAuthorization = true;
+            }
+            return;
+        }
+    })
+    if (!hasAuthorization) {
+        return properAuth();
+    }
+
+    // Deleting event
+    await event.destroy();
+    res.status(200);
+    res.json({
+        message: "Successfully deleted"
+    });
+})
+
 // Get all events
 router.get('/', async (req, res) => {
     const events = await Event.findAll({
