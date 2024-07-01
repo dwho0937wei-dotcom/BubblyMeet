@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 
 const { Op } = require('sequelize');
-const { Group, Member, Image, User, Venue, Event } = require('../../db/models');
+const { Group, Member, Image, User, Venue, Event, Attendant } = require('../../db/models');
 
 const router = express.Router();
 
@@ -83,6 +83,9 @@ router.post('/groupId/:groupId', async (req, res) => {
         const newEvent = await Event.create({
             venueId, name, type, capacity, price, description, startDate, endDate, groupId
         });
+        await Attendant.create({
+            userId, eventId: newEvent.id, status: 'host'
+        })
         const eventJson = newEvent.toJSON();
         delete eventJson.createdAt;
         delete eventJson.updatedAt;
@@ -125,6 +128,52 @@ router.get('/groupId/:groupId', async (req, res) => {
 
     res.status(200);
     res.json({Events: events});
+})
+
+// Add an image to event based on its id
+router.post('/images/:eventId', async (req, res) => {
+    // Authentication
+    const { token } = req.cookies;
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return requireAuth();
+    }
+    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Event exists?
+    const eventId = req.params.eventId;
+    const event = await Event.findByPk(eventId, {attributes: {exclude: ['eventId']}});
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+
+    // Authorization
+    const userId = decodeToken.data.id;
+    const attendants = await event.getUsers();
+    // console.log(attendants);
+    let isAttendant = false;
+    attendants.forEach(attendant => {
+        if (attendant.id === userId) {
+            isAttendant = true;
+            return;
+        }
+    })
+    if (!isAttendant) {
+        return properAuth(res);
+    }
+
+    const { url, preview } = req.body;
+    const newImage = Image.create({
+        url, preview, eventId, groupId: event.groupId
+    });
+    const imageJson = newImage.toJSON();
+    console.log(imageJson);
+
+    return res.json({});
 })
 
 // Get details of the event specified by its id
