@@ -22,7 +22,7 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        defaultValue: null
       },
       name: {
         type: Sequelize.STRING,

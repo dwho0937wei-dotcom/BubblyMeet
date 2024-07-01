@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      defaultValue: null
     },
     name: {
       type: DataTypes.STRING,
