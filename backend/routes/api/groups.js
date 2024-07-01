@@ -88,7 +88,7 @@ router.get('/:groupId/details', async (req, res) => {
 })
 
 // Edit a group
-router.post('/:groupId', async (req, res) => {
+router.put('/:groupId', async (req, res) => {
     const { name, about, type, private, city, state } = req.body;
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId, {
