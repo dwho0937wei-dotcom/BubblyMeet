@@ -225,7 +225,7 @@ router.put('/:eventId', async (req, res) => {
     const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decodeToken.data.id;
 
-    // Authorization & Event Existence
+    // Event Existence
     const eventId = +req.params.eventId;
     const event = await Event.findByPk(eventId, {attributes: {exclude: ['eventId']}});
     if (!event) {
@@ -234,6 +234,8 @@ router.put('/:eventId', async (req, res) => {
             message: "Event couldn't be found"
         })
     }
+
+    // Authorization
     const group = await event.getGroup();
     const members = await group.getUsers();
     let hasAuthorization = false;
@@ -251,8 +253,16 @@ router.put('/:eventId', async (req, res) => {
         return properAuth();
     }
 
+    // Body Inputs
     const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+    
     try {
+        // Venue Existence
+        const venue = await Venue.findByPk(venueId);
+        if (!venue) {
+            throw new Error('Venue does not exist');
+        }
+        // Editing Event
         event.set({
             venueId, name, type, capacity, price, description, startDate, endDate
         });
@@ -260,6 +270,7 @@ router.put('/:eventId', async (req, res) => {
         delete eventJson.createdAt;
         delete eventJson.updatedAt;
         delete eventJson.numAttending;
+        res.status(200);
         return res.json(eventJson);
     } catch (error) {
         res.status(400);
