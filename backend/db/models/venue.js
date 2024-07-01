@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      references: {model: 'Groups'}
     },
     address: {
       type: DataTypes.STRING,

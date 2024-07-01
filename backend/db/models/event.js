@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'userId'
       });
       Event.hasMany(models.Image, {
-        foreignKey: 'eventId'
+        foreignKey: 'eventId',
+        onDelete: 'CASCADE'
       });
     }
   }
@@ -36,11 +37,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {model: 'Groups'}
     },
     venueId: {
       type: DataTypes.INTEGER,
-      defaultValue: null
+      defaultValue: null,
+      references: {model: 'Venues'}
     },
     name: {
       type: DataTypes.STRING,

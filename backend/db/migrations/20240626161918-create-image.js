@@ -26,12 +26,14 @@ module.exports = {
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        references: {model: 'Groups'}
       },
       eventId: {
         type: Sequelize.INTEGER,
         onDelete: 'SET NULL',
-        defaultValue: null
+        defaultValue: null,
+        references: {model: 'Events'}
       },
       createdAt: {
         allowNull: false,
