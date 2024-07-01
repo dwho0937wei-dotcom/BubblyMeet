@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../../db/models');
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 
-
 const router = express.Router();
 
 // login

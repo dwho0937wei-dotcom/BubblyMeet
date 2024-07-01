@@ -73,4 +73,36 @@ const requireAuth = function (req, _res, next) {
     return next(err);
   }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+// --------------------------------------------------------------- Authentications --------------------------------------------------------------------
+
+// If the user is logged in, return true
+const userLoggedIn = function (req) {
+  const { token } = req.cookies;
+  if (token) {
+    return true;
+  }
+  return false;
+};
+
+// Error Response: Require Authentication
+const requireAuth2 = function (res) {
+  return res.json({
+    message: "Authentication required"
+  });
+};
+
+// --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
+
+const requireProperAuth = function (res) {
+  return res.json({
+    message: "Forbidden"
+  });
+};
+
+module.exports = { setTokenCookie, 
+                   restoreUser, 
+                   requireAuth, 
+                   userLoggedIn, 
+                   requireAuth2, 
+                   requireProperAuth 
+                 };

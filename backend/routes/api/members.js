@@ -2,11 +2,14 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 
 const { Group, Member, Image, User, Venue } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
 
 // Request a new membership
-
+router.post('/groupId/:groupId', async (req, res) => {
+    requireAuth();
+})
 
 // Get all members of a group specified by its id
 router.get('/groupId/:groupId', async (req, res) => {
