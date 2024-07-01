@@ -40,6 +40,10 @@ module.exports = {
         type: Sequelize.NUMERIC,
         allowNull: false
       },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       startDate: {
         type: Sequelize.DATE,
         allowNull: false

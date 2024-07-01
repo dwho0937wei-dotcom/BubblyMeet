@@ -70,6 +70,10 @@ module.exports = (sequelize, DataTypes) => {
         isNumeric: true
       }
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     startDate: {
       type: DataTypes.DATE,
       allowNull: false

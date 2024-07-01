@@ -85,7 +85,7 @@ router.post('/groupId/:groupId', async (req, res) => {
         });
         await Attendant.create({
             userId, eventId: newEvent.id, status: 'host'
-        })
+        });
         const eventJson = newEvent.toJSON();
         delete eventJson.createdAt;
         delete eventJson.updatedAt;
@@ -142,7 +142,7 @@ router.post('/images/:eventId', async (req, res) => {
     const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Event exists?
-    const eventId = req.params.eventId;
+    const eventId = +req.params.eventId;
     const event = await Event.findByPk(eventId, {attributes: {exclude: ['eventId']}});
     if (!event) {
         res.status(404);
@@ -167,13 +167,16 @@ router.post('/images/:eventId', async (req, res) => {
     }
 
     const { url, preview } = req.body;
-    const newImage = Image.create({
+    const newImage = await Image.create({
         url, preview, eventId, groupId: event.groupId
     });
     const imageJson = newImage.toJSON();
-    console.log(imageJson);
-
-    return res.json({});
+    // console.log(imageJson);
+    delete imageJson.eventId;
+    delete imageJson.groupId;
+    delete imageJson.updatedAt;
+    delete imageJson.createdAt;
+    return res.json(imageJson);
 })
 
 // Get details of the event specified by its id
@@ -208,6 +211,52 @@ router.get('/details/:eventId', async (req, res) => {
     delete eventJson.Images;
     res.status(200);
     res.json(eventJson);
+})
+
+// Edit an event specified by its id
+router.put('/:eventId', async (req, res) => {
+    // Authentication
+    const { token } = req.cookies;
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return requireAuth();
+    }
+    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodeToken.data.id;
+
+    // Authorization & Event Existence
+    const eventId = +req.params.eventId;
+    const event = await Event.findByPk(eventId, {attributes: {exclude: ['eventId']}});
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+    const group = await event.getGroup();
+    const members = await group.getUsers();
+    let hasAuthorization = false;
+    members.forEach(user => {
+        const userJson = user.toJSON();
+        if (userJson.id === userId) {
+            const status = userJson.Member.status;
+            if (['organizer', 'co-host'].includes(status)) {
+                hasAuthorization = true;
+            }
+            return;
+        }
+    })
+    if (!hasAuthorization) {
+        return properAuth();
+    }
+
+    const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
+    event.set({
+        venueId, name, type, capacity, price, description, startDate, endDate
+    })
+
+    res.json({});
 })
 
 // Get all events
