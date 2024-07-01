@@ -44,11 +44,31 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [5, Infinity]
+      }
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isIn: ['Online', 'In person']
+      }
+    },
+    capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: true
+      }
+    },
+    price: {
+      type: DataTypes.NUMERIC,
+      allowNull: false,
+      validate: {
+        isNumeric: true
+      }
     },
     startDate: {
       type: DataTypes.DATE,
@@ -60,7 +80,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     numAttending: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,

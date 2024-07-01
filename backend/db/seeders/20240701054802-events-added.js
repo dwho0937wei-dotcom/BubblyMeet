@@ -25,6 +25,8 @@ module.exports = {
       "venueId": null,
       "name": "Tennis Group First Meet and Greet",
       "type": "Online",
+      "capacity": 10,
+      "price": 20.00,
       "startDate": "2021-11-19 20:00:00",
       "endDate": "2021-11-19 22:00:00",
       "numAttending": 8
@@ -34,6 +36,8 @@ module.exports = {
       "venueId": 1,
       "name": "Tennis Singles",
       "type": "In Person",
+      "capacity": 10,
+      "price": 20.00,
       "startDate": "2021-11-20 20:00:00",
       "endDate": "2021-11-19 22:00:00",
       "numAttending": 4

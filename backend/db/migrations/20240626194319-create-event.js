@@ -32,6 +32,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      capacity: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      price: {
+        type: Sequelize.NUMERIC,
+        allowNull: false
+      },
       startDate: {
         type: Sequelize.DATE,
         allowNull: false
@@ -42,7 +50,8 @@ module.exports = {
       },
       numAttending: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
