@@ -1,14 +1,12 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
-
-const bcrypt = require('bcryptjs');
 
 let options = {};
-options.tableName = "Users";
+options.tableName = "Groups";
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -22,11 +20,15 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
-        "firstName": "John",
-        "lastName": "Smith",
-        "email": "john.smith@gmail.com",
-        "username": "JohnSmith",
-        "hashedPassword": bcrypt.hashSync('password')
+        "organizerId": 1,
+        "name": "Evening Tennis on the Water",
+        "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
+        "type": "In person",
+        "private": true,
+        "city": "New York",
+        "state": "NY",
+        "createdAt": "2021-11-19 20:39:36",
+        "updatedAt": "2021-11-19 20:39:36"
       }
     ]);
   },
@@ -39,7 +41,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options, {
-      email: "john.smith@gmail.com"
+      about: "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
     });
   }
 };

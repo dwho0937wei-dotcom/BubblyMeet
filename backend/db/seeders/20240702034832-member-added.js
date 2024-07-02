@@ -1,14 +1,12 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
-
-const bcrypt = require('bcryptjs');
 
 let options = {};
-options.tableName = "Users";
+options.tableName = "Memberships";
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -22,11 +20,9 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
-        "firstName": "John",
-        "lastName": "Smith",
-        "email": "john.smith@gmail.com",
-        "username": "JohnSmith",
-        "hashedPassword": bcrypt.hashSync('password')
+        userId: 1,
+        groupId: 1,
+        status: 'co-host'
       }
     ]);
   },
@@ -39,7 +35,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options, {
-      email: "john.smith@gmail.com"
+      userId: 1, groupId: 1
     });
   }
 };

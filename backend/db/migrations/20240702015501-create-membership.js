@@ -22,7 +22,7 @@ module.exports = {
         }
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('pending', 'member', 'co-host')
       },
       createdAt: {
         allowNull: false,
