@@ -29,6 +29,28 @@ module.exports = {
         "state": "NY",
         "createdAt": "2021-11-19 20:39:36",
         "updatedAt": "2021-11-19 20:39:36"
+      },
+      {
+        "organizerId": 1,
+        "name": "Playing Soccer on the Water",
+        "about": "Enjoy rounds of soccer with a tight-nit group of people on the water facing the Brooklyn Bridge. Kick, Run, Kick!",
+        "type": "In person",
+        "private": true,
+        "city": "New York",
+        "state": "NY",
+        "createdAt": "2021-11-19 20:39:36",
+        "updatedAt": "2021-11-19 20:39:36"
+      },
+      {
+        "organizerId": 1,
+        "name": "Playing Basketball on the Water",
+        "about": "Enjoy rounds of basketball with a tight-nit group of people on the water facing the Brooklyn Bridge. Dribble Dribble Dribble.",
+        "type": "In person",
+        "private": true,
+        "city": "New York",
+        "state": "NY",
+        "createdAt": "2021-11-19 20:39:36",
+        "updatedAt": "2021-11-19 20:39:36"
       }
     ]);
   },

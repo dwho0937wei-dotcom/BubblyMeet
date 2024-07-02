@@ -31,6 +31,8 @@ router.put('/:venueId', async (req, res) => {
         })
     }
 
+    const groupId = venue.dataValues.groupId;
+    const group = await Group.findByPk(groupId);
     const coHost = await Membership.findOne({
         where: {userId: user.id, groupId, status: 'co-host'}
     });
@@ -40,7 +42,12 @@ router.put('/:venueId', async (req, res) => {
 
     const { address, city, state, lat, lng } = req.body;
     try {
-        
+        await venue.set({
+            address, city, state, lat, lng
+        });
+        await venue.save();
+        res.status(200);
+        res.json(venue);
     } catch (error) {
         res.status(400);
         res.json({

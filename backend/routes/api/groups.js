@@ -144,6 +144,7 @@ router.put('/:groupId', async (req, res) => {
         await group.set({
             name, about, type, private, city, state
         });
+        await group.save();
         res.status(200);
         res.json(group);
     } catch (error) {
