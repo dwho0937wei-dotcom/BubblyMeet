@@ -79,6 +79,19 @@ router.get('/current', async (req, res) => {
     res.json(groups);
 })
 
+// Create a group
+// router.post('/', async (req, res) => {
+//     if (!userLoggedIn(req)) {
+//         return requireAuth2(res);
+//     }
+//     const user = getUserFromToken(req);
+
+
+//     const newGroup = Group.create({
+
+//     })
+// })
+
 // Get all groups
 router.get('/', async (req, res) => {
     const groups = await Group.findAll({

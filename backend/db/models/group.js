@@ -45,26 +45,44 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [0, 60]
+      }
     },
     about: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [50, Infinity]
+      }
     },
     type: {
-      type: DataTypes.ENUM('Online', 'In person')
+      type: DataTypes.ENUM('Online', 'In person'),
+      validate: {
+        isIn: [['Online', 'In person']]
+      }
     },
     private: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isIn: [[true, false]]
+      }
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: true
+      }
     },
     state: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: true
+      }
     }
   }, {
     sequelize,
