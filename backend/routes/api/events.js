@@ -15,6 +15,42 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
+// Create an event for a group specified by its id
+router.post('/:groupId/events', async (req, res) => {
+    
+})
+
+// Get details of an event specified by its id
+router.get('/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    const event = await Event.findByPk(eventId, {
+        include: [
+            {
+                model: Group,
+                attributes: ['id', 'name', 'private', 'city', 'state']
+            },
+            {
+                model: Venue,
+                attributes: ['id', 'address', 'city', 'state', 'lat', 'lng']
+            },
+            {
+                model: EventImage,
+                attributes: ['id', 'url', 'preview']
+            },
+            {
+                model: Attendance,
+                attributes: []
+            }
+        ],
+        attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendances.id")), 'numAttending']]
+        }
+    });
+    res.status(200);
+    res.json(event);
+})
+
 // Get all events
 router.get('/', async (req, res) => {
     const events = await Event.findAll({

@@ -47,25 +47,57 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [5, Infinity]
+      }
     },
     description: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notNull: true
+      }
     },
     type: {
-      type: DataTypes.ENUM('Online', 'In person')
+      type: DataTypes.ENUM('Online', 'In person'),
+      allowNull: false,
+      validate: {
+        isIn: ['Online', 'In person']
+      }
     },
     capacity: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: true
+      }
     },
     price: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isNumeric: true
+      }
     },
     startDate: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isAfter: new Date().toISOString()
+      }
     },
     endDate: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isFuture(value) {
+          if (new Date(value) <= new Date(this.startDate)) {
+            throw new Error('The end date must be after the start date.')
+          }
+        }
+      }
     }
   }, {
     sequelize,

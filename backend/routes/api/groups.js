@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { User, Group, Membership, GroupImage, Sequelize, Venue } = require('../../db/models');
+const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
 
 const router = express.Router();
@@ -120,6 +120,82 @@ router.post('/:groupId/images', async (req, res) => {
     res.json(newImage);
 })
 
+// Get all groups joined or organized by the current user
+router.get('/current', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const groups = await Group.findAll({
+        include: [
+            {
+                model: Membership,
+                attributes: []
+            },
+            {
+                model: GroupImage,
+                required: false,
+                where: { preview: true },
+                attributes: []
+            }
+        ],
+        attributes: {
+            include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
+                      [Sequelize.literal(`COALESCE(GroupImages.url, '')`), 'previewImage']]
+        },
+        where: { 
+            [Op.or]: [
+               { organizerId: user.id },
+               Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = id AND Memberships.userId = ${user.id})`)
+            ]
+        },
+        group: ['Group.id', 'GroupImages.id', 'Memberships.id']
+    });
+    return res.json({Groups: groups});
+})
+
+// Get all events of a group specified by its id
+router.get('/:groupId/events', async (req, res) => {
+    const groupId = req.params.groupId;
+
+    const events = await Event.findAll({
+        where: { groupId },
+        include: [
+            {
+                model: Attendance,
+                attributes: []
+            },
+            {
+                model: Venue,
+                attributes: ['id', 'city', 'state']
+            },
+            {
+                model: EventImage,
+                where: {preview: true},
+                attributes: [],
+            },
+            {
+                model: Group,
+                attributes: ['id', 'name', 'city', 'state']
+            }
+        ],
+        attributes: {
+            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendances.id")), "numAttending"],     
+                      [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]]
+        },
+        group: [
+            'Event.id',
+            'Venue.id',
+            'Group.id',
+            'EventImages.id',
+            'Attendances.id'
+        ]
+    });
+    res.status(200);
+    res.json({Events: events});
+})
+
 // Edit a group
 router.put('/:groupId', async (req, res) => {
     if (!userLoggedIn(req)) {
@@ -221,39 +297,6 @@ router.delete('/:groupId', async (req, res) => {
     });
 })
 
-// Get all groups joined or organized by the current user
-router.get('/current', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
-    const user = getUserFromToken(req);
-
-    const groups = await Group.findAll({
-        include: [
-            {
-                model: Membership,
-                attributes: []
-            },
-            {
-                model: GroupImage,
-                where: { preview: true },
-                attributes: []
-            }
-        ],
-        attributes: {
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
-                      [Sequelize.fn("", Sequelize.col("GroupImages.url")), "previewImage"]]
-        },
-        where: { 
-            [Op.or]: [
-               { organizerId: user.id },
-               Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = id AND Memberships.userId = ${user.id})`)
-            ]
-        },
-        group: ['Group.id', 'GroupImages.id', 'Memberships.id']
-    });
-    res.json({Groups: groups});
-})
 
 // Create a group
 router.post('/', async (req, res) => {
@@ -297,13 +340,14 @@ router.get('/', async (req, res) => {
                 },
                 {
                     model: GroupImage,
+                    required: false,
                     where: { preview: true },
                     attributes: []
                 }
             ],
             attributes: {
                 include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
-                        [Sequelize.fn("", Sequelize.col("GroupImages.url")), "previewImage"]]
+                [Sequelize.literal(`COALESCE(GroupImages.url, '')`), 'previewImage']]
             },
             group: ['Group.id', 'GroupImages.id', 'Memberships.id']
         }
