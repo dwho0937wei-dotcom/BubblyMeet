@@ -21,6 +21,7 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
+        "id": 1,
         "groupId": 1,
         "venueId": null,
         "name": "Tennis Group First Meet and Greet",
@@ -32,6 +33,7 @@ module.exports = {
         "price": 20
       },
       {
+        "id": 2,
         "groupId": 1,
         "venueId": 1,
         "name": "Tennis Singles",

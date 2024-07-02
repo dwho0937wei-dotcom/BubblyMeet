@@ -231,12 +231,12 @@ router.get('/current', async (req, res) => {
     const groups = await Group.findAll({
         include: [
             {
-                model: GroupImage,
-                where: { preview: true },
+                model: Membership,
                 attributes: []
             },
             {
-                model: Membership,
+                model: GroupImage,
+                where: { preview: true },
                 attributes: []
             }
         ],
@@ -249,9 +249,10 @@ router.get('/current', async (req, res) => {
                { organizerId: user.id },
                Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = id AND Memberships.userId = ${user.id})`)
             ]
-        }
+        },
+        group: ['Group.id', 'GroupImages.id', 'Memberships.id']
     });
-    res.json(groups);
+    res.json({Groups: groups});
 })
 
 // Create a group
@@ -287,24 +288,27 @@ router.post('/', async (req, res) => {
 
 // Get all groups
 router.get('/', async (req, res) => {
-    const groups = await Group.findAll({
-        include: [
-            {
-                model: GroupImage,
-                where: { preview: true },
-                attributes: []
+    const groups = await Group.findAll(
+        {
+            include: [
+                {
+                    model: Membership,
+                    attributes: []
+                },
+                {
+                    model: GroupImage,
+                    where: { preview: true },
+                    attributes: []
+                }
+            ],
+            attributes: {
+                include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
+                        [Sequelize.fn("", Sequelize.col("GroupImages.url")), "previewImage"]]
             },
-            {
-                model: Membership,
-                attributes: []
-            }
-        ],
-        attributes: {
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
-                      [Sequelize.fn("", Sequelize.col("GroupImages.url")), "previewImage"]]
+            group: ['Group.id', 'GroupImages.id', 'Memberships.id']
         }
-    });
-    res.json(groups);
+    );
+    res.json({Groups: groups});
 })
 
 module.exports = router;
