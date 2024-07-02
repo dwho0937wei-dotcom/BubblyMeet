@@ -11,12 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      GroupImage.belongsTo(models.Group, {
+        foreignKey: 'groupId'
+      });
     }
   }
   GroupImage.init({
-    groupId: DataTypes.INTEGER,
-    url: DataTypes.STRING,
-    preview: DataTypes.BOOLEAN
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Groups'
+      }
+    },
+    url: {
+      type: DataTypes.STRING
+    },
+    preview: {
+      type: DataTypes.BOOLEAN
+    }
   }, {
     sequelize,
     modelName: 'GroupImage',

@@ -11,6 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Event.hasMany(models.EventImage, {
+        foreignKey: 'eventId',
+        onDelete: 'CASCADE'
+      });
+      Event.belongsTo(models.Venue, {
+        foreignKey: 'venueId'
+      });
+      Event.belongsTo(models.Group, {
+        foreignKey: 'groupId'
+      })
     }
   }
   Event.init({
@@ -39,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     type: {
-      type: DataTypes.ENUM
+      type: DataTypes.ENUM('Online', 'In person')
     },
     capacity: {
       type: DataTypes.INTEGER
