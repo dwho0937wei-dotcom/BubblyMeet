@@ -20,6 +20,7 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
+        id: 1,
         "organizerId": 1,
         "name": "Evening Tennis on the Water",
         "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
@@ -31,6 +32,7 @@ module.exports = {
         "updatedAt": "2021-11-19 20:39:36"
       },
       {
+        id: 2,
         "organizerId": 1,
         "name": "Playing Soccer on the Water",
         "about": "Enjoy rounds of soccer with a tight-nit group of people on the water facing the Brooklyn Bridge. Kick, Run, Kick!",
@@ -42,6 +44,7 @@ module.exports = {
         "updatedAt": "2021-11-19 20:39:36"
       },
       {
+        id: 3,
         "organizerId": 1,
         "name": "Playing Basketball on the Water",
         "about": "Enjoy rounds of basketball with a tight-nit group of people on the water facing the Brooklyn Bridge. Dribble Dribble Dribble.",

@@ -17,7 +17,41 @@ const getUserFromToken = function (req) {
 
 // Create an event for a group specified by its id
 router.post('/:groupId/events', async (req, res) => {
-    
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    const coHost = await Membership.findOne({
+        where: {userId: user.id, groupId, status: 'co-host'}
+    });
+    if (group.dataValues.organizerId !== user.id && !coHost) {
+        return requireProperAuth(res);
+    }
+
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+    const venue = await Venue.findByPk(venueId);
+    if (!venue) {
+        res.status(404);
+        return res.json({
+            message: "Venue couldn't be found"
+        })
+    }
+
+    try {
+        
+    } catch (error) {
+        
+    }
 })
 
 // Get details of an event specified by its id
