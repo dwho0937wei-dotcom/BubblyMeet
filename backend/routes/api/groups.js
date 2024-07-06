@@ -140,10 +140,19 @@ router.get('/:groupId/members', async (req, res) => {
         }
     }
 
-    const members = await group.getUsers({
+    let memberCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
-    });
+    };
+    if (!isOrganizer) {
+        memberCriteria.where = 
+        {
+            '$Membership.status$': {
+                [Op.notIn]: ['pending']
+            }
+        }
+    }
+    const members = await group.getUsers(memberCriteria);
 
     res.status(200);
     res.json({ Members: members });
