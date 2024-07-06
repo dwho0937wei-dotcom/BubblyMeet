@@ -39,8 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     status: {
-      type: DataTypes.STRING
-    }
+      type: DataTypes.ENUM('attendee', 'host', 'co-host'),
+      allowNull: false,
+      validate: {
+        isIn: [['attendee', 'host', 'co-host']] 
+      }
+    },
   }, {
     sequelize,
     modelName: 'Attendance',

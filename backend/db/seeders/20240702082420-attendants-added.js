@@ -23,7 +23,7 @@ module.exports = {
       {
         "eventId": 1,
         "userId": 1,
-        "status": "will play"
+        "status": "host"
       }
     ]);
   },
@@ -38,7 +38,7 @@ module.exports = {
     await queryInterface.bulkDelete(options, {
       "eventId": 1,
       "userId": 1,
-      "status": "will play"
+      "status": "host"
     });
   }
 };

@@ -15,6 +15,16 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
+// Add an Image to an Event based on its id
+router.post('/:eventId/images', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    
+})
+
 // Get details of an event specified by its id
 router.get('/:eventId', async (req, res) => {
     const eventId = req.params.eventId;
