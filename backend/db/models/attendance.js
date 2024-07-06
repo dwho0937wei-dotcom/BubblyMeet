@@ -11,12 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Attendance.belongsTo(models.User, {
-        foreignKey: 'userId'
-      });
-      Attendance.belongsTo(models.Event, {
-        foreignKey: 'eventId'
-      });
     }
   }
   Attendance.init({
@@ -30,13 +24,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'Events'
-      }
+      },
+      onDelete: 'CASCADE'
     },
     userId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'Users'
-      }
+      },
+      onDelete: 'CASCADE'
     },
     status: {
       type: DataTypes.ENUM('attendee', 'host', 'co-host'),
