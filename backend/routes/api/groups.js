@@ -357,7 +357,6 @@ router.delete('/:groupId', async (req, res) => {
     });
 })
 
-
 // Create a group
 router.post('/', async (req, res) => {
     if (!userLoggedIn(req)) {
