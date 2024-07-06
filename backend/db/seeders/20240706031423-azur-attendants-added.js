@@ -34,22 +34,22 @@ module.exports = {
       {
         "eventId": 3,
         "userId": 15,
-        "status": "attendee"
+        "status": "attending"
       },
       {
         "eventId": 3,
         "userId": 16,
-        "status": "attendee"
+        "status": "attending"
       },
       {
         "eventId": 3,
         "userId": 17,
-        "status": "attendee"
+        "status": "attending"
       },
       {
         "eventId": 3,
         "userId": 18,
-        "status": "attendee"
+        "status": "attending"
       }
     ]);
   },

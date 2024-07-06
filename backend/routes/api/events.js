@@ -52,6 +52,33 @@ router.post('/:eventId/images', async (req, res) => {
     res.json(payload);
 })
 
+// Get all attendees of an event specified by its id
+router.get('/:eventId/attendees', async (req, res) => {
+    const eventId = req.params.eventId;
+    const event = Event.findByPk(eventId);
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+
+    res.status(200);
+
+    const attendanceCriteria = {
+        attributes: ['id', 'firstName', 'lastName'],
+        joinTableAttributes: ['status']
+    }
+
+    let user;
+    if (userLoggedIn(req)) {
+        user = getUserFromToken(req);
+    }
+
+    const attendants = event.getUsers(attendanceCriteria);
+    return res.json({Attendees: attendants});
+})
+
 // Edit an event specified by its id
 router.put('/:eventId', async (req, res) => {
     if (!userLoggedIn(req)) {

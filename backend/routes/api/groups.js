@@ -15,6 +15,51 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
+// Delete a membership to a group specified by id
+router.delete('/:groupId/membership/:memberId', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const groupId = +req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    const memberId = +req.params.memberId;
+    const memberUser = await User.findByPk(memberId);
+    if (!memberUser) {
+        res.status(404);
+        return res.json({
+            message: "User couldn't be found"
+        });
+    }
+    const membershipToDelete = await Membership.findOne(
+        { where: { userId: memberId } }
+    );
+    if (!membershipToDelete) {
+        res.status(404);
+        return res.json({
+            message: "Membership does not exist for this User"
+        });
+    }
+
+    if (group.organizerId !== user.id && memberId !== user.id) {
+        return requireProperAuth(res);
+    }
+
+    res.status(200);
+    await membershipToDelete.destroy();
+    res.json({
+        message: "Successfully deleted membership from group"
+    });
+})
+
 // Create a new venue for a group specified by its id
 router.post('/:groupId/venues', async (req, res) => {
     if (!userLoggedIn(req)) {
@@ -91,6 +136,80 @@ router.get('/:groupId/venues', async (req, res) => {
     res.json({Venues: venues})
 })
 
+// Change the status of a membership for a group specified by its id
+router.put('/:groupId/membership', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    const { memberId, status } = req.body;
+    const memberUser = await User.findByPk(memberId);
+    if (!memberUser) {
+        res.status(404);
+        return res.json({
+            message: "User couldn't be found"
+        });
+    }
+
+    const membershipToUpdate = await Membership.findOne(
+        { where: { userId: memberId } }
+    );
+    if (!membershipToUpdate) {
+        res.status(404);
+        return res.json({
+            message: "Membership between the user and the group does not exist"
+        });
+    }
+
+    if (status === 'pending') {
+        res.status(400);
+        return res.json({
+            message: "Bad Request",
+            errors: {
+                status: "Cannot change a membership to pending"
+            }
+        })
+    }
+    else if (status === 'member') {
+        const coHost = await Membership.findOne({
+            where: {userId: user.id, groupId, status: 'co-host'}
+        });
+        if (group.dataValues.organizerId !== user.id && !coHost) {
+            return requireProperAuth(res);
+        }
+    }
+    else if (status === 'co-host') {
+        if (group.dataValues.organizerId !== user.id) {
+            return requireProperAuth(res);
+        }
+    }
+
+    if (status === 'member' || status === 'co-host') {
+        membershipToUpdate.set({
+            status
+        });
+        await membershipToUpdate.save();
+    }
+    res.status(200);
+    const payload = {
+        id: membershipToUpdate.dataValues.id,
+        userId: membershipToUpdate.dataValues.userId,
+        groupId: membershipToUpdate.dataValues.groupId,
+        status: membershipToUpdate.dataValues.status
+    };
+    return res.json(payload);
+})
+
 // Request a membership for a group specified by its id
 router.post('/:groupId/membership', async (req, res) => {
     if (!userLoggedIn(req)) {
@@ -129,14 +248,10 @@ router.post('/:groupId/membership', async (req, res) => {
     }
 
     res.status(200);
-    const newMember = group.createMember({
-        userId: user.id,
-        groupId,
-        status: "pending"
-    });
+    const newMember = await group.addUser(user.id, { through: { status:'pending' } });
     const payload = {
-        memberId: newMember.dataValues.userId,
-        status: newMember.dataValues.status
+        memberId: newMember[0].dataValues.userId,
+        status: newMember[0].dataValues.status
     };
     return res.json(payload);
 })
