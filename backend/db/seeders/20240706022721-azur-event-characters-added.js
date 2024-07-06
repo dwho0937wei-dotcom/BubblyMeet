@@ -88,6 +88,16 @@ module.exports = {
         "email": "laffey.union@gmail.com",
         "username": "LaffeyUnion",
         "hashedPassword": bcrypt.hashSync('azurPassword19')
+      },
+
+      // Sakura Empire Non-Event Characters
+      {
+        "id": 21,
+        "firstName": "Ibuki",
+        "lastName": "Sakura",
+        "email": "ibuki.sakura@gmail.com",
+        "username": "IbukiSakura",
+        "hashedPassword": bcrypt.hashSync('azurPassword20')
       }
     ]);
   },
