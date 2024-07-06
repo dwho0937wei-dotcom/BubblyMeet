@@ -91,8 +91,8 @@ router.get('/:groupId/venues', async (req, res) => {
     res.json({Venues: venues})
 })
 
-// Add an image to a group specified by its id
-router.post('/:groupId/images', async (req, res) => {
+// Request a membership for a group specified by its id
+router.post('/:groupId/membership', async (req, res) => {
     if (!userLoggedIn(req)) {
         return requireAuth2(res);
     }
@@ -106,18 +106,39 @@ router.post('/:groupId/images', async (req, res) => {
             message: "Group couldn't be found"
         })
     }
-    if (group.dataValues.organizerId !== user.id) {
-        return requireProperAuth(res);
+
+    const sameMember = await Membership.findOne({
+        where: {
+            userId: user.id,
+            groupId
+        }
+    });
+    if (sameMember) {
+        res.status(400);
+        const status = sameMember.dataValues.status;
+        if (status === 'pending') {
+            return res.json({
+                message: "Membership has already been requested"
+            })
+        }
+        else {
+            return res.json({
+                message: "User is already a member of the group"
+            })
+        }
     }
 
-    const { url, preview } = req.body;
-    let newImage = await group.createGroupImage({ url, preview });
-    newImage = newImage.toJSON();
-    delete newImage.groupId;
-    delete newImage.updatedAt;
-    delete newImage.createdAt;
     res.status(200);
-    res.json(newImage);
+    const newMember = group.createMember({
+        userId: user.id,
+        groupId,
+        status: "pending"
+    });
+    const payload = {
+        memberId: newMember.dataValues.userId,
+        status: newMember.dataValues.status
+    };
+    return res.json(payload);
 })
 
 // Get all members of a group specified by its id
@@ -156,6 +177,35 @@ router.get('/:groupId/members', async (req, res) => {
 
     res.status(200);
     res.json({ Members: members });
+})
+
+// Add an image to a group specified by its id
+router.post('/:groupId/images', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+    if (group.dataValues.organizerId !== user.id) {
+        return requireProperAuth(res);
+    }
+
+    const { url, preview } = req.body;
+    let newImage = await group.createGroupImage({ url, preview });
+    newImage = newImage.toJSON();
+    delete newImage.groupId;
+    delete newImage.updatedAt;
+    delete newImage.createdAt;
+    res.status(200);
+    res.json(newImage);
 })
 
 // Create an event for a group specified by its id
