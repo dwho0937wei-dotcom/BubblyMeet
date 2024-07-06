@@ -156,6 +156,38 @@ router.get('/:eventId', async (req, res) => {
     res.json(event);
 })
 
+// Delete an event specified by its id
+router.delete('/:eventId', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const eventId = req.params.eventId;
+    const event = await Event.findByPk(eventId);
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+    const groupId = event.dataValues.groupId;
+    const group = await Group.findByPk(groupId);
+    
+    const coHost = await Membership.findOne({
+        where: {userId: user.id, groupId, status: 'co-host'}
+    });
+    if (group.dataValues.organizerId !== user.id && !coHost) {
+        return requireProperAuth(res);
+    }
+
+    await event.destroy();
+    res.status(200);
+    res.json({
+        message: "Successfully deleted"
+    });
+})
+
 // Get all events
 router.get('/', async (req, res) => {
     const events = await Event.findAll({
