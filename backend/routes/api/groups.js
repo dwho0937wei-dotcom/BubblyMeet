@@ -141,10 +141,7 @@ router.get('/:groupId/members', async (req, res) => {
     }
 
     const members = await group.getUsers({
-        attributes: ['id', 'firstName', 'lastName'],
-        through: {
-            attributes: ['status']
-        }
+        attributes: ['id', 'firstName', 'lastName']
     });
 
     res.status(200);
