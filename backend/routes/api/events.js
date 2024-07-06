@@ -68,7 +68,7 @@ router.get('/:eventId/attendees', async (req, res) => {
     const attendanceCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
-    }
+    };
 
     let user;
     if (userLoggedIn(req)) {
