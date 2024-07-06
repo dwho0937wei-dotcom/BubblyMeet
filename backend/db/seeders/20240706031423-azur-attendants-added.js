@@ -20,6 +20,7 @@ module.exports = {
      * }], {});
     */
     await queryInterface.bulkInsert(options, [
+      // Royal Navy Recruitment
       {
         "eventId": 3,
         "userId": 13,

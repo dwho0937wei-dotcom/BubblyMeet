@@ -70,6 +70,24 @@ module.exports = {
         "email": "hermes.navy@azur.io",
         "username": "HermesNavy",
         "hashedPassword": bcrypt.hashSync('azurPassword17')
+      },
+
+      // Eagle Union Non-Event Characters
+      {
+        "id": 19,
+        "firstName": "Georgia",
+        "lastName": "Union",
+        "email": "georgia.union@gmail.com",
+        "username": "GeorgiaUnion",
+        "hashedPassword": bcrypt.hashSync('azurPassword18')
+      },
+      {
+        "id": 20,
+        "firstName": "Laffey",
+        "lastName": "Union",
+        "email": "laffey.union@gmail.com",
+        "username": "LaffeyUnion",
+        "hashedPassword": bcrypt.hashSync('azurPassword19')
       }
     ]);
   },

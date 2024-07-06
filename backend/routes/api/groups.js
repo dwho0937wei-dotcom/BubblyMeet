@@ -120,6 +120,38 @@ router.post('/:groupId/images', async (req, res) => {
     res.json(newImage);
 })
 
+// Get all members of a group specified by its id
+router.get('/:groupId/members', async (req, res) => {
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    let user;
+    let isOrganizer = false;
+    if (userLoggedIn(req)) {
+        user = getUserFromToken(req);
+        if (user.id === group.dataValues.organizerId) {
+            isOrganizer = true;
+        }
+    }
+
+    const members = await group.getMemberships({
+        attributes: ['status'],
+        include: {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }
+    });
+
+    res.status(200);
+    res.json({ Members: members });
+})
+
 // Create an event for a group specified by its id
 router.post('/:groupId/events', async (req, res) => {
     if (!userLoggedIn(req)) {
