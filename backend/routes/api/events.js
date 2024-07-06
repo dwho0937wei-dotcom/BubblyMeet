@@ -69,7 +69,8 @@ router.get('/:eventId', async (req, res) => {
             },
             {
                 model: EventImage,
-                attributes: ['id', 'url', 'preview']
+                attributes: ['id', 'url', 'preview'],
+                separate: true
             },
             {
                 model: Attendance,
