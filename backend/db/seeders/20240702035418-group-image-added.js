@@ -23,6 +23,17 @@ module.exports = {
         groupId: 1,
         url: 'image url',
         preview: true
+      },
+      // fake group images to be deleted
+      {
+        groupId: 1,
+        url: 'fake url',
+        preview: false
+      },
+      {
+        groupId: 1,
+        url: 'fake url2',
+        preview: false
       }
     ]);
   },

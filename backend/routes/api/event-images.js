@@ -15,7 +15,7 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
-// Delete an image for a group
+// Delete an image for an event
 router.delete('/:imageId', async (req, res) => {
     if (!userLoggedIn(req)) {
         return requireAuth2(res);
@@ -23,15 +23,17 @@ router.delete('/:imageId', async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const imageId = req.params.imageId;
-    const image = await GroupImage.findByPk(imageId);
+    const image = await EventImage.findByPk(imageId);
     if (!image) {
         res.status(404);
         return res.json({
-            message: "Group Image couldn't be found"
+            message: "Event Image couldn't be found"
         })
     }
 
-    const groupId = image.dataValues.groupId;
+    const event = image.getEvent();
+    const groupId = event.dataValues.groupId;
+
     const coHost = await Membership.findOne({
         where: {userId: loginUser.id, groupId, status: 'co-host'}
     });
@@ -43,7 +45,7 @@ router.delete('/:imageId', async (req, res) => {
     await image.destroy();
     return res.json({
         message: "Successfully deleted"
-    })
+    });
 })
 
 module.exports = router;

@@ -29,6 +29,17 @@ module.exports = {
         "eventId": 2,
         "url": "image_url",
         "preview": true
+      },
+      // fake event images to be deleted
+      {
+        "eventId": 1,
+        "url": "fake_url",
+        "preview": false
+      },
+      {
+        "eventId": 2,
+        "url": "fake_url",
+        "preview": false
       }
     ]);
   },
