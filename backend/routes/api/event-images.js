@@ -31,8 +31,9 @@ router.delete('/:imageId', async (req, res) => {
         })
     }
 
-    const event = image.getEvent();
+    const event = await image.getEvent();
     const groupId = event.dataValues.groupId;
+    const group = await Group.findByPk(groupId);
 
     const coHost = await Membership.findOne({
         where: {userId: loginUser.id, groupId, status: 'co-host'}
