@@ -15,6 +15,15 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
+async function listAssociationMethods(modelInstance) {
+    const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(modelInstance))
+      .filter(method => typeof modelInstance[method] === 'function');
+  
+    console.log('Available methods:', methods);
+}
+
+// Delete attendance to an event specified by its id
+
 // Add an Image to an Event based on its id
 router.post('/:eventId/images', async (req, res) => {
     if (!userLoggedIn(req)) {
@@ -55,7 +64,7 @@ router.post('/:eventId/images', async (req, res) => {
 // Get all attendees of an event specified by its id
 router.get('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
-    const event = Event.findByPk(eventId);
+    const event = await Event.findByPk(eventId);
     if (!event) {
         res.status(404);
         res.json({
@@ -64,19 +73,79 @@ router.get('/:eventId/attendees', async (req, res) => {
     }
 
     res.status(200);
-
     const attendanceCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
     };
-
+    const group = await event.getGroup();
     let user;
     if (userLoggedIn(req)) {
         user = getUserFromToken(req);
+        const coHost = await Membership.findOne({
+            where: {userId: user.id, groupId: event.dataValues.groupId, status: 'co-host'}
+        });
+        if (group.dataValues.organizerId !== user.id && !coHost) {
+            attendanceCriteria.where = {
+                '$Attendance.status$': {
+                    [Op.notIn]: ['pending']
+                } 
+            }
+        }
     }
 
-    const attendants = event.getUsers(attendanceCriteria);
+    const attendants = await event.getAttendees(attendanceCriteria);
     return res.json({Attendees: attendants});
+})
+
+// Request to attend an event based on its id
+router.post('/:eventId/attendance', async (req, res) => {
+    if (!userLoggedIn(req)) {
+        return requireAuth2(res);
+    }
+    const user = getUserFromToken(req);
+
+    const eventId = req.params.eventId;
+    const event = await Event.findByPk(eventId);
+    if (!event) {
+        res.status(404);
+        res.json({
+            message: "Event couldn't be found"
+        })
+    }
+
+    const groupId = event.dataValues.groupId;
+    const sameMember = await Membership.findOne({
+        where: {userId: user.id, groupId}
+    });
+    if (!sameMember) {
+        return requireProperAuth(res);
+    }
+
+    const sameAttendee = await Attendance.findOne({
+        where: {userId: user.id, eventId}
+    });
+    if (sameAttendee) {
+        res.status(400);
+        const status = sameAttendee.dataValues.status;
+        if (status === 'pending') {
+            return res.json({
+                message: "Attendance has already been requested"
+            })
+        }
+        else {
+            return res.json({
+                message: "User is already an attendee of the event"
+            })
+        }
+    }
+
+    res.status(200);
+    const newAttendee = await event.addAttendee(user.id, { through: { status: "pending" } });
+    const payload = {
+        userId: newAttendee[0].dataValues.userId,
+        status: newAttendee[0].dataValues.status
+    }
+    res.json(payload);
 })
 
 // Edit an event specified by its id

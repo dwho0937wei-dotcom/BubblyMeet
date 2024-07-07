@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Attendance,
         foreignKey: 'eventId',
         otherKey: 'userId',
-        as: 'Attendees'
+        as: 'Attendee'
       });
     }
   }
