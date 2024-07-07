@@ -31,7 +31,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       status: {
-        type: Sequelize.ENUM('pending', 'member', 'co-host'),
+        type: Sequelize.ENUM('pending', 'member', 'co-host', 'host'),
         allowNull: false
       },
       createdAt: {
