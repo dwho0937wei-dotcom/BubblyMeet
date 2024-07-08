@@ -406,6 +406,7 @@ router.delete('/:eventId', async (req, res) => {
 
 // Get all events
 router.get('/', async (req, res) => {
+    // Setting up the criteria for finding all the events
     const eventCriteria = {
         include: [
             {
@@ -427,27 +428,37 @@ router.get('/', async (req, res) => {
                 attributes: ['id', 'name', 'city', 'state']
             }
         ],
-        // attributes: {
-        //     include: [[Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"],     
-        //               [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]]
-        // },
-        // group: [
-        //     'Event.id',
-        //     'Venue.id',
-        //     'Group.id',
-        //     'EventImages.id',
-        //     'Attendee.id'
-        // ]
+    // Grouping
+        group: [
+            'Event.id'
+        ],
+        attributes: [
+            'id',
+            'groupId',
+            'venueId',
+            'name',
+            'type',
+            'startDate',
+            'endDate',
+    // Aggregating
+            [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"],
+    // Extracting
+            [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]
+        ]
     };
 
+    // Getting the query
     let { page, size, name, type, startDate } = req.query;
 
+    // Setting the page and size
     if (!page || page > 10) page = 1;
     if (!size || size > 20) size = 20;
     if (page < 1 || size < 1) return queryBadRequest(res);
+    // Applying the page and size
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);
 
+    // Does nothing for now
     if (name && type && startDate) {
         if (typeof name !== 'string' 
               || ['Online', 'In Person'].includes(type) 
@@ -457,10 +468,10 @@ router.get('/', async (req, res) => {
             }
     }
 
+    // Finding and paginating all events
     res.status(200);
     const events = await Event.findAll(eventCriteria);
     return res.json({Events: events});
-    
 })
 
 module.exports = router;
