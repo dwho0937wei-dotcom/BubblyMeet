@@ -6,15 +6,9 @@ const jwt = require('jsonwebtoken');
 
 const { User } = require('../../db/models');
 const { setTokenCookie, restoreUser, userLoggedIn } = require('../../utils/auth');
+const { getUserFromToken } = require('../../utils/helper');
 
 const router = express.Router();
-
-const getUserFromToken = function (req) {
-    const { token } = req.cookies;
-    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-    const user = decodeToken.data;
-    return user;
-} 
 
 // Get the current user
 router.get('/', async (req, res) => {

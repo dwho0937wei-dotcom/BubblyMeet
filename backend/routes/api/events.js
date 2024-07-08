@@ -5,15 +5,9 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { getUserFromToken } = require('../../utils/helper');
 
 const router = express.Router();
-
-const getUserFromToken = function (req) {
-    const { token } = req.cookies;
-    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-    const user = decodeToken.data;
-    return user;
-} 
 
 const queryBadRequest = function (res) {
     res.status(400);
