@@ -404,13 +404,13 @@ router.get('/', async (req, res) => {
     const eventCriteria = {
         include: [
             {
+                model: Group,
+                attributes: ['id', 'name', 'city', 'state']
+            },
+            {
                 model: Venue,
                 attributes: ['id', 'city', 'state']
             },
-            {
-                model: Group,
-                attributes: ['id', 'name', 'city', 'state']
-            }
         ],
         attributes: [
             'id',
@@ -444,15 +444,12 @@ router.get('/', async (req, res) => {
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);
 
-    // Does nothing for now
-    if (name && type && startDate) {
-        if (typeof name !== 'string' 
-              || ['Online', 'In Person'].includes(type) 
-              || typeof startDate !== 'date') 
-            {
-                return queryBadRequest(res);
-            }
-    }
+    // If there exist any name, type, or startDate,
+        // then filter events matching these attributes.
+    eventCriteria.where = {};
+    if (name) eventCriteria.where.name = name;
+    if (type) eventCriteria.where.type = type;
+    if (startDate) eventCriteria.where.startDate = startDate;
 
     // Finding and paginating all events
     res.status(200);
