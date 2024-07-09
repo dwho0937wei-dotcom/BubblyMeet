@@ -24,7 +24,7 @@ module.exports = {
     await queryInterface.bulkInsert(options, [
       // Eagle Union Leader
       {
-        id: 3,
+        // id: 3,
         firstName: "Grey",
         lastName: "Ghost",
         email: "grey.ghost@azurL.io",
@@ -33,7 +33,7 @@ module.exports = {
       },
       // Royal Navy Leader
       {
-        id: 4,
+        // id: 4,
         firstName: "Queen",
         lastName: "Elizabeth",
         email: "queen.elizabeth@azurL.io",
@@ -42,7 +42,7 @@ module.exports = {
       },
       // Sakura Empire Leader
       {
-        id: 5,
+        // id: 5,
         firstName: "Nagato",
         lastName: "Sakura",
         email: "nagato.sakura@azurL.io",
@@ -51,7 +51,7 @@ module.exports = {
       },
       // Iron Blood Leader
       {
-        id: 6,
+        // id: 6,
         firstName: "Bismarck",
         lastName: "IronBlood",
         email: "bismarck.ironblood@azurL.io",
@@ -60,7 +60,7 @@ module.exports = {
       },
       // Dragon Empery Leader
       {
-        id: 7,
+        // id: 7,
         firstName: "Yat",
         lastName: "Sen",
         email: "yat.sen@azurL.io",
@@ -69,7 +69,7 @@ module.exports = {
       },
       // Sardegna Empire Leader
       {
-        id: 8,
+        // id: 8,
         firstName: "Vittorio",
         lastName: "Veneto",
         email: "vittorio.veneto@azurL.io",
@@ -78,7 +78,7 @@ module.exports = {
       },
       // Vichya Dominion Leader
       {
-        id: 9,
+        // id: 9,
         firstName: "Jean",
         lastName: "Bart",
         email: "jean.bart@azurL.io",
@@ -87,7 +87,7 @@ module.exports = {
       },
       // Iris Libre Leader
       {
-        id: 10,
+        // id: 10,
         firstName: "Richelieu",
         lastName: "Libre",
         email: "richelieu.libre@azurL.io",
@@ -96,7 +96,7 @@ module.exports = {
       },
       // Northern Parliament Leader
       {
-        id: 11,
+        // id: 11,
         firstName: "Sovetsky",
         lastName: "Soyuz",
         email: "sovetsky.soyuz@azurL.io",
@@ -105,7 +105,7 @@ module.exports = {
       },
       // Siren Leader
       {
-        id: 12,
+        // id: 12,
         firstName: "Observer",
         lastName: "Alpha",
         email: "observer.alpha@azurL.io",

@@ -21,7 +21,7 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
-        id: 2,
+        // id: 2,
         "groupId": 5,
         "address": "Naval Command Base, Royal Navy Operations",
         "city": "Portsmouth",

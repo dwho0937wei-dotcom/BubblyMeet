@@ -21,7 +21,7 @@ module.exports = {
     */
     await queryInterface.bulkInsert(options, [
       {
-        id: 3,
+        // id: 3,
         groupId: 5,
         venueId: 2,
         name: "Strive, Wish, and Strategize",
