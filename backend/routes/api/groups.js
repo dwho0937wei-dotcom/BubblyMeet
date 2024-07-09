@@ -589,23 +589,26 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     const groups = await Group.findAll(
         {
-            include: [
-                {
-                    model: Membership,
-                    attributes: []
-                },
-                {
-                    model: GroupImage,
-                    required: false,
-                    where: { preview: true },
-                    attributes: []
-                }
-            ],
-            attributes: {
-                include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
-                [Sequelize.literal(`COALESCE(GroupImages.url, '')`), 'previewImage']]
-            },
-            group: ['Group.id', 'GroupImages.id', 'Memberships.id']
+            attributes: [
+                'id',
+                'organizerId',
+                'name',
+                'about',
+                'type',
+                'private',
+                'city',
+                'state',
+                'createdAt',
+                'updatedAt',
+                [
+                    Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE "Memberships"."groupId" = "Group"."id")'), 
+                    'numMembers'
+                ],
+                [
+                    Sequelize.literal('(SELECT (url) FROM GroupImages WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)'),
+                    'previewImage'
+                ]
+            ]
         }
     );
     res.json({Groups: groups});
