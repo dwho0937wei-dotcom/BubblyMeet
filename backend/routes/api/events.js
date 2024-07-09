@@ -404,27 +404,13 @@ router.get('/', async (req, res) => {
     const eventCriteria = {
         include: [
             {
-                model: User,
-                as: 'Attendee',
-                attributes: []
-            },
-            {
                 model: Venue,
                 attributes: ['id', 'city', 'state']
-            },
-            {
-                model: EventImage,
-                where: {preview: true},
-                attributes: [],
             },
             {
                 model: Group,
                 attributes: ['id', 'name', 'city', 'state']
             }
-        ],
-    // Grouping
-        group: [
-            'Event.id'
         ],
         attributes: [
             'id',
@@ -435,9 +421,15 @@ router.get('/', async (req, res) => {
             'startDate',
             'endDate',
     // Aggregating
-            [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"],
+            [
+                Sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id)'),
+                'numAttending'
+            ],
     // Extracting
-            [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]
+            [
+                Sequelize.literal('(SELECT url FROM EventImages WHERE preview = true AND eventId = Event.id)'),
+                'previewImage'
+            ]
         ]
     };
 
