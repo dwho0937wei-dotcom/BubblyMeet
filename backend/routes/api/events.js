@@ -110,7 +110,7 @@ router.post('/:eventId/images', async (req, res) => {
 
 // Change the status of an attendance for an event specified by its id
 router.put('/:eventId/attendance', async (req, res) => {
-    if (!userLoggedIn) {
+    if (!userLoggedIn(req)) {
         return requireAuth2(res);
     }
     const loginUser = getUserFromToken(req);
