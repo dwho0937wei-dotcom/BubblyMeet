@@ -387,7 +387,8 @@ router.get('/current', async (req, res) => {
     const groups = await Group.findAll({
         include: [
             {
-                model: Membership,
+                model: User,
+                as: 'Members',
                 attributes: []
             },
             {
@@ -398,16 +399,16 @@ router.get('/current', async (req, res) => {
             }
         ],
         attributes: {
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Memberships.id")), "numMembers"], 
-                      [Sequelize.literal(`COALESCE(GroupImages.url, '')`), 'previewImage']]
+            include: [[Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId =`Group`.`id`)'), 'numMembers'], 
+                      [Sequelize.literal(`(COALESCE(GroupImages.url, ''))`), 'previewImage']]
         },
         where: { 
             [Op.or]: [
                { organizerId: user.id },
-               Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = id AND Memberships.userId = ${user.id})`)
+               Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = 'Group'.'id' AND Memberships.userId = ${user.id})`)
             ]
         },
-        group: ['Group.id', 'GroupImages.id', 'Memberships.id']
+        group: ['Group.id', 'Members.id', 'GroupImages.id']
     });
     return res.json({Groups: groups});
 })
