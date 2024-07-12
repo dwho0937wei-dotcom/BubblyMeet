@@ -8,7 +8,24 @@ const { setTokenCookie, restoreUser, userLoggedIn } = require('../../utils/auth'
 
 const router = express.Router();
 
+// Sample Body Validation
+// const validateLogin = [
+//     check('credential')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .withMessage('Email or username is required'),
+//     check('password')
+//         .exists({ checkFalsy: true })
+//         .withMessage('Password is required'),
+//     handleValidationErrors
+// ];
+
+
 // Sign up the user
+const validateSignUp = [
+
+];
+
 router.post('/', async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
 
