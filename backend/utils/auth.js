@@ -32,35 +32,36 @@ const setTokenCookie = (res, user) => {
     });
   
     return token;
-  };
+};
 
+// Restore user?
 const restoreUser = (req, res, next) => {
-    // token parsed from cookies
-    const { token } = req.cookies;
-    req.user = null;
-  
-    return jwt.verify(token, secret, null, async (err, jwtPayload) => {
-      if (err) {
-        return next();
-      }
-  
-      try {
-        const { id } = jwtPayload.data;
-        req.user = await User.findByPk(id, {
-          attributes: {
-            include: ['email', 'createdAt', 'updatedAt']
-          }
-        });
-      } catch (e) {
-        res.clearCookie('token');
-        return next();
-      }
-  
-      if (!req.user) res.clearCookie('token');
-  
+  // token parsed from cookies
+  const { token } = req.cookies;
+  req.user = null;
+
+  return jwt.verify(token, secret, null, async (err, jwtPayload) => {
+    if (err) {
       return next();
-    });
-  };
+    }
+
+    try {
+      const { id } = jwtPayload.data;
+      req.user = await User.findByPk(id, {
+        attributes: {
+          include: ['email', 'createdAt', 'updatedAt']
+        }
+      });
+    } catch (e) {
+      res.clearCookie('token');
+      return next();
+    }
+
+    if (!req.user) res.clearCookie('token');
+
+    return next();
+  });
+};
 
 // If there is no current user, return an error
 const requireAuth = function (req, _res, next) {
@@ -71,7 +72,7 @@ const requireAuth = function (req, _res, next) {
     err.errors = { message: 'Authentication required' };
     err.status = 401;
     return next(err);
-  }
+}
 
 // --------------------------------------------------------------- Authentications --------------------------------------------------------------------
 
@@ -106,10 +107,12 @@ const requireProperAuth = function (res) {
   });
 };
 
-module.exports = { setTokenCookie, 
-                   restoreUser, 
-                   requireAuth, 
-                   userLoggedIn, 
-                   requireAuth2, 
-                   requireProperAuth 
-                 };
+// -------------------------------------------------------------------- Export -----------------------------------------------------------------------
+
+module.exports = 
+        { setTokenCookie, 
+          restoreUser, 
+          requireAuth, 
+          userLoggedIn, 
+          requireAuth2, 
+          requireProperAuth };
