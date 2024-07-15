@@ -37,10 +37,7 @@ const validateLogin = [
     handleValidationErrors
 ];
 
-router.post(
-    '/',
-    validateLogin, 
-    async (req, res) => {
+router.post('/', validateLogin, async (req, res) => {
         const { credential, password } = req.body;
 
         if (!credential || !password) {
