@@ -108,9 +108,51 @@ const validateVenue = [
   handleValidationErrors
 ];
 
+// Validate Event
+const today = new Date().toISOString();
+const validateEvent = [
+    check('name')
+        .exists({ checkFalsy: true })
+        .isLength({ min: 5 })
+        .withMessage('Name must be at least 5 characters'),
+    check('type')
+        .exists({ checkFalsy: true })
+        .isIn(['Online', 'In person'])
+        .withMessage("Type must be Online or In person"),
+    check('capacity')
+        .exists({ checkFalsy: true })
+        .isInt()
+        .withMessage('Capacity must be an integer'),
+    check('price')
+        .exists({ checkFalsy: true })
+        .isFloat({ min: 0 })
+        // .isDecimal({ decimal_digits: 2 })
+        .withMessage('Price is invalid'),
+    check('description')
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('Description is required'),
+    check('startDate')
+        .exists({ checkFalsy: true })
+        .isAfter(today)
+        .withMessage('Start date must be in the future'),
+    check('endDate')
+        .exists({ checkFalsy: true })
+        .custom((_endDate, { req }) => {
+            const startDate = req.body.startDate;
+            if (!check('endDate').isAfter(startDate)) {
+                throw new Error();
+            }
+            return true;
+        })
+        .withMessage('End date is less than start date'),
+    handleValidationErrors
+];
+
 module.exports = {
   validateLogin,
   validateSignUp,
   validateGroup,
-  validateVenue
+  validateVenue,
+  validateEvent
 };
