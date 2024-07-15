@@ -63,16 +63,6 @@ const restoreUser = (req, res, next) => {
   });
 };
 
-// If there is no current user, return an error
-const requireAuth = function (req, _res, next) {
-    if (req.user) return next();
-  
-    const err = new Error('Authentication required');
-    err.title = 'Authentication required';
-    err.errors = { message: 'Authentication required' };
-    err.status = 401;
-    return next(err);
-}
 
 // --------------------------------------------------------------- Authentications --------------------------------------------------------------------
 
@@ -90,12 +80,30 @@ const userLoggedIn = function (req) {
   return loggedIn;
 };
 
-// Error Response: Require Authentication
-const requireAuth2 = function (res) {
-  res.status(401);
-  return res.json({
-    message: "Authentication required"
-  });
+// If there is no current user, return an error
+// Error Response: 1st Require Authentication
+const requireAuth = function (req, _res, next) {
+    if (req.user) return next();
+  
+    const err = new Error('Authentication required');
+    err.title = 'Authentication required';
+    err.errors = { message: 'Authentication required' };
+    err.status = 401;
+    return next(err);
+}
+
+
+// Error Response: 2nd Require Authentication
+const requireAuth2 = function (req, _res, next) {
+  if (req.user) return next();
+
+  const err = new Error('Authentication required');
+  err.status = 401;
+  return next(err);
+  // res.status(401);
+  // return res.json({
+  //   message: "Authentication required"
+  // });
 };
 
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
