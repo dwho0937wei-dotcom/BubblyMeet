@@ -127,6 +127,13 @@ const validateEvent = [
         .exists({ checkFalsy: true })
         .isFloat({ min: 0 })
         // .isDecimal({ decimal_digits: 2 })
+        .custom(price => {
+            const places = price.toString().split('.');
+            if (places.length > 1 && places[1].length > 2) {
+                throw new Error();
+            }
+            return true;
+        })
         .withMessage('Price is invalid'),
     check('description')
         .exists({ checkFalsy: true })
