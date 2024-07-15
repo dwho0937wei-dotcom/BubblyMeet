@@ -3,12 +3,11 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
 
 const { User } = require('../../db/models');
 const { setTokenCookie, restoreUser, userLoggedIn } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
+const { validateLogin } = require('../../utils/validation');
 
 const router = express.Router();
 
@@ -26,17 +25,6 @@ router.get('/', async (req, res) => {
 })
 
 // Login user
-const validateLogin = [
-    check('credential')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .withMessage('Email or username is required'),
-    check('password')
-        .exists({ checkFalsy: true })
-        .withMessage('Password is required'),
-    handleValidationErrors
-];
-
 router.post('/', validateLogin, async (req, res) => {
         const { credential, password } = req.body;
 

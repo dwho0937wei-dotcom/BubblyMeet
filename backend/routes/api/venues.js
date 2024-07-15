@@ -6,11 +6,12 @@ const jwt = require('jsonwebtoken');
 const { User, Group, Membership, GroupImage, Sequelize, Venue } = require('../../db/models');
 const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
+const { validateVenue } = require('../../utils/validation');
 
 const router = express.Router();
 
 // Edit a venue specified by its id
-router.put('/:venueId', async (req, res) => {
+router.put('/:venueId', validateVenue, async (req, res) => {
     if (!userLoggedIn(req)) {
         return requireAuth2(res);
     }
