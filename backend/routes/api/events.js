@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
-const { validateEvent } = require('../../utils/validation');
+const { validateEvent, validateAttendance } = require('../../utils/validation');
 
 const router = express.Router();
 
@@ -110,7 +110,7 @@ router.post('/:eventId/images', async (req, res) => {
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', async (req, res) => {
+router.put('/:eventId/attendance', validateAttendance, async (req, res) => {
     if (!userLoggedIn) {
         return requireAuth2(res);
     }
