@@ -156,10 +156,20 @@ const validateEvent = [
     handleValidationErrors
 ];
 
+// Validate Attendance
+const validateAttendance = [
+    check('status')
+        .exists({ checkFalsy: true })
+        .not().isIn(['pending'])
+        .withMessage('Cannot change an attendance status to pending'),
+    handleValidationErrors
+];
+
 module.exports = {
   validateLogin,
   validateSignUp,
   validateGroup,
   validateVenue,
-  validateEvent
+  validateEvent,
+  validateAttendance
 };
