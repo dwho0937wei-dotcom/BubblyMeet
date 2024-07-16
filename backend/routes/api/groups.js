@@ -484,13 +484,24 @@ router.delete('/:groupId', requireAuth2, async (req, res) => {
 
 // Create a group
 router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
+    res.status(201);
+
+    // User creates Group
     const user = getUserFromToken(req);
+    console.log(user);
     const { name, about, type, private, city, state } = req.body;
     const newGroup = await Group.create({
         name, about, type, private, city, state,
         organizerId: user.id
     });
-    res.status(201);
+
+    // User becomes the host of its created Group
+    await Membership.create({
+        userId: user.id,
+        groupId: newGroup.dataValues.id,
+        status: 'host'
+    });
+    
     res.json(newGroup);
 })
 
