@@ -288,8 +288,10 @@ router.post('/:groupId/images', restoreUser, requireAuth2, async (req, res) => {
 
 // Create an event for a group specified by its id
 router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async (req, res) => {
+    // Identify current user
     const user = getUserFromToken(req);
 
+    // Identify group
     const groupId = +req.params.groupId;
     const group = await Group.findByPk(groupId);
     if (!group) {
@@ -299,6 +301,7 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async 
         })
     }
 
+    // Verify if the current user is the organizer or co-host of the specified group
     const coHost = await Membership.findOne({
         where: {userId: user.id, groupId, status: 'co-host'}
     });
@@ -306,7 +309,9 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async 
         return requireProperAuth(res);
     }
 
+    // Get the req.body
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+    // Verify the venue's existence
     const venue = await Venue.findByPk(venueId);
     if (!venue) {
         res.status(404);
@@ -315,9 +320,19 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async 
         })
     }
 
+    // Create an event
     const newEvent = await Event.create({
         venueId, groupId, name, type, capacity, price, description, startDate, endDate
     });
+
+    // Current user becomes the host of the event
+    await Attendance.create({
+        eventId: newEvent.dataValues.id,
+        userId: user.id,
+        status: 'host'
+    });
+
+    // Create and respond with the proper JSON for the new event
     const newEventJson = newEvent.toJSON();
     delete newEventJson.createdAt;
     delete newEventJson.updatedAt;
