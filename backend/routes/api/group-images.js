@@ -10,10 +10,7 @@ const { getUserFromToken } = require('../../utils/helper');
 const router = express.Router();
 
 // Delete an image for a group
-router.delete('/:imageId', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.delete('/:imageId', requireAuth2, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const imageId = req.params.imageId;

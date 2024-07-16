@@ -11,10 +11,7 @@ const { validateVenue } = require('../../utils/validation');
 const router = express.Router();
 
 // Edit a venue specified by its id
-router.put('/:venueId', validateVenue, async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.put('/:venueId', requireAuth2, validateVenue, async (req, res) => {
     const user = getUserFromToken(req);
 
     const venueId = req.params.venueId;

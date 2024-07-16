@@ -27,10 +27,7 @@ const queryBadRequest = function (res) {
 }
 
 // Delete attendance to an event specified by its id
-router.delete('/:eventId/attendance/:userId', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.delete('/:eventId/attendance/:userId', requireAuth2, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const { eventId, userId } = req.params;
@@ -73,10 +70,7 @@ router.delete('/:eventId/attendance/:userId', async (req, res) => {
 })
 
 // Add an Image to an Event based on its id
-router.post('/:eventId/images', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:eventId/images', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = +req.params.eventId;
@@ -110,10 +104,7 @@ router.post('/:eventId/images', async (req, res) => {
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', validateAttendance, async (req, res) => {
-    if (!userLoggedIn) {
-        return requireAuth2(res);
-    }
+router.put('/:eventId/attendance', requireAuth2, validateAttendance, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -177,10 +168,7 @@ router.put('/:eventId/attendance', validateAttendance, async (req, res) => {
 })
 
 // Request to attend an event based on its id
-router.post('/:eventId/attendance', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:eventId/attendance', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -264,10 +252,7 @@ router.get('/:eventId/attendees', async (req, res) => {
 })
 
 // Edit an event specified by its id
-router.put('/:eventId', validateEvent, async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.put('/:eventId', requireAuth2, validateEvent, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -350,10 +335,7 @@ router.get('/:eventId', async (req, res) => {
 })
 
 // Delete an event specified by its id
-router.delete('/:eventId', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.delete('/:eventId', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;

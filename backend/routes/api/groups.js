@@ -11,10 +11,7 @@ const { validateGroup, validateVenue, validateEvent } = require('../../utils/val
 const router = express.Router();
 
 // Delete a membership to a group specified by id
-router.delete('/:groupId/membership/:memberId', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.delete('/:groupId/membership/:memberId', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
@@ -56,10 +53,7 @@ router.delete('/:groupId/membership/:memberId', async (req, res) => {
 })
 
 // Create a new venue for a group specified by its id
-router.post('/:groupId/venues', validateVenue, async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:groupId/venues', requireAuth2, validateVenue, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -115,10 +109,7 @@ router.get('/:groupId/venues', requireAuth2, async (req, res) => {
 })
 
 // Change the status of a membership for a group specified by its id
-router.put('/:groupId/membership', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.put('/:groupId/membership', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -189,10 +180,7 @@ router.put('/:groupId/membership', async (req, res) => {
 })
 
 // Request a membership for a group specified by its id
-router.post('/:groupId/membership', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:groupId/membership', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -273,10 +261,7 @@ router.get('/:groupId/members', async (req, res) => {
 })
 
 // Add an image to a group specified by its id
-router.post('/:groupId/images', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:groupId/images', requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -302,10 +287,7 @@ router.post('/:groupId/images', async (req, res) => {
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', validateEvent, async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/:groupId/events', requireAuth2, validateEvent, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
@@ -472,11 +454,7 @@ router.get('/:groupId', async (req, res) => {
 })
 
 // Delete the group specified by its id
-router.delete('/:groupId', async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
-
+router.delete('/:groupId', requireAuth2, async (req, res) => {
     const user = await getUserFromToken(req);
 
     const groupId = req.params.groupId;
