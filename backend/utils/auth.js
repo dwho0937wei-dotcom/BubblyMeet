@@ -34,7 +34,7 @@ const setTokenCookie = (res, user) => {
     return token;
 };
 
-// Restore user?
+// Get user from the cookie token
 const restoreUser = (req, res, next) => {
   // token parsed from cookies
   const { token } = req.cookies;
@@ -62,7 +62,6 @@ const restoreUser = (req, res, next) => {
     return next();
   });
 };
-
 
 // --------------------------------------------------------------- Authentications --------------------------------------------------------------------
 

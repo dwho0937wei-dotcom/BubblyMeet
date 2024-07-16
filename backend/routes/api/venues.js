@@ -4,14 +4,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue } = require('../../db/models');
-const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
 const { validateVenue } = require('../../utils/validation');
 
 const router = express.Router();
 
 // Edit a venue specified by its id
-router.put('/:venueId', requireAuth2, validateVenue, async (req, res) => {
+router.put('/:venueId', restoreUser, requireAuth2, validateVenue, async (req, res) => {
     const user = getUserFromToken(req);
 
     const venueId = req.params.venueId;

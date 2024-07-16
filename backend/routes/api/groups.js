@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
-const { userLoggedIn, requireAuth2, requireProperAuth, requireAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth, requireAuth2, requireProperAuth} = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
@@ -53,7 +53,7 @@ router.delete('/:groupId/membership/:memberId', requireAuth2, async (req, res) =
 })
 
 // Create a new venue for a group specified by its id
-router.post('/:groupId/venues', requireAuth2, validateVenue, async (req, res) => {
+router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -84,7 +84,7 @@ router.post('/:groupId/venues', requireAuth2, validateVenue, async (req, res) =>
 })
 
 // Get all venues for a group specified by its id
-router.get('/:groupId/venues', requireAuth2, async (req, res) => {
+router.get('/:groupId/venues', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -261,7 +261,7 @@ router.get('/:groupId/members', async (req, res) => {
 })
 
 // Add an image to a group specified by its id
-router.post('/:groupId/images', requireAuth2, async (req, res) => {
+router.post('/:groupId/images', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -287,7 +287,7 @@ router.post('/:groupId/images', requireAuth2, async (req, res) => {
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', requireAuth2, validateEvent, async (req, res) => {
+router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
@@ -326,7 +326,9 @@ router.post('/:groupId/events', requireAuth2, validateEvent, async (req, res) =>
 })
 
 // Get all groups joined or organized by the current user
-router.get('/current', requireAuth2, async (req, res) => {
+router.get('/current', restoreUser, requireAuth2, async (req, res) => {
+    const user = getUserFromToken(req);
+
     const groups = await Group.findAll({
         include: [
             {
@@ -398,7 +400,7 @@ router.get('/:groupId/events', async (req, res) => {
 })
 
 // Edit a group
-router.put('/:groupId', requireAuth2, validateGroup, async (req, res) => {
+router.put('/:groupId', restoreUser, requireAuth2, validateGroup, async (req, res) => {
     const user = await getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -444,6 +446,10 @@ router.get('/:groupId', async (req, res) => {
         })
     }
 
+    const members = await group.getMembers();
+    const numMembers = members.length;
+    group.dataValues.numMembers = numMembers;
+
     let organizer = await User.findByPk(group.organizerId, {
         attributes: ['id', 'firstName', 'lastName']
     });
@@ -477,10 +483,7 @@ router.delete('/:groupId', requireAuth2, async (req, res) => {
 })
 
 // Create a group
-router.post('/', requireAuth2, validateGroup, async (req, res) => {
-    if (!userLoggedIn(req)) {
-        return requireAuth2(res);
-    }
+router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
     const user = getUserFromToken(req);
     const { name, about, type, private, city, state } = req.body;
     const newGroup = await Group.create({

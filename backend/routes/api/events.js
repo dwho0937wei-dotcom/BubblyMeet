@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
-const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
 
@@ -70,7 +70,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth2, async (req, res) => 
 })
 
 // Add an Image to an Event based on its id
-router.post('/:eventId/images', requireAuth2, async (req, res) => {
+router.post('/:eventId/images', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = +req.params.eventId;
