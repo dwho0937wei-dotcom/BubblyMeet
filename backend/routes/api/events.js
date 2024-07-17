@@ -321,17 +321,27 @@ router.get('/:eventId', async (req, res) => {
                 separate: true
             },
             {
-                model: Attendance,
+                model: User,
+                as: 'Attendee',
                 attributes: []
             }
         ],
         attributes: {
             exclude: ['createdAt', 'updatedAt'],
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendances.id")), 'numAttending']]
+            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), 'numAttending']]
         }
     });
+
+    // Verify the specified event's existence
+    if (event.dataValues.id === null) {
+        res.status(404);
+        return res.json({
+            message: "Event couldn't be found"
+        })
+    }
+
     res.status(200);
-    res.json(event);
+    return res.json(event);
 })
 
 // Delete an event specified by its id

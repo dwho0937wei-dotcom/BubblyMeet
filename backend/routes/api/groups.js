@@ -377,6 +377,16 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
 router.get('/:groupId/events', async (req, res) => {
     const groupId = req.params.groupId;
 
+    // Verify the specified group's existence
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    // Find all events related to the specified group
     const events = await Event.findAll({
         where: { groupId },
         include: [
@@ -408,7 +418,7 @@ router.get('/:groupId/events', async (req, res) => {
         ]
     });
     res.status(200);
-    res.json({Events: events});
+    return res.json({Events: events});
 })
 
 // Edit a group
