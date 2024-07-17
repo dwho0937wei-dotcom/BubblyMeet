@@ -109,7 +109,7 @@ router.get('/:groupId/venues', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Change the status of a membership for a group specified by its id
-router.put('/:groupId/membership', requireAuth2, async (req, res) => {
+router.put('/:groupId/membership', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -180,7 +180,7 @@ router.put('/:groupId/membership', requireAuth2, async (req, res) => {
 })
 
 // Request a membership for a group specified by its id
-router.post('/:groupId/membership', requireAuth2, async (req, res) => {
+router.post('/:groupId/membership', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
@@ -214,7 +214,7 @@ router.post('/:groupId/membership', requireAuth2, async (req, res) => {
     }
 
     res.status(200);
-    const newMember = await group.addUser(user.id, { through: { status:'pending' } });
+    const newMember = await group.addMember(user.id, { through: { status:'pending' } });
     const payload = {
         memberId: newMember[0].dataValues.userId,
         status: newMember[0].dataValues.status

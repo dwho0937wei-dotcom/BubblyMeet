@@ -252,7 +252,7 @@ router.get('/:eventId/attendees', async (req, res) => {
 })
 
 // Edit an event specified by its id
-router.put('/:eventId', requireAuth2, validateEvent, async (req, res) => {
+router.put('/:eventId', restoreUser, requireAuth2, validateEvent, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
