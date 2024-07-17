@@ -381,7 +381,7 @@ router.get('/:groupId/events', async (req, res) => {
         where: { groupId },
         include: [
             {
-                model: Attendance,
+                model: User,
                 attributes: []
             },
             {
