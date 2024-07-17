@@ -382,6 +382,7 @@ router.get('/:groupId/events', async (req, res) => {
         include: [
             {
                 model: User,
+                as: 'Attendee',
                 attributes: []
             },
             {
@@ -399,15 +400,11 @@ router.get('/:groupId/events', async (req, res) => {
             }
         ],
         attributes: {
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendances.id")), "numAttending"],     
+            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"],     
                       [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]]
         },
         group: [
             'Event.id',
-            'Venue.id',
-            'Group.id',
-            'EventImages.id',
-            'Attendances.id'
         ]
     });
     res.status(200);
