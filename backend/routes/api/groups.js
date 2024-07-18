@@ -11,7 +11,7 @@ const { validateGroup, validateVenue, validateEvent } = require('../../utils/val
 const router = express.Router();
 
 // Delete a membership to a group specified by id
-router.delete('/:groupId/membership/:memberId', requireAuth2, async (req, res) => {
+router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
@@ -235,18 +235,26 @@ router.get('/:groupId/members', async (req, res) => {
 
     let user;
     let isOrganizer = false;
+    let isCoHost = false;
     if (userLoggedIn(req)) {
         user = getUserFromToken(req);
         if (user.id === group.dataValues.organizerId) {
             isOrganizer = true;
         }
+        const sameCoHost = await Membership.findOne({
+            groupId, userId: user.id, status: 'co-host'
+        });
+        if (sameCoHost) {
+            isCoHost = true;
+        }
     }
+
 
     let memberCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
     };
-    if (!isOrganizer) {
+    if (!isOrganizer && !isCoHost) {
         memberCriteria.where = 
         {
             '$Membership.status$': {
@@ -254,7 +262,7 @@ router.get('/:groupId/members', async (req, res) => {
             }
         }
     }
-    const members = await group.getUsers(memberCriteria);
+    const members = await group.getMembers(memberCriteria);
 
     res.status(200);
     res.json({ Members: members });
@@ -482,7 +490,7 @@ router.get('/:groupId', async (req, res) => {
 })
 
 // Delete the group specified by its id
-router.delete('/:groupId', requireAuth2, async (req, res) => {
+router.delete('/:groupId', restoreUser, requireAuth2, async (req, res) => {
     const user = await getUserFromToken(req);
 
     const groupId = req.params.groupId;

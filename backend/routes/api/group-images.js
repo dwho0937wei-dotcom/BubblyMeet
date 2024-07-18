@@ -4,13 +4,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
-const { userLoggedIn, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
 
 const router = express.Router();
 
 // Delete an image for a group
-router.delete('/:imageId', requireAuth2, async (req, res) => {
+router.delete('/:imageId', restoreUser, requireAuth2, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const imageId = req.params.imageId;

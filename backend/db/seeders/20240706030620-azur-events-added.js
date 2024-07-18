@@ -25,7 +25,7 @@ module.exports = {
         groupId: 5,
         venueId: 2,
         name: "Strive, Wish, and Strategize",
-        type: "In Person",
+        type: "In person",
         startDate: "2018-09-13 00:00:00",
         endDate: "2018-09-30 00:00:00",
         description: 'The event "Strive, Wish, and Strategize" in Azur Lane presents a critical period for the Royal Navy, focusing on their strategic maneuvers and the resilience of their fleet. Set against the backdrop of escalating tensions with the Sakura Empire and Iron Blood, the Royal Navy shipgirls are tasked with safeguarding their interests and showcasing their naval prowess.',

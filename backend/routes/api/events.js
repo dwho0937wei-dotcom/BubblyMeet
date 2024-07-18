@@ -27,7 +27,7 @@ const queryBadRequest = function (res) {
 }
 
 // Delete attendance to an event specified by its id
-router.delete('/:eventId/attendance/:userId', requireAuth2, async (req, res) => {
+router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const { eventId, userId } = req.params;
@@ -48,7 +48,8 @@ router.delete('/:eventId/attendance/:userId', requireAuth2, async (req, res) => 
 
     const groupId = event.dataValues.groupId;
     const group = await Group.findByPk(groupId);
-    if (group.dataValues.organizerId !== loginUser.id && userId !== loginUser.id) {
+
+    if (group.dataValues.organizerId !== loginUser.id && +userId !== loginUser.id) {
         return requireProperAuth(res);
     }
 
@@ -83,7 +84,7 @@ router.post('/:eventId/images', restoreUser, requireAuth2, async (req, res) => {
     }
 
     const userAttendance = await Attendance.findOne({
-        where: { userId: user.id, eventId }
+        where: { userId: user.id, eventId, status: { [Op.not]: 'pending' } }
     });
     if (!userAttendance) {
         return requireProperAuth(res);
@@ -104,7 +105,7 @@ router.post('/:eventId/images', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', requireAuth2, validateAttendance, async (req, res) => {
+router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -168,7 +169,7 @@ router.put('/:eventId/attendance', requireAuth2, validateAttendance, async (req,
 })
 
 // Request to attend an event based on its id
-router.post('/:eventId/attendance', requireAuth2, async (req, res) => {
+router.post('/:eventId/attendance', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -182,7 +183,7 @@ router.post('/:eventId/attendance', requireAuth2, async (req, res) => {
 
     const groupId = event.dataValues.groupId;
     const sameMember = await Membership.findOne({
-        where: {userId: user.id, groupId}
+        where: {userId: user.id, groupId, status: { [Op.not]: 'pending' } }
     });
     if (!sameMember) {
         return requireProperAuth(res);
@@ -345,7 +346,7 @@ router.get('/:eventId', async (req, res) => {
 })
 
 // Delete an event specified by its id
-router.delete('/:eventId', requireAuth2, async (req, res) => {
+router.delete('/:eventId', restoreUser, requireAuth2, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
