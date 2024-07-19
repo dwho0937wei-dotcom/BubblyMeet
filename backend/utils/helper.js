@@ -9,6 +9,21 @@ const getUserFromToken = function (req) {
     return user;
 } 
 
+// Validate if group exist
+const groupExists = async function (req, res, next) {
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        res.status(404);
+        return res.json({
+            message: "Group couldn't be found"
+        })
+    }
+
+    return next();
+}
+
 module.exports = {
-    getUserFromToken
+    getUserFromToken,
+    groupExists
 }

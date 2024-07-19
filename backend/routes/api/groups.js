@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth, requireAuth2, requireProperAuth} = require('../../utils/auth');
-const { getUserFromToken } = require('../../utils/helper');
+const { getUserFromToken, groupExists } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
 const router = express.Router();
@@ -53,21 +53,14 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, async
 })
 
 // Create a new venue for a group specified by its id
-router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, async (req, res) => {
+router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
-    const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-
     const coHost = await Membership.findOne({
         where: {userId: user.id, groupId, status: 'co-host'}
     });
+    const group = await Group.findByPk(groupId);
     if (group.dataValues.organizerId !== user.id && !coHost) {
         return requireProperAuth(res);
     }
