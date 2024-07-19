@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth, requireAuth2, requireProperAuth} = require('../../utils/auth');
-const { getUserFromToken, groupExists } = require('../../utils/helper');
+const { getUserFromToken, groupExists, venueExists } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
 const router = express.Router();
@@ -249,7 +249,7 @@ router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, async (r
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, async (req, res) => {
+router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, venueExists, async (req, res) => {
     // Identify current user
     const user = getUserFromToken(req);
 
@@ -269,12 +269,6 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupE
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
     // Verify the venue's existence
     const venue = await Venue.findByPk(venueId);
-    if (!venue) {
-        res.status(404);
-        return res.json({
-            message: "Venue couldn't be found"
-        })
-    }
 
     // Create an event
     const newEvent = await Event.create({

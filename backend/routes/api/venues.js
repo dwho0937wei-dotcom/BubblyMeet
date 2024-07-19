@@ -5,23 +5,17 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
-const { getUserFromToken } = require('../../utils/helper');
+const { getUserFromToken, venueExists } = require('../../utils/helper');
 const { validateVenue } = require('../../utils/validation');
 
 const router = express.Router();
 
 // Edit a venue specified by its id
-router.put('/:venueId', restoreUser, requireAuth2, validateVenue, async (req, res) => {
+router.put('/:venueId', restoreUser, requireAuth2, validateVenue, venueExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const venueId = req.params.venueId;
     const venue = await Venue.findByPk(venueId);
-    if (!venue) {
-        res.status(404);
-        return res.json({
-            message: "Venue couldn't be found"
-        })
-    }
 
     const groupId = venue.dataValues.groupId;
     const group = await Group.findByPk(groupId);

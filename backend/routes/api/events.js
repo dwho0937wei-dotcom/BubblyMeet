@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
-const { getUserFromToken } = require('../../utils/helper');
+const { getUserFromToken, venueExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
 
 const router = express.Router();
@@ -253,7 +253,7 @@ router.get('/:eventId/attendees', async (req, res) => {
 })
 
 // Edit an event specified by its id
-router.put('/:eventId', restoreUser, requireAuth2, validateEvent, async (req, res) => {
+router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -276,12 +276,6 @@ router.put('/:eventId', restoreUser, requireAuth2, validateEvent, async (req, re
 
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
     const venue = await Venue.findByPk(venueId);
-    if (!venue) {
-        res.status(404);
-        res.json({
-            message: "Venue couldn't be found"
-        })
-    }
 
     event.set({
         venueId, name, type, capacity, price, description, startDate, endDate
