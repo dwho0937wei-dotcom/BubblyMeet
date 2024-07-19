@@ -65,6 +65,23 @@ const restoreUser = (req, res, next) => {
 
 // --------------------------------------------------------------- Authentications --------------------------------------------------------------------
 
+// Custom error display for authentication
+class AuthenError extends Error {
+  constructor() {
+    super();
+    this.status = 401;
+    this.title = 'Client Error'
+    this.message = 'Authentication required';
+    delete this.stack;
+  }
+
+  toJSON() {
+    return {
+      message: this.message,
+    };
+  }
+}
+
 // If the user is logged in, return true
 const userLoggedIn = function (req) {
   const { token } = req.cookies;
@@ -81,28 +98,21 @@ const userLoggedIn = function (req) {
 
 // If there is no current user, return an error
 // Error Response: 1st Require Authentication
-const requireAuth = function (req, _res, next) {
-    if (req.user) return next();
-  
-    const err = new Error('Authentication required');
-    err.title = 'Authentication required';
-    err.errors = { message: 'Authentication required' };
-    err.status = 401;
-    return next(err);
-}
-
-
-// Error Response: 2nd Require Authentication
-const requireAuth2 = function (req, _res, next) {
+const requireAuth = function (req, res, next) {
   if (req.user) return next();
 
-  const err = new Error('Authentication required');
-  err.status = 401;
+  const err = new AuthenError();
+  res.status(err.status);
   return next(err);
-  // res.status(401);
-  // return res.json({
-  //   message: "Authentication required"
-  // });
+}
+
+// Error Response: 2nd Require Authentication
+const requireAuth2 = function (req, res, next) {
+  if (req.user) return next();
+
+  const err = new AuthenError();
+  res.status(err.status)
+  return next(err);
 };
 
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
