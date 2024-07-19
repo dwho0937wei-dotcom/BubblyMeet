@@ -11,17 +11,11 @@ const { validateGroup, validateVenue, validateEvent } = require('../../utils/val
 const router = express.Router();
 
 // Delete a membership to a group specified by id
-router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, async (req, res) => {
+router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     const memberId = +req.params.memberId;
     const memberUser = await User.findByPk(memberId);
@@ -77,21 +71,14 @@ router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, groupE
 })
 
 // Get all venues for a group specified by its id
-router.get('/:groupId/venues', restoreUser, requireAuth2, async (req, res) => {
+router.get('/:groupId/venues', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
-    const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-
     const coHost = await Membership.findOne({
         where: {userId: user.id, groupId, status: 'co-host'}
     });
+    const group = await Group.findByPk(groupId);
     if (group.dataValues.organizerId !== user.id && !coHost) {
         return requireProperAuth(res);
     }
@@ -102,17 +89,8 @@ router.get('/:groupId/venues', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Change the status of a membership for a group specified by its id
-router.put('/:groupId/membership', restoreUser, requireAuth2, async (req, res) => {
+router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
-
-    const groupId = req.params.groupId;
-    const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     const { memberId, status } = req.body;
     const memberUser = await User.findByPk(memberId);
@@ -133,6 +111,8 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, async (req, res) =
         });
     }
 
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
     if (status === 'pending') {
         res.status(400);
         return res.json({
@@ -173,18 +153,10 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, async (req, res) =
 })
 
 // Request a membership for a group specified by its id
-router.post('/:groupId/membership', restoreUser, requireAuth2, async (req, res) => {
+router.post('/:groupId/membership', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
-    const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
-
     const sameMember = await Membership.findOne({
         where: {
             userId: user.id,
@@ -207,6 +179,7 @@ router.post('/:groupId/membership', restoreUser, requireAuth2, async (req, res) 
     }
 
     res.status(200);
+    const group = await Group.findByPk(groupId);
     const newMember = await group.addMember(user.id, { through: { status:'pending' } });
     const payload = {
         memberId: newMember[0].dataValues.userId,
@@ -216,15 +189,9 @@ router.post('/:groupId/membership', restoreUser, requireAuth2, async (req, res) 
 })
 
 // Get all members of a group specified by its id
-router.get('/:groupId/members', async (req, res) => {
+router.get('/:groupId/members', groupExists, async (req, res) => {
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     let user;
     let isOrganizer = false;
@@ -262,17 +229,11 @@ router.get('/:groupId/members', async (req, res) => {
 })
 
 // Add an image to a group specified by its id
-router.post('/:groupId/images', restoreUser, requireAuth2, async (req, res) => {
+router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
     if (group.dataValues.organizerId !== user.id) {
         return requireProperAuth(res);
     }
@@ -288,19 +249,13 @@ router.post('/:groupId/images', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, async (req, res) => {
+router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, async (req, res) => {
     // Identify current user
     const user = getUserFromToken(req);
 
     // Identify group
     const groupId = +req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     // Verify if the current user is the organizer or co-host of the specified group
     const coHost = await Membership.findOne({
@@ -375,17 +330,11 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Get all events of a group specified by its id
-router.get('/:groupId/events', async (req, res) => {
+router.get('/:groupId/events', groupExists, async (req, res) => {
     const groupId = req.params.groupId;
 
     // Verify the specified group's existence
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     // Find all events related to the specified group
     const events = await Event.findAll({
@@ -423,17 +372,11 @@ router.get('/:groupId/events', async (req, res) => {
 })
 
 // Edit a group
-router.put('/:groupId', restoreUser, requireAuth2, validateGroup, async (req, res) => {
+router.put('/:groupId', restoreUser, requireAuth2, validateGroup, groupExists, async (req, res) => {
     const user = await getUserFromToken(req);
 
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
     if (group.dataValues.organizerId !== user.id) {
         return requireProperAuth(res);
     }
@@ -448,7 +391,7 @@ router.put('/:groupId', restoreUser, requireAuth2, validateGroup, async (req, re
 })
 
 // Get details from a group specified by its id
-router.get('/:groupId', async (req, res) => {
+router.get('/:groupId', groupExists, async (req, res) => {
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId, {
         include: [
@@ -462,12 +405,6 @@ router.get('/:groupId', async (req, res) => {
             }
         ]
     })
-    if (!group) {
-        res.status(404);
-        res.json({
-            message: "Group couldn't be found"
-        })
-    }
 
     const members = await group.getMembers();
     const numMembers = members.length;
@@ -483,17 +420,11 @@ router.get('/:groupId', async (req, res) => {
 })
 
 // Delete the group specified by its id
-router.delete('/:groupId', restoreUser, requireAuth2, async (req, res) => {
+router.delete('/:groupId', restoreUser, requireAuth2, groupExists, async (req, res) => {
     const user = await getUserFromToken(req);
 
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
-    if (!group) {
-        res.status(404);
-        return res.json({
-            message: "Group couldn't be found"
-        })
-    }
     if (group.dataValues.organizerId !== user.id) {
         return requireProperAuth(res);
     }

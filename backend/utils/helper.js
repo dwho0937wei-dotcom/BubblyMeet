@@ -1,6 +1,8 @@
 // backend/utils/helper.js
 const jwt = require('jsonwebtoken');
 
+const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../backend/db/models');
+
 // Getting Current User From Token
 const getUserFromToken = function (req) {
     const { token } = req.cookies;
