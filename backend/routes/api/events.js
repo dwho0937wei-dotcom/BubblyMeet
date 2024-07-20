@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
-const { getUserFromToken, venueExists } = require('../../utils/helper');
+const { getUserFromToken, venueExists, eventExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
 
 const router = express.Router();
@@ -27,17 +27,11 @@ const queryBadRequest = function (res) {
 }
 
 // Delete attendance to an event specified by its id
-router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, async (req, res) => {
+router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, eventExists, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const { eventId, userId } = req.params;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        return res.json({
-            message: "Event couldn't be found"
-        });
-    }
     const user = await User.findByPk(userId);
     if (!user) {
         res.status(404);
@@ -71,17 +65,10 @@ router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, async (
 })
 
 // Add an Image to an Event based on its id
-router.post('/:eventId/images', restoreUser, requireAuth2, async (req, res) => {
+router.post('/:eventId/images', restoreUser, requireAuth2, eventExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = +req.params.eventId;
-    const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        res.json({
-            message: "Event couldn't be found"
-        });
-    }
 
     const userAttendance = await Attendance.findOne({
         where: { userId: user.id, eventId, status: { [Op.not]: 'pending' } }
@@ -105,17 +92,11 @@ router.post('/:eventId/images', restoreUser, requireAuth2, async (req, res) => {
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, async (req, res) => {
+router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, eventExists, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        return res.json({
-            message: "Event couldn't be found"
-        })
-    }
 
     const group = await event.getGroup();
     const coHost = await Membership.findOne({
@@ -169,17 +150,11 @@ router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance
 })
 
 // Request to attend an event based on its id
-router.post('/:eventId/attendance', restoreUser, requireAuth2, async (req, res) => {
+router.post('/:eventId/attendance', restoreUser, requireAuth2, eventExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        res.json({
-            message: "Event couldn't be found"
-        })
-    }
 
     const groupId = event.dataValues.groupId;
     const sameMember = await Membership.findOne({
@@ -217,15 +192,9 @@ router.post('/:eventId/attendance', restoreUser, requireAuth2, async (req, res) 
 })
 
 // Get all attendees of an event specified by its id
-router.get('/:eventId/attendees', async (req, res) => {
+router.get('/:eventId/attendees', eventExists, async (req, res) => {
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        res.json({
-            message: "Event couldn't be found"
-        })
-    }
 
     res.status(200);
     const attendanceCriteria = {
@@ -253,17 +222,11 @@ router.get('/:eventId/attendees', async (req, res) => {
 })
 
 // Edit an event specified by its id
-router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, async (req, res) => {
+router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, eventExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        res.json({
-            message: "Event couldn't be found"
-        })
-    }
     const groupId = event.dataValues.groupId;
     const group = await Group.findByPk(groupId);
     
@@ -298,7 +261,7 @@ router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, a
 })
 
 // Get details of an event specified by its id
-router.get('/:eventId', async (req, res) => {
+router.get('/:eventId', eventExists, async (req, res) => {
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId, {
         include: [
@@ -327,30 +290,16 @@ router.get('/:eventId', async (req, res) => {
         }
     });
 
-    // Verify the specified event's existence
-    if (event.dataValues.id === null) {
-        res.status(404);
-        return res.json({
-            message: "Event couldn't be found"
-        })
-    }
-
     res.status(200);
     return res.json(event);
 })
 
 // Delete an event specified by its id
-router.delete('/:eventId', restoreUser, requireAuth2, async (req, res) => {
+router.delete('/:eventId', restoreUser, requireAuth2, eventExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
-    if (!event) {
-        res.status(404);
-        res.json({
-            message: "Event couldn't be found"
-        })
-    }
     const groupId = event.dataValues.groupId;
     const group = await Group.findByPk(groupId);
     

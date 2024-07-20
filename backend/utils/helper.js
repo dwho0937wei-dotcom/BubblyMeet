@@ -46,10 +46,53 @@ const venueExists = async function (req, res, next) {
     return next();
 }
 
+// Validate if event exist
+const eventExists = async function (req, res, next) {
+    const eventId = req.params.eventId;
+    const event = await Event.findByPk(eventId);
+    if (!event) {
+        res.status(404);
+        return res.json({
+            message: "Event couldn't be found"
+        })
+    }
 
+    return next();
+}
+
+// Validate if event-image exist
+const eventImageExists = async function (req, res, next) {
+    const eventImageId = req.params.imageId;
+    const eventImage = await EventImage.findByPk(eventImageId);
+    if (!eventImage) {
+        res.status(404);
+        return res.json({
+            message: "Event Image couldn't be found"
+        })
+    }
+
+    return next();
+}
+
+// Validate if group-image exist
+const groupImageExists = async function (req, res, next) {
+    const groupImageId = req.params.imageId;
+    const groupImage = await GroupImage.findByPk(groupImageId);
+    if (!groupImage) {
+        res.status(404);
+        return res.json({
+            message: "Group Image couldn't be found"
+        })
+    }
+
+    return next();
+}
 
 module.exports = {
     getUserFromToken,
     groupExists,
-    venueExists
+    venueExists,
+    eventExists,
+    eventImageExists,
+    groupImageExists
 }

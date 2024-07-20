@@ -5,23 +5,17 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
-const { getUserFromToken } = require('../../utils/helper');
+const { getUserFromToken, eventImageExists } = require('../../utils/helper');
 
 const router = express.Router();
 
 // Delete an image for an event
-router.delete('/:imageId', restoreUser, requireAuth2, async (req, res) => {
+router.delete('/:imageId', restoreUser, requireAuth2, eventImageExists, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const imageId = req.params.imageId;
     const image = await EventImage.findByPk(imageId);
-    if (!image) {
-        res.status(404);
-        return res.json({
-            message: "Event Image couldn't be found"
-        })
-    }
-
+    
     const event = await image.getEvent();
     const groupId = event.dataValues.groupId;
     const group = await Group.findByPk(groupId);
