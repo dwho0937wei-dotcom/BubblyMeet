@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
-const { getUserFromToken, venueExists, eventExists } = require('../../utils/helper');
+const { getUserFromToken, venueExists, eventExists, userExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
 
 const router = express.Router();
@@ -27,18 +27,11 @@ const queryBadRequest = function (res) {
 }
 
 // Delete attendance to an event specified by its id
-router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, eventExists, async (req, res) => {
+router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, eventExists, userExists, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const { eventId, userId } = req.params;
     const event = await Event.findByPk(eventId);
-    const user = await User.findByPk(userId);
-    if (!user) {
-        res.status(404);
-        return res.json({
-            message: "User couldn't be found"
-        });
-    }
 
     const groupId = event.dataValues.groupId;
     const group = await Group.findByPk(groupId);
@@ -92,7 +85,7 @@ router.post('/:eventId/images', restoreUser, requireAuth2, eventExists, async (r
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, eventExists, async (req, res) => {
+router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, eventExists, userExists, async (req, res) => {
     const loginUser = getUserFromToken(req);
 
     const eventId = req.params.eventId;
@@ -107,13 +100,6 @@ router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance
     }
 
     const { userId, status } = req.body;
-    const user = await User.findByPk(userId);
-    if (!user) {
-        res.status(404);
-        res.json({
-            message: "User couldn't be found"
-        })
-    }
 
     const attendanceToUpdate = await Attendance.findOne(
         { where: { userId } }

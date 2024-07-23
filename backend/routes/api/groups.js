@@ -5,26 +5,19 @@ const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth, requireAuth2, requireProperAuth} = require('../../utils/auth');
-const { getUserFromToken, groupExists, venueExists } = require('../../utils/helper');
+const { getUserFromToken, groupExists, venueExists, userExists } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
 const router = express.Router();
 
 // Delete a membership to a group specified by id
-router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, groupExists, async (req, res) => {
+router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, groupExists, userExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const groupId = +req.params.groupId;
     const group = await Group.findByPk(groupId);
 
     const memberId = +req.params.memberId;
-    const memberUser = await User.findByPk(memberId);
-    if (!memberUser) {
-        res.status(404);
-        return res.json({
-            message: "User couldn't be found"
-        });
-    }
     const membershipToDelete = await Membership.findOne(
         { where: { userId: memberId } }
     );
@@ -89,17 +82,10 @@ router.get('/:groupId/venues', restoreUser, requireAuth2, groupExists, async (re
 })
 
 // Change the status of a membership for a group specified by its id
-router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, async (req, res) => {
+router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userExists, async (req, res) => {
     const user = getUserFromToken(req);
 
     const { memberId, status } = req.body;
-    const memberUser = await User.findByPk(memberId);
-    if (!memberUser) {
-        res.status(404);
-        return res.json({
-            message: "User couldn't be found"
-        });
-    }
 
     const membershipToUpdate = await Membership.findOne(
         { where: { userId: memberId } }

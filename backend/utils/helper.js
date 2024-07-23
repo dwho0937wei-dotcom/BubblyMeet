@@ -88,11 +88,31 @@ const groupImageExists = async function (req, res, next) {
     return next();
 }
 
+// Validate if a user exist
+const userExists = async function (req, res, next) {
+    let userId;
+    if (req.params.memberId) userId = +req.params.memberId;
+    else if (req.body.memberId) userId = +req.body.memberId;
+    else if (req.params.userId) userId = +req.params.userId;
+    else if (req.body.userId) userId = +req.body.userId;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+        res.status(404);
+        return res.json({
+            message: "User couldn't be found"
+        });
+    }
+
+    return next();
+}
+
 module.exports = {
     getUserFromToken,
     groupExists,
     venueExists,
     eventExists,
     eventImageExists,
-    groupImageExists
+    groupImageExists,
+    userExists
 }
