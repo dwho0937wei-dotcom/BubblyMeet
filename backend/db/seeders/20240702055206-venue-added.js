@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+const { Group } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,10 +21,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const group1 = await Group.findOne({
+      where: { name: "Evening Tennis on the Water" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        // id: 1,
-        "groupId": 1,
+        "groupId": group1.id,
         "address": "123 Disney Lane",
         "city": "New York",
         "state": "NY",
@@ -39,8 +44,12 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const group1 = await Group.findOne({
+      where: { name: "Evening Tennis on the Water" }
+    });
+
     await queryInterface.bulkDelete(options, {
-      "groupId": 1,
+      "groupId": group1.id,
       "address": "123 Disney Lane",
       "city": "New York",
       "state": "NY",

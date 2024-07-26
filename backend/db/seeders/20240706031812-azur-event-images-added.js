@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Event } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,14 +21,18 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const StriveEvent = await Event.findOne({
+      where: { name: "Strive, Wish, and Strategize" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        "eventId": 3,
+        "eventId": StriveEvent.id,
         "url": "https://pbs.twimg.com/media/Edla45UU8AAO8vM.jpg",
         "preview": true
       },
       {
-        "eventId": 3,
+        "eventId": StriveEvent.id,
         "url": "https://azurlane.netojuu.com/images/thumb/d/df/Pow_tasks.png/300px-Pow_tasks.png",
         "preview": false
       }
@@ -40,8 +46,12 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const StriveEvent = await Event.findOne({
+      where: { name: "Strive, Wish, and Strategize" }
+    });
+
     await queryInterface.bulkDelete(options, {
-      eventId: 3
+      eventId: StriveEvent.id
     });
   }
 };

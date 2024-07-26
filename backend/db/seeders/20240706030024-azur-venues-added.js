@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Group } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,10 +21,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const RoyalNavy = await Group.findOne({
+      where: { name: "Royal Navy" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        // id: 2,
-        "groupId": 5,
+        "groupId": RoyalNavy.id,
         "address": "Naval Command Base, Royal Navy Operations",
         "city": "Portsmouth",
         "state": "Hampshire (UK)",
@@ -40,7 +45,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options, {
-      id: 2
+      address: "Naval Command Base, Royal Navy Operations"
     });
   }
 };

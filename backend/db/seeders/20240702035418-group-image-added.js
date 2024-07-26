@@ -6,6 +6,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+const { Group } = require('../models');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -18,20 +20,24 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const group1 = await Group.findOne({
+      where: { name: "Evening Tennis on the Water" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        groupId: 1,
+        groupId: group1.id,
         url: 'image url',
         preview: true
       },
       // fake group images to be deleted
       {
-        groupId: 1,
+        groupId: group1.id,
         url: 'fake url',
         preview: false
       },
       {
-        groupId: 1,
+        groupId: group1.id,
         url: 'fake url2',
         preview: false
       }
@@ -45,8 +51,12 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const group1 = await Group.findOne({
+      where: { name: "Evening Tennis on the Water" }
+    });
+
     await queryInterface.bulkDelete(options, {
-      groupId: 1, url: 'image url', preview: true
+      groupId: group1.id
     });
   }
 };

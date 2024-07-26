@@ -24,7 +24,6 @@ module.exports = {
     await queryInterface.bulkInsert(options, [
       // Strive, Wish, and Strategize Royal Navy characters
       {
-        // "id": 13,
         "firstName": "Prince",
         "lastName": "Wales",
         "email": "prince.wales@azur.io",
@@ -32,7 +31,6 @@ module.exports = {
         "hashedPassword": bcrypt.hashSync('azurPassword12')
       },
       {
-        // "id": 14,
         "firstName": "Repulse",
         "lastName": "Navy",
         "email": "repulse.navy@azur.io",
@@ -40,7 +38,6 @@ module.exports = {
         "hashedPassword": bcrypt.hashSync('azurPassword13')
       },
       {
-        // "id": 15,
         "firstName": "Vampire",
         "lastName": "Navy",
         "email": "vampire.navy@azur.io",
@@ -48,7 +45,6 @@ module.exports = {
         "hashedPassword": bcrypt.hashSync('azurPassword14')
       },
       {
-        // "id": 16,
         "firstName": "Rodney",
         "lastName": "Navy",
         "email": "rodney.navy@azur.io",
@@ -56,7 +52,6 @@ module.exports = {
         "hashedPassword": bcrypt.hashSync('azurPassword15')
       },
       {
-        // "id": 17,
         "firstName": "Ark",
         "lastName": "Royal",
         "email": "ark.royal@azur.io",
@@ -64,7 +59,6 @@ module.exports = {
         "hashedPassword": bcrypt.hashSync('azurPassword16')
       },
       {
-        // "id": 18,
         "firstName": "Hermes",
         "lastName": "Navy",
         "email": "hermes.navy@azur.io",
@@ -74,28 +68,25 @@ module.exports = {
 
       // Eagle Union Non-Event Characters
       {
-        // "id": 19,
         "firstName": "Georgia",
         "lastName": "Union",
-        "email": "georgia.union@gmail.com",
+        "email": "georgia.union@azur.io",
         "username": "GeorgiaUnion",
         "hashedPassword": bcrypt.hashSync('azurPassword18')
       },
       {
-        // "id": 20,
         "firstName": "Laffey",
         "lastName": "Union",
-        "email": "laffey.union@gmail.com",
+        "email": "laffey.union@azur.io",
         "username": "LaffeyUnion",
         "hashedPassword": bcrypt.hashSync('azurPassword19')
       },
 
       // Sakura Empire Non-Event Characters
       {
-        // "id": 21,
         "firstName": "Ibuki",
         "lastName": "Sakura",
-        "email": "ibuki.sakura@gmail.com",
+        "email": "ibuki.sakura@azur.io",
         "username": "IbukiSakura",
         "hashedPassword": bcrypt.hashSync('azurPassword20')
       }

@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Event } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,25 +21,32 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const event1 = await Event.findOne({
+      where: { name: "Tennis Group First Meet and Greet" }
+    });
+    const event2 = await Event.findOne({
+      where: { name: "Tennis Singles" }
+    })
+
     await queryInterface.bulkInsert(options, [
       {
-        "eventId": 1,
+        "eventId": event1.id,
         "url": "image_url",
         "preview": true
       },
       {
-        "eventId": 2,
+        "eventId": event2.id,
         "url": "image_url",
         "preview": true
       },
       // fake event images to be deleted
       {
-        "eventId": 1,
+        "eventId": event1.id,
         "url": "fake_url",
         "preview": false
       },
       {
-        "eventId": 2,
+        "eventId": event2.id,
         "url": "fake_url",
         "preview": false
       }
@@ -51,9 +60,16 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const event1 = await Event.findOne({
+      where: { name: "Tennis Group First Meet and Greet" }
+    });
+    const event2 = await Event.findOne({
+      where: { name: "Tennis Singles" }
+    })
+
+    const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      "url": "image_url",
-      "preview": true
+      "eventId": { [Op.in]: [event1.id, event2.id] }
     });
   }
 };

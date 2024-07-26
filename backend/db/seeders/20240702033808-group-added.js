@@ -6,6 +6,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+const { User } = require('../models');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -18,10 +20,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const organizer = await User.findOne({
+      where: { email: "john.smith@gmail.com" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        // id: 1,
-        "organizerId": 1,
+        "organizerId": organizer.id,
         "name": "Evening Tennis on the Water",
         "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
         "type": "In person",
@@ -32,8 +37,7 @@ module.exports = {
         "updatedAt": "2021-11-19 20:39:36"
       },
       {
-        // id: 2,
-        "organizerId": 1,
+        "organizerId": organizer.id,
         "name": "Playing Soccer on the Water",
         "about": "Enjoy rounds of soccer with a tight-nit group of people on the water facing the Brooklyn Bridge. Kick, Run, Kick!",
         "type": "In person",
@@ -44,8 +48,7 @@ module.exports = {
         "updatedAt": "2021-11-19 20:39:36"
       },
       {
-        // id: 3,
-        "organizerId": 1,
+        "organizerId": organizer.id,
         "name": "Playing Basketball on the Water",
         "about": "Enjoy rounds of basketball with a tight-nit group of people on the water facing the Brooklyn Bridge. Dribble Dribble Dribble.",
         "type": "In person",
@@ -65,8 +68,9 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      about: "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
+      name: { [Op.endsWith]: "on the Water" } 
     });
   }
 };

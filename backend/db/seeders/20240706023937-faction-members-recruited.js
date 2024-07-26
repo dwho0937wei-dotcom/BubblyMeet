@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { User, Group } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,21 +21,115 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const EagleUnion = await Group.findOne({
+      where: { name: "Eagle Union" }
+    });
+    const EagleUnionLeader = await User.findOne({
+      where: { email: "grey.ghost@azurL.io" }
+    });
+    const EagleUnionMember1 = await User.findOne({
+      where: { email: "georgia.union@azur.io" }
+    });
+    const EagleUnionMember2 = await User.findOne({
+      where: { email: "laffey.union@azur.io" }
+    });
+    
+    const RoyalNavy = await Group.findOne({
+      where: { name: "Royal Navy" }
+    });
+    const RoyalNavyLeader = await User.findOne({
+      where: { email: "queen.elizabeth@azurL.io" }
+    });
+    const RoyalNavyMember1 = await User.findOne({
+      where: { email: "prince.wales@azur.io" }
+    });
+    const RoyalNavyMember2 = await User.findOne({
+      where: { email: "repulse.navy@azur.io" }
+    });
+    const RoyalNavyMember3 = await User.findOne({
+      where: { email: "vampire.navy@azur.io" }
+    });
+    const RoyalNavyMember4 = await User.findOne({
+      where: { email: "rodney.navy@azur.io" }
+    });
+    const RoyalNavyMember5 = await User.findOne({
+      where: { email: "ark.royal@azur.io" }
+    });
+    const RoyalNavyMember6 = await User.findOne({
+      where: { email: "hermes.navy@azur.io" }
+    });
+    
+    const SakuraEmpire = await Group.findOne({
+      where: { name: "Sakura Empire" }
+    });
+    const SakuraEmpireLeader = await User.findOne({
+      where: { email: "nagato.sakura@azurL.io" }
+    });
+    
+    const IronBlood = await Group.findOne({
+      where: { name: "Iron Blood" }
+    });
+    const IronBloodLeader = await User.findOne({
+      where: { email: "bismarck.ironblood@azurL.io", }
+    });
+    
+    const DragonEmpery = await Group.findOne({
+      where: { name: "Dragon Empery" }
+    });
+    const DragonEmperyLeader = await User.findOne({
+      where: { email: "yat.sen@azurL.io" }
+    });
+    
+    const SardegnaEmpire = await Group.findOne({
+      where: { name: "Sardegna Empire" }
+    });
+    const SardegnaEmpireLeader = await User.findOne({
+      where: { email: "vittorio.veneto@azurL.io" }
+    });
+    
+    const VichyaDominion = await Group.findOne({
+      where: { name: "Vichya Dominion" }
+    });
+    const VichyaDominionLeader = await User.findOne({
+      where: { email: "jean.bart@azurL.io" }
+    });
+    
+    const IrisLibre = await Group.findOne({
+      where: { name: "Iris Libre" }
+    });
+    const IrisLibreLeader = await User.findOne({
+      where: { email: "richelieu.libre@azurL.io" }
+    });
+    
+    const NorthernParliament = await Group.findOne({
+      where: { name: "Northern Parliament" }
+    });
+    const NorthernParliamentLeader = await User.findOne({
+      where: { email: "sovetsky.soyuz@azurL.io" }
+    });
+    
+    const Siren = await Group.findOne({
+      where: { name: "Siren" }
+    });
+    const SirenLeader = await User.findOne({
+      where: { email: "observer.alpha@azurL.io" }
+    });
+
     // Eagle Union Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 3,
-        groupId: 4,
-        status: 'co-host'
+        userId: EagleUnionLeader.id,
+        groupId: EagleUnion.id,
+        status: 'host'
       },
       {
-        userId: 19,
-        groupId: 4,
+        userId: EagleUnionMember1.id,
+        groupId: EagleUnion.id,
         status: 'pending'
       },
       {
-        userId: 20,
-        groupId: 4,
+        userId: EagleUnionMember2.id,
+        groupId: EagleUnion.id,
         status: 'pending'
       }
     ])
@@ -41,38 +137,38 @@ module.exports = {
     // Royal Navy Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 4,
-        groupId: 5,
-        status: 'co-host'
+        userId: RoyalNavyLeader.id,
+        groupId: RoyalNavy.id,
+        status: 'host'
       },
       {
-        userId: 13,
-        groupId: 5,
+        userId: RoyalNavyMember1.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
       {
-        userId: 14,
-        groupId: 5,
+        userId: RoyalNavyMember2.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
       {
-        userId: 15,
-        groupId: 5,
+        userId: RoyalNavyMember3.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
       {
-        userId: 16,
-        groupId: 5,
+        userId: RoyalNavyMember4.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
       {
-        userId: 17,
-        groupId: 5,
+        userId: RoyalNavyMember5.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
       {
-        userId: 18,
-        groupId: 5,
+        userId: RoyalNavyMember6.id,
+        groupId: RoyalNavy.id,
         status: 'member'
       },
     ]);
@@ -80,72 +176,72 @@ module.exports = {
     // Sakura Empire Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 5,
-        groupId: 6,
-        status: 'co-host'
+        userId: SakuraEmpireLeader.id,
+        groupId: SakuraEmpire.id,
+        status: 'host'
       }
     ])
 
     // Iron Blood Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 6,
-        groupId: 7,
-        status: 'co-host'
+        userId: IronBloodLeader.id,
+        groupId: IronBlood.id,
+        status: 'host'
       }
     ])
 
     // Dragon Empery Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 7,
-        groupId: 8,
-        status: 'co-host'
+        userId: DragonEmperyLeader.id,
+        groupId: DragonEmpery.id,
+        status: 'host'
       }
     ])
 
     // Sardegna Empire Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 8,
-        groupId: 9,
-        status: 'co-host'
+        userId: SardegnaEmpireLeader.id,
+        groupId: SardegnaEmpire.id,
+        status: 'host'
       }
     ])
 
     // Vichya Dominion Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 9,
-        groupId: 10,
-        status: 'co-host'
+        userId: VichyaDominionLeader.id,
+        groupId: VichyaDominion.id,
+        status: 'host'
       }
     ])
 
     // Iris Libre Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 10,
-        groupId: 11,
-        status: 'co-host'
+        userId: IrisLibreLeader.id,
+        groupId: IrisLibre.id,
+        status: 'host'
       }
     ])
 
     // Northern Parliament Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 11,
-        groupId: 12,
-        status: 'co-host'
+        userId: NorthernParliamentLeader.id,
+        groupId: NorthernParliament.id,
+        status: 'host'
       }
     ])
 
     // Siren Recruitment
     await queryInterface.bulkInsert(options, [
       {
-        userId: 12,
-        groupId: 13,
-        status: 'co-host'
+        userId: SirenLeader.id,
+        groupId: Siren.id,
+        status: 'host'
       }
     ])
   },
@@ -157,9 +253,16 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const EagleUnion = await Group.findOne({
+      where: { name: "Eagle Union" }
+    });
+    const Siren = await Group.findOne({
+      where: { name: "Siren" }
+    });
+
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      groupId: { [Op.between]: [4, 13] }
+      groupId: { [Op.between]: [EagleUnion.id, Siren.id] }
     });
   }
 };

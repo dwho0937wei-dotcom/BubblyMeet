@@ -8,6 +8,35 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Event, User } = require('../models');
+
+const RoyalNavyMembers = [
+  {
+    firstName: "Prince",
+    lastName: "Wales",
+  },
+  {
+    firstName: "Repulse",
+    lastName: "Navy",
+  },
+  {
+    firstName: "Vampire",
+    lastName: "Navy",
+  },
+  {
+    firstName: "Rodney",
+    lastName: "Navy",
+  },
+  {
+    firstName: "Ark",
+    lastName: "Royal",
+  },
+  {
+    firstName: "Hermes",
+    lastName: "Navy",
+  },
+];
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,36 +48,48 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const StriveEvent = await Event.findOne({
+      where: { name: "Strive, Wish, and Strategize" }
+    });
+
+    const findRoyalNavyMembers = [];
+    for (const member of RoyalNavyMembers) {
+      const findMember = await User.findOne({
+        where: member
+      });
+      findRoyalNavyMembers.push(findMember);
+    }
+
     await queryInterface.bulkInsert(options, [
       // Royal Navy Recruitment
       {
-        "eventId": 3,
-        "userId": 13,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[0].id,
         "status": "host"
       },
       {
-        "eventId": 3,
-        "userId": 14,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[1].id,
         "status": "co-host"
       },
       {
-        "eventId": 3,
-        "userId": 15,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[2].id,
         "status": "attending"
       },
       {
-        "eventId": 3,
-        "userId": 16,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[3].id,
         "status": "attending"
       },
       {
-        "eventId": 3,
-        "userId": 17,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[4].id,
         "status": "attending"
       },
       {
-        "eventId": 3,
-        "userId": 18,
+        "eventId": StriveEvent.id,
+        "userId": findRoyalNavyMembers[5].id,
         "status": "attending"
       }
     ]);
@@ -61,8 +102,12 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const StriveEvent = await Event.findOne({
+      where: { name: "Strive, Wish, and Strategize" }
+    });
+
     await queryInterface.bulkDelete(options, {
-      "eventId": 3
+      "eventId": StriveEvent.id
     });
   }
 };

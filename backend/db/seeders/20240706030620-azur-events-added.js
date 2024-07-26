@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Group, Venue } = require('../models');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -19,11 +21,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const RoyalNavy = await Group.findOne({
+      where: { name: "Royal Navy" }
+    });
+    const NavalCommandBase = await Venue.findOne({
+      where: { address: "Naval Command Base, Royal Navy Operations" }
+    });
+
     await queryInterface.bulkInsert(options, [
       {
-        // id: 3,
-        groupId: 5,
-        venueId: 2,
+        groupId: RoyalNavy.id,
+        venueId: NavalCommandBase.id,
         name: "Strive, Wish, and Strategize",
         type: "In person",
         startDate: "2018-09-13 00:00:00",
