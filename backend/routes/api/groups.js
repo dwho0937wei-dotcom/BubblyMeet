@@ -278,15 +278,13 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupE
 
 // Get all groups joined or organized by the current user
 router.get('/current', restoreUser, requireAuth2, async (req, res) => {
+    // Finding user
     const user = getUserFromToken(req);
+    const findUser = await User.findByPk(user.id);
 
-    const groups = await Group.findAll({
+    // Getting the groups that the current user is part of
+    const groups = await findUser.getJoinedGroup({
         include: [
-            {
-                model: User,
-                as: 'Members',
-                attributes: []
-            },
             {
                 model: GroupImage,
                 required: false,
@@ -294,17 +292,6 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
                 attributes: []
             }
         ],
-        // attributes: {
-        //     include: [[Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId =`Group`.`id`)'), 'numMembers'], 
-        //               [Sequelize.literal(`(COALESCE(GroupImages.url, ''))`), 'previewImage']]
-        // },
-        where: { 
-            [Op.or]: [
-               { organizerId: user.id },
-               Sequelize.literal(`EXISTS (SELECT 1 FROM Memberships WHERE Memberships.groupId = 'Group'.'id' AND Memberships.userId = ${user.id})`)
-            ]
-        },
-        group: ['Group.id', 'Members.id', 'GroupImages.id']
     });
 
     // Aggregate using JavaScript
@@ -321,6 +308,9 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
             }
         })
         group.dataValues.previewImage = previewImage.dataValues.url;
+
+        // Deleting unneeded membership details
+        delete group.dataValues.Membership;
     }
 
     return res.json({Groups: groups});
@@ -471,17 +461,28 @@ router.get('/', async (req, res) => {
                 'state',
                 'createdAt',
                 'updatedAt',
-                [
-                    Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE "Memberships"."groupId" = "Group"."id")'), 
-                    'numMembers'
-                ],
-                [
-                    Sequelize.literal('(SELECT (url) FROM GroupImages WHERE "GroupImages"."groupId" = "Group"."id" AND "GroupImages"."preview" = true)'),
-                    'previewImage'
-                ]
             ]
         }
     );
+
+    // Iterating through each group
+    for (const group of groups) {
+        // Count the number of members in group
+        const numMembers = await group.countMembers();
+        group.dataValues.numMembers = numMembers;
+
+        // Get the group's preview image 
+        const previewImage = await group.getGroupImages({
+            where: { preview: true }
+        });
+        if (previewImage.length >= 1) {
+            group.dataValues.previewImage = previewImage[0].dataValues.url;
+        }
+        else {
+            group.dataValues.previewImage = null;
+        }
+    }
+
     res.json({Groups: groups});
 })
 

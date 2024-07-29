@@ -329,20 +329,6 @@ router.get('/', async (req, res) => {
             'type',
             'startDate',
             'endDate',
-    // Aggregating
-            // [
-            //     Sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id)'),
-            //     'numAttending'
-            // ],
-            // [
-            //     sequelize.fn("COUNT", sequelize.col("Attendees.id")),
-            //     "numAttending"
-            // ],
-    // Extracting
-            // [
-            //     Sequelize.literal('(SELECT url FROM EventImages WHERE preview = true AND eventId = Event.id)'),
-            //     'previewImage'
-            // ]
         ]
     };
 
