@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
+const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage, sequelize} = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
 const { getUserFromToken, venueExists, eventExists, userExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
@@ -316,6 +316,10 @@ router.get('/', async (req, res) => {
                 model: Venue,
                 attributes: ['id', 'city', 'state']
             },
+            // {
+            //     model: User,
+            //     as: "Attendee"
+            // }
         ],
         attributes: [
             'id',
@@ -326,15 +330,19 @@ router.get('/', async (req, res) => {
             'startDate',
             'endDate',
     // Aggregating
-            [
-                Sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id)'),
-                'numAttending'
-            ],
+            // [
+            //     Sequelize.literal('(SELECT COUNT(*) FROM Attendances WHERE Attendances.eventId = Event.id)'),
+            //     'numAttending'
+            // ],
+            // [
+            //     sequelize.fn("COUNT", sequelize.col("Attendees.id")),
+            //     "numAttending"
+            // ],
     // Extracting
-            [
-                Sequelize.literal('(SELECT url FROM EventImages WHERE preview = true AND eventId = Event.id)'),
-                'previewImage'
-            ]
+            // [
+            //     Sequelize.literal('(SELECT url FROM EventImages WHERE preview = true AND eventId = Event.id)'),
+            //     'previewImage'
+            // ]
         ]
     };
 
@@ -359,6 +367,24 @@ router.get('/', async (req, res) => {
     // Finding and paginating all events
     res.status(200);
     const events = await Event.findAll(eventCriteria);
+
+    // Aggregate using JavaScript instead
+    for (const event of events) {
+        // For counting number of attendance in each event
+        const numAttending = await event.countAttendee();
+        event.dataValues.numAttending = numAttending;
+
+        // And extracting each event's preview image
+        const eventId = event.dataValues.id;
+        const previewImage = await EventImage.findOne({
+            where: { 
+                eventId,
+                preview: true,
+            }
+        });
+        event.dataValues.previewImage = previewImage.dataValues.url;
+    }
+
     return res.json({Events: events});
 })
 

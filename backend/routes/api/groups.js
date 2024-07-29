@@ -294,10 +294,10 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
                 attributes: []
             }
         ],
-        attributes: {
-            include: [[Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId =`Group`.`id`)'), 'numMembers'], 
-                      [Sequelize.literal(`(COALESCE(GroupImages.url, ''))`), 'previewImage']]
-        },
+        // attributes: {
+        //     include: [[Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId =`Group`.`id`)'), 'numMembers'], 
+        //               [Sequelize.literal(`(COALESCE(GroupImages.url, ''))`), 'previewImage']]
+        // },
         where: { 
             [Op.or]: [
                { organizerId: user.id },
@@ -306,6 +306,23 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
         },
         group: ['Group.id', 'Members.id', 'GroupImages.id']
     });
+
+    // Aggregate using JavaScript
+    for (const group of groups) {
+        // Counting member in each group
+        const numMembers = await group.countMembers();
+        group.dataValues.numMembers = numMembers;
+
+        // Getting the group's preview image
+        const previewImage = await GroupImage.findOne({
+            where: {
+                groupId: group.dataValues.id,
+                preview: true,
+            }
+        })
+        group.dataValues.previewImage = previewImage.dataValues.url;
+    }
+
     return res.json({Groups: groups});
 })
 
