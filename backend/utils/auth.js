@@ -66,7 +66,7 @@ const restoreUser = (req, res, next) => {
 // --------------------------------------------------------------- Authentications --------------------------------------------------------------------
 
 // Custom error display for authentication
-class AuthenError extends Error {
+class AuthentError extends Error {
   constructor() {
     super();
     this.status = 401;
@@ -101,18 +101,24 @@ const userLoggedIn = function (req) {
 const requireAuth = function (req, res, next) {
   if (req.user) return next();
 
-  const err = new AuthenError();
+  const err = new AuthentError();
   res.status(err.status);
-  return next(err);
+  // return next(err);
+  return res.json({
+    message: err.message
+  });
 }
 
 // Error Response: 2nd Require Authentication
 const requireAuth2 = function (req, res, next) {
   if (req.user) return next();
 
-  const err = new AuthenError();
+  const err = new AuthentError();
   res.status(err.status)
-  return next(err);
+  // return next(err);
+  return res.json({
+    message: err.message
+  });
 };
 
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
