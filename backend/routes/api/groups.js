@@ -475,7 +475,7 @@ router.get('/', async (req, res) => {
         const previewImage = await group.getGroupImages({
             where: { preview: true }
         });
-        if (previewImage.length >= 1) {
+        if (previewImage.length > 0) {
             group.dataValues.previewImage = previewImage[0].dataValues.url;
         }
         else {
