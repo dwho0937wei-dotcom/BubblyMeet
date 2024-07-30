@@ -1,7 +1,8 @@
 // backend/utils/auth.js
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Group } = require('../db/models');
+const { getUserFromToken } = require('./helper');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -102,9 +103,8 @@ const requireAuth = function (req, res, next) {
   if (req.user) return next();
 
   const err = new AuthenticationError();
-  res.status(err.status);
   // return next(err);
-  return res.json({
+  return res.status(err.status).json({
     message: err.message
   });
 }
@@ -114,18 +114,25 @@ const requireAuth2 = function (req, res, next) {
   if (req.user) return next();
 
   const err = new AuthenticationError();
-  res.status(err.status)
   // return next(err);
-  return res.json({
+  return res.status(err.status).json({
     message: err.message
   });
 };
 
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
 
+const userIsOrganizerOfGroup = async function (req, res, next) {
+  const user = getUserFromToken(req);
+  const group = await Group.findByPk(req.params.groupId);
+  if (group.dataValues.organizerId !== user.id) {
+      return requireProperAuth(res);
+  }
+  return next();
+}
+
 const requireProperAuth = function (res) {
-  res.status(403);
-  return res.json({
+  return res.status(403).json({
     message: "Forbidden"
   });
 };
@@ -138,4 +145,5 @@ module.exports =
           requireAuth, 
           userLoggedIn, 
           requireAuth2, 
+          userIsOrganizerOfGroup,
           requireProperAuth };
