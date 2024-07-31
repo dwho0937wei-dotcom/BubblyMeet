@@ -1,7 +1,7 @@
 // backend/utils/auth.js
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group } = require('../db/models');
+const { User, Group, Venue } = require('../db/models');
 const { getUserFromToken } = require('./helper');
 
 const { secret, expiresIn } = jwtConfig;
@@ -135,7 +135,16 @@ const hostOfGroup = async function (req, res, next) {
 // Checks if user is the organizer or co-host of the group
 const hostOrCohostOfGroup = async (req, res, next) => {
   const user = getUserFromToken(req);
-  const groupId = req.params.groupId;
+
+  let groupId;
+  if (req.params.groupId) {
+    groupId = req.params.groupId;
+  }
+  else if (req.params.venueId) {
+    const venue = await Venue.findByPk(req.params.venueId);
+    groupId = venue.dataValues.groupId;
+  }
+
   const coHost = await Membership.findOne({
       where: {userId: user.id, groupId, status: 'co-host'}
   });
