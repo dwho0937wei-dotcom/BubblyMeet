@@ -196,42 +196,25 @@ router.get('/:eventId/attendees', eventExists, async (req, res) => {
 })
 
 // Edit an event specified by its id
-router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, eventExists, async (req, res) => {
-    const user = getUserFromToken(req);
-
-    const eventId = req.params.eventId;
+router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, eventExists, hostOrCohostOfGroup, async (req, res) => {
+    const eventId = +req.params.eventId;
     const event = await Event.findByPk(eventId);
-    const groupId = event.dataValues.groupId;
-    const group = await Group.findByPk(groupId);
-    
-    const coHost = await Membership.findOne({
-        where: {userId: user.id, groupId, status: 'co-host'}
-    });
-    if (group.dataValues.organizerId !== user.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-    const venue = await Venue.findByPk(venueId);
-
-    event.set({
+    await event.set({
         venueId, name, type, capacity, price, description, startDate, endDate
+    }).save();
+    return res.status(200).json({
+        id: event.id,
+        venueId: event.venueId,
+        groupId: event.groupId,
+        name: event.name,
+        description: event.description,
+        type: event.type,
+        capacity: event.capacity,
+        price: event.price,
+        startDate: event.startDate,
+        endDate: event.endDate
     });
-    await event.save();
-    res.status(200);
-    const payload = {
-        id: event.dataValues.id,
-        venueId: event.dataValues.venueId,
-        groupId: event.dataValues.groupId,
-        name: event.dataValues.name,
-        description: event.dataValues.description,
-        type: event.dataValues.type,
-        capacity: event.dataValues.capacity,
-        price: event.dataValues.price,
-        startDate: event.dataValues.startDate,
-        endDate: event.dataValues.endDate
-    }
-    res.json(payload);
 })
 
 // Get details of an event specified by its id
@@ -264,29 +247,15 @@ router.get('/:eventId', eventExists, async (req, res) => {
         }
     });
 
-    res.status(200);
-    return res.json(event);
+    return res.status(200).json(event);
 })
 
 // Delete an event specified by its id
-router.delete('/:eventId', restoreUser, requireAuth2, eventExists, async (req, res) => {
-    const user = getUserFromToken(req);
-
-    const eventId = req.params.eventId;
+router.delete('/:eventId', restoreUser, requireAuth2, eventExists, hostOrCohostOfGroup, async (req, res) => {
+    const eventId = +req.params.eventId;
     const event = await Event.findByPk(eventId);
-    const groupId = event.dataValues.groupId;
-    const group = await Group.findByPk(groupId);
-    
-    const coHost = await Membership.findOne({
-        where: {userId: user.id, groupId, status: 'co-host'}
-    });
-    if (group.dataValues.organizerId !== user.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
-    await event.destroy();
-    res.status(200);
-    res.json({
+    event.destroy();
+    return res.status(200).json({
         message: "Successfully deleted"
     });
 })

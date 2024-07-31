@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
 const { User, Group, Venue } = require('../db/models');
 const { getUserFromToken } = require('./helper');
+const { Op } = require('sequelize');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -142,14 +143,17 @@ const hostOrCohostOfGroup = async (req, res, next) => {
   }
   else if (req.params.venueId) {
     const venue = await Venue.findByPk(+req.params.venueId);
-    groupId = venue.dataValues.groupId;
+    groupId = +venue.dataValues.groupId;
+  }
+  else if (req.params.eventId){
+    const event = await Event.findByPk(+req.params.eventId);
+    groupId = +event.dataValues.groupId
   }
 
-  const coHost = await Membership.findOne({
-      where: {userId: user.id, groupId, status: 'co-host'}
+  const hostOrCohost = await Membership.findOne({
+      where: {userId: user.id, groupId, status: { [Op.in]: [['co-host', 'host']] }}
   });
-  const group = await Group.findByPk(groupId);
-  if (group.dataValues.organizerId !== user.id && !coHost) {
+  if (!hostOrCohost) {
       return requireProperAuth(res);
   }
   return next();
