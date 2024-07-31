@@ -138,10 +138,10 @@ const hostOrCohostOfGroup = async (req, res, next) => {
 
   let groupId;
   if (req.params.groupId) {
-    groupId = req.params.groupId;
+    groupId = +req.params.groupId;
   }
   else if (req.params.venueId) {
-    const venue = await Venue.findByPk(req.params.venueId);
+    const venue = await Venue.findByPk(+req.params.venueId);
     groupId = venue.dataValues.groupId;
   }
 

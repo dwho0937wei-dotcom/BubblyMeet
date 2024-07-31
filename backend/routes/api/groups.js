@@ -211,26 +211,15 @@ router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, hostOfGr
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, venueExists, async (req, res) => {
+router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, venueExists, hostOrCohostOfGroup, async (req, res) => {
     // Identify current user
     const user = getUserFromToken(req);
 
-    // Identify group
+    // Get groupId
     const groupId = +req.params.groupId;
-    const group = await Group.findByPk(groupId);
-
-    // Verify if the current user is the organizer or co-host of the specified group
-    const coHost = await Membership.findOne({
-        where: {userId: user.id, groupId, status: 'co-host'}
-    });
-    if (group.dataValues.organizerId !== user.id && !coHost) {
-        return requireProperAuth(res);
-    }
 
     // Get the req.body
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-    // Verify the venue's existence
-    const venue = await Venue.findByPk(venueId);
 
     // Create an event
     const newEvent = await Event.create({
