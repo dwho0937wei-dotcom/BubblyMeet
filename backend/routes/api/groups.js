@@ -40,18 +40,9 @@ router.delete('/:groupId/membership/:memberId', restoreUser, requireAuth2, group
 })
 
 // Create a new venue for a group specified by its id
-router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, groupExists, async (req, res) => {
-    const user = getUserFromToken(req);
-
+router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, groupExists, hostOrCohostOfGroup, async (req, res) => {
     const groupId = req.params.groupId;
-    const coHost = await Membership.findOne({
-        where: {userId: user.id, groupId, status: 'co-host'}
-    });
     const group = await Group.findByPk(groupId);
-    if (group.dataValues.organizerId !== user.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
     const { address, city, state, lat, lng } = req.body;
     let newVenue = await group.createVenue({
         address, city, state, lat, lng
