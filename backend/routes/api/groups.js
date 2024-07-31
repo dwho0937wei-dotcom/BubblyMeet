@@ -72,8 +72,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userE
         { where: { userId: memberId } }
     );
     if (!membershipToUpdate) {
-        res.status(404);
-        return res.json({
+        return res.status(404).json({
             message: "Membership between the user and the group does not exist"
         });
     }
@@ -81,8 +80,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userE
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
     if (status === 'pending') {
-        res.status(400);
-        return res.json({
+        return res.status(400).json({
             message: "Bad Request",
             errors: {
                 status: "Cannot change a membership to pending"
@@ -104,19 +102,14 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userE
     }
 
     if (status === 'member' || status === 'co-host') {
-        membershipToUpdate.set({
-            status
-        });
-        await membershipToUpdate.save();
+        await membershipToUpdate.set({ status }).save();
     }
-    res.status(200);
-    const payload = {
-        id: membershipToUpdate.dataValues.id,
-        userId: membershipToUpdate.dataValues.userId,
-        groupId: membershipToUpdate.dataValues.groupId,
-        status: membershipToUpdate.dataValues.status
-    };
-    return res.json(payload);
+    return res.status(200).json({
+        id: membershipToUpdate.id,
+        userId: membershipToUpdate.userId,
+        groupId: membershipToUpdate.groupId,
+        status: membershipToUpdate.status
+    });
 })
 
 // Request a membership for a group specified by its id
@@ -383,10 +376,9 @@ router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
     });
 
     // User becomes the host of its created Group
-    await Membership.create({
+    newGroup.createMember({
         userId: user.id,
-        groupId: newGroup.dataValues.id,
-        status: 'host'
+        status: "host"
     });
     
     res.json(newGroup);

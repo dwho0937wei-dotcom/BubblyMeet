@@ -4,32 +4,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
-const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth, hostOrCohostOfGroup } = require('../../utils/auth');
 const { getUserFromToken, eventImageExists } = require('../../utils/helper');
 
 const router = express.Router();
 
 // Delete an image for an event
-router.delete('/:imageId', restoreUser, requireAuth2, eventImageExists, async (req, res) => {
-    const loginUser = getUserFromToken(req);
-
+router.delete('/:imageId', restoreUser, requireAuth2, eventImageExists, hostOrCohostOfGroup, async (req, res) => {
     const imageId = req.params.imageId;
     const image = await EventImage.findByPk(imageId);
-    
-    const event = await image.getEvent();
-    const groupId = event.dataValues.groupId;
-    const group = await Group.findByPk(groupId);
-
-    const coHost = await Membership.findOne({
-        where: {userId: loginUser.id, groupId, status: 'co-host'}
-    });
-    if (group.dataValues.organizerId !== loginUser.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
-    res.status(200);
-    await image.destroy();
-    return res.json({
+    image.destroy();
+    return res.status(200).json({
         message: "Successfully deleted"
     });
 })

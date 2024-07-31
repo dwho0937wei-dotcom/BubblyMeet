@@ -73,28 +73,14 @@ router.post('/:eventId/images', restoreUser, requireAuth2, eventExists, partOfAn
 })
 
 // Change the status of an attendance for an event specified by its id
-router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, eventExists, userExists, async (req, res) => {
-    const loginUser = getUserFromToken(req);
-
-    const eventId = req.params.eventId;
-    const event = await Event.findByPk(eventId);
-
-    const group = await event.getGroup();
-    const coHost = await Membership.findOne({
-        where: {userId: loginUser.id, groupId: group.id, status: 'co-host'}
-    });
-    if (group.dataValues.organizerId !== loginUser.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
+router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance, eventExists, userExists, hostOrCohostOfGroup, async (req, res) => {
     const { userId, status } = req.body;
 
     const attendanceToUpdate = await Attendance.findOne(
         { where: { userId } }
     );
     if (!attendanceToUpdate) {
-        res.status(404);
-        return res.json({
+        return res.status(404).json({
             message: "Attendance between the user and the event does not exist"
         });
     }
@@ -109,18 +95,13 @@ router.put('/:eventId/attendance', restoreUser, requireAuth2, validateAttendance
         });
     }
 
-    res.status(200);
-    attendanceToUpdate.set({
-        status
+    await attendanceToUpdate.set({ status }).save();
+    return res.status(200).json({
+        id: attendanceToUpdate.id,
+        eventId: attendanceToUpdate.eventId,
+        userId: attendanceToUpdate.userId,
+        status: attendanceToUpdate.status
     });
-    await attendanceToUpdate.save();
-    const payload = {
-        id: attendanceToUpdate.dataValues.id,
-        eventId: attendanceToUpdate.dataValues.eventId,
-        userId: attendanceToUpdate.dataValues.userId,
-        status: attendanceToUpdate.dataValues.status
-    };
-    return res.json(payload);
 })
 
 // Request to attend an event based on its id
@@ -170,7 +151,6 @@ router.get('/:eventId/attendees', eventExists, async (req, res) => {
     const eventId = req.params.eventId;
     const event = await Event.findByPk(eventId);
 
-    res.status(200);
     const attendanceCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
@@ -192,7 +172,7 @@ router.get('/:eventId/attendees', eventExists, async (req, res) => {
     }
 
     const attendants = await event.getAttendee(attendanceCriteria);
-    return res.json({Attendees: attendants});
+    return res.status(200).json({Attendees: attendants});
 })
 
 // Edit an event specified by its id
