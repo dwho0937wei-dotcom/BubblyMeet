@@ -155,6 +155,20 @@ const hostOrCohostOfGroup = async (req, res, next) => {
   return next();
 }
 
+// Checks if user is an attendant, co-host, or host of an event
+const partOfAnEvent = async (req, res, next) => {
+  const user = getUserFromToken(req);
+  const eventId = +req.params.eventId;
+  const userAttendance = await Attendance.findOne({
+      where: { userId: user.id, eventId, status: { [Op.in]: [["attending", "co-host", "host"]] } }
+  });
+  if (!userAttendance) {
+      return requireProperAuth(res);
+  }
+  return next();
+}
+
+
 const requireProperAuth = function (res) {
   return res.status(403).json({
     message: "Forbidden"
@@ -171,4 +185,5 @@ module.exports =
           requireAuth2, 
           hostOfGroup,
           hostOrCohostOfGroup,
+          partOfAnEvent,
           requireProperAuth };

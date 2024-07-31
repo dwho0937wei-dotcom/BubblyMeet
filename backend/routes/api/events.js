@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage, sequelize} = require('../../db/models');
-const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth } = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth, partOfAnEvent, hostOrCohostOfGroup } = require('../../utils/auth');
 const { getUserFromToken, venueExists, eventExists, userExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance } = require('../../utils/validation');
 
@@ -58,30 +58,18 @@ router.delete('/:eventId/attendance/:userId', restoreUser, requireAuth2, eventEx
 })
 
 // Add an Image to an Event based on its id
-router.post('/:eventId/images', restoreUser, requireAuth2, eventExists, async (req, res) => {
-    const user = getUserFromToken(req);
-
+router.post('/:eventId/images', restoreUser, requireAuth2, eventExists, partOfAnEvent, async (req, res) => {
     const eventId = +req.params.eventId;
-
-    const userAttendance = await Attendance.findOne({
-        where: { userId: user.id, eventId, status: { [Op.not]: 'pending' } }
-    });
-    if (!userAttendance) {
-        return requireProperAuth(res);
-    }
-
     const { url, preview } = req.body;
     const newEventImage = await EventImage.create({
         url, preview, eventId
     });
-    // console.log(newEventImage);
     const payload = {
         id: newEventImage.dataValues.id,
         url: newEventImage.dataValues.url,
         preview: newEventImage.dataValues.preview
     }
-    res.status(200);
-    res.json(payload);
+    res.status(200).json(payload);
 })
 
 // Change the status of an attendance for an event specified by its id
