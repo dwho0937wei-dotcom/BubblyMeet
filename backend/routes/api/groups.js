@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
-const { userLoggedIn, restoreUser, requireAuth, requireAuth2, userIsOrganizerOfGroup, requireProperAuth} = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth, requireAuth2, hostOfGroup, hostOrCohostOfGroup, requireProperAuth} = require('../../utils/auth');
 const { getUserFromToken, groupExists, venueExists, userExists } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
@@ -64,18 +64,8 @@ router.post('/:groupId/venues', restoreUser, requireAuth2, validateVenue, groupE
 })
 
 // Get all venues for a group specified by its id
-router.get('/:groupId/venues', restoreUser, requireAuth2, groupExists, async (req, res) => {
-    const user = getUserFromToken(req);
-
-    const groupId = req.params.groupId;
-    const coHost = await Membership.findOne({
-        where: {userId: user.id, groupId, status: 'co-host'}
-    });
-    const group = await Group.findByPk(groupId);
-    if (group.dataValues.organizerId !== user.id && !coHost) {
-        return requireProperAuth(res);
-    }
-
+router.get('/:groupId/venues', restoreUser, requireAuth2, groupExists, hostOrCohostOfGroup, async (req, res) => {
+    const group = await Group.findByPk(req.params.groupId);
     const venues = await group.getVenues();
     res.status(200);
     res.json({Venues: venues})
@@ -195,7 +185,6 @@ router.get('/:groupId/members', groupExists, async (req, res) => {
         }
     }
 
-
     let memberCriteria = {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
@@ -215,7 +204,7 @@ router.get('/:groupId/members', groupExists, async (req, res) => {
 })
 
 // Add an image to a group specified by its id
-router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, userIsOrganizerOfGroup, async (req, res) => {
+router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, hostOfGroup, async (req, res) => {
     // Find group
     const group = await Group.findByPk(req.params.groupId);
     const { url, preview } = req.body;
@@ -355,7 +344,7 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
 })
 
 // Edit a group
-router.put('/:groupId', restoreUser, requireAuth2, validateGroup, groupExists, userIsOrganizerOfGroup, async (req, res) => {
+router.put('/:groupId', restoreUser, requireAuth2, validateGroup, groupExists, hostOfGroup, async (req, res) => {
     const group = await Group.findByPk(req.params.groupId);
     const { name, about, type, private, city, state } = req.body;
     await group.set({ name, about, type, private, city, state }).save();
@@ -392,7 +381,7 @@ router.get('/:groupId', groupExists, async (req, res) => {
 })
 
 // Delete the group specified by its id
-router.delete('/:groupId', restoreUser, requireAuth2, groupExists, userIsOrganizerOfGroup, async (req, res) => {
+router.delete('/:groupId', restoreUser, requireAuth2, groupExists, hostOfGroup, async (req, res) => {
     const group = await Group.findByPk(req.params.groupId);
     await group.destroy();
     return res.status(200).json({

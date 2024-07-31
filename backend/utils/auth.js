@@ -122,10 +122,25 @@ const requireAuth2 = function (req, res, next) {
 
 // --------------------------------------------------------------- Authorizations --------------------------------------------------------------------
 
-const userIsOrganizerOfGroup = async function (req, res, next) {
+// Checks if user is the organizer of the group
+const hostOfGroup = async function (req, res, next) {
   const user = getUserFromToken(req);
   const group = await Group.findByPk(req.params.groupId);
   if (group.dataValues.organizerId !== user.id) {
+      return requireProperAuth(res);
+  }
+  return next();
+}
+
+// Checks if user is the organizer or co-host of the group
+const hostOrCohostOfGroup = async (req, res, next) => {
+  const user = getUserFromToken(req);
+  const groupId = req.params.groupId;
+  const coHost = await Membership.findOne({
+      where: {userId: user.id, groupId, status: 'co-host'}
+  });
+  const group = await Group.findByPk(groupId);
+  if (group.dataValues.organizerId !== user.id && !coHost) {
       return requireProperAuth(res);
   }
   return next();
@@ -145,5 +160,6 @@ module.exports =
           requireAuth, 
           userLoggedIn, 
           requireAuth2, 
-          userIsOrganizerOfGroup,
+          hostOfGroup,
+          hostOrCohostOfGroup,
           requireProperAuth };
