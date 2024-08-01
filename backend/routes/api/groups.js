@@ -364,11 +364,9 @@ router.delete('/:groupId', restoreUser, requireAuth2, groupExists, hostOfGroup, 
 
 // Create a group
 router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
-    res.status(201);
-
     // User creates Group
     const user = getUserFromToken(req);
-    console.log(user);
+    console.log("User Id is:", user.id);
     const { name, about, type, private, city, state } = req.body;
     const newGroup = await Group.create({
         name, about, type, private, city, state,
@@ -376,12 +374,13 @@ router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
     });
 
     // User becomes the host of its created Group
-    newGroup.createMember({
+    Membership.create({
         userId: user.id,
+        groupId: newGroup.dataValues.id,
         status: "host"
-    });
+    })
     
-    res.json(newGroup);
+    return res.status(201).json(newGroup);
 })
 
 // Get all groups
@@ -406,7 +405,7 @@ router.get('/', async (req, res) => {
     // Iterating through each group
     for (const group of groups) {
         // Count the number of members in group
-        const numMembers = await group.countMembers();
+        const numMembers = await group.countMember();
         group.dataValues.numMembers = numMembers;
 
         // Get the group's preview image 
