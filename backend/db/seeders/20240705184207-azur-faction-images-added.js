@@ -130,8 +130,10 @@ module.exports = {
       where: { name: "Siren" }
     });
 
-    await queryInterface.bulkDelete(options, {
-      groupId: [EagleUnion.id, Siren.id]
-    })
+    if (EagleUnion && Siren) {
+      await queryInterface.bulkDelete(options, {
+        groupId: [EagleUnion.id, Siren.id]
+      })
+    }
   }
 };

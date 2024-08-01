@@ -106,8 +106,10 @@ module.exports = {
       where: { name: "Strive, Wish, and Strategize" }
     });
 
-    await queryInterface.bulkDelete(options, {
-      "eventId": StriveEvent.id
-    });
+    if (StriveEvent) {
+      await queryInterface.bulkDelete(options, {
+        "eventId": StriveEvent.id
+      });
+    }
   }
 };

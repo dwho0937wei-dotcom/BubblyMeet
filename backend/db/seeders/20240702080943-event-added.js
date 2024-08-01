@@ -66,10 +66,12 @@ module.exports = {
       where: { name: "Evening Tennis on the Water" }
     });
 
-    await queryInterface.bulkDelete(options, {
-      "groupId": group1.id,
-      "capacity": 50,
-      "price": 20
-    });
+    if (group1) {
+      await queryInterface.bulkDelete(options, {
+        "groupId": group1.id,
+        "capacity": 50,
+        "price": 20
+      });
+    }
   }
 };
