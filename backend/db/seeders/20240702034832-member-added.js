@@ -64,8 +64,10 @@ module.exports = {
       where: { email: "john.smith@gmail.com" }
     });
 
-    await queryInterface.bulkDelete(options, {
-      userId: organizer.id
-    });
+    if (organizer) {
+      await queryInterface.bulkDelete(options, {
+        userId: organizer.id
+      });
+    }
   }
 };

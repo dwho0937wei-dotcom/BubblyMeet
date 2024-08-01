@@ -51,10 +51,12 @@ module.exports = {
       where: { email: "john.smith@gmail.com" }
     });
 
-    await queryInterface.bulkDelete(options, {
-      "eventId": event1.id,
-      "userId": user1.id,
-      "status": "host"
-    });
+    if (event1 && user1) {
+      await queryInterface.bulkDelete(options, {
+        "eventId": event1.id,
+        "userId": user1.id,
+        "status": "host"
+      });
+    }
   }
 };

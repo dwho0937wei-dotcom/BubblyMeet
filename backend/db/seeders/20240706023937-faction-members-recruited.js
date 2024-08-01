@@ -261,8 +261,10 @@ module.exports = {
     });
 
     const Op = Sequelize.Op;
-    await queryInterface.bulkDelete(options, {
-      groupId: { [Op.between]: [EagleUnion.id, Siren.id] }
-    });
+    if (EagleUnion && Siren) {
+      await queryInterface.bulkDelete(options, {
+        groupId: { [Op.between]: [EagleUnion.id, Siren.id] }
+      });
+    }
   }
 };

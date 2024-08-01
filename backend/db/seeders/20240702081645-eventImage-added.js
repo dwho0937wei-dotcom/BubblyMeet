@@ -68,8 +68,10 @@ module.exports = {
     })
 
     const Op = Sequelize.Op;
-    await queryInterface.bulkDelete(options, {
-      "eventId": { [Op.in]: [event1.id, event2.id] }
-    });
+    if (event1 && event2) {
+      await queryInterface.bulkDelete(options, {
+        "eventId": { [Op.in]: [event1.id, event2.id] }
+      });
+    }
   }
 };
