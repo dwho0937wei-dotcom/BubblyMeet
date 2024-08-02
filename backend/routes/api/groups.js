@@ -1,10 +1,8 @@
 const express = require('express');
 const { Op } = require('sequelize');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
-const { userLoggedIn, restoreUser, requireAuth, requireAuth2, hostOfGroup, hostOrCohostOfGroup, requireProperAuth} = require('../../utils/auth');
+const { userLoggedIn, restoreUser, requireAuth2, hostOfGroup, hostOrCohostOfGroup, requireProperAuth} = require('../../utils/auth');
 const { getUserFromToken, groupExists, venueExists, userExists } = require('../../utils/helper');
 const { validateGroup, validateVenue, validateEvent } = require('../../utils/validation');
 
@@ -255,7 +253,7 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
     // Aggregate using JavaScript
     for (const group of groups) {
         // Counting member in each group
-        const numMembers = await group.countMembers();
+        const numMembers = await group.countMember();
         group.dataValues.numMembers = numMembers;
 
         // Getting the group's preview image
@@ -340,8 +338,7 @@ router.get('/:groupId', groupExists, async (req, res) => {
         ]
     })
 
-    const members = await group.getMembers();
-    const numMembers = members.length;
+    const numMembers = await group.countMember();
     group.dataValues.numMembers = numMembers;
 
     let organizer = await User.findByPk(group.organizerId, {

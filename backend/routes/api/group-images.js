@@ -1,11 +1,8 @@
 const express = require('express');
-const { Op } = require('sequelize');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-const { User, Group, Membership, GroupImage, Sequelize, Venue, Event, Attendance, EventImage} = require('../../db/models');
-const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth, hostOrCohostOfGroup } = require('../../utils/auth');
-const { getUserFromToken, groupImageExists } = require('../../utils/helper');
+const { GroupImage } = require('../../db/models');
+const { restoreUser, requireAuth2, hostOrCohostOfGroup } = require('../../utils/auth');
+const { groupImageExists } = require('../../utils/helper');
 
 const router = express.Router();
 

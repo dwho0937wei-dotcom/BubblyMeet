@@ -1,11 +1,9 @@
 // backend/routes/api/session.js
 const express = require('express');
-const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const { User } = require('../../db/models');
-const { setTokenCookie, restoreUser, userLoggedIn } = require('../../utils/auth');
+const { setTokenCookie, userLoggedIn } = require('../../utils/auth');
 const { getUserFromToken } = require('../../utils/helper');
 const { validateLogin } = require('../../utils/validation');
 

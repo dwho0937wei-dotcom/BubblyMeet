@@ -1,10 +1,8 @@
 const express = require('express');
-const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const { User } = require('../../db/models');
-const { setTokenCookie, restoreUser, userLoggedIn } = require('../../utils/auth');
+const { setTokenCookie } = require('../../utils/auth');
 const { validateSignUp } = require('../../utils/validation');
 
 const router = express.Router();

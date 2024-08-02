@@ -1,7 +1,7 @@
 // backend/utils/auth.js
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group, Venue, Event, EventImage } = require('../db/models');
+const { User, Group, Venue, Event, EventImage, Membership, Attendance } = require('../db/models');
 const { getUserFromToken } = require('./helper');
 const { Op } = require('sequelize');
 
@@ -156,7 +156,11 @@ const hostOrCohostOfGroup = async (req, res, next) => {
   }
 
   const hostOrCohost = await Membership.findOne({
-      where: {userId: user.id, groupId, status: { [Op.in]: [['co-host', 'host']] }}
+      where: {
+        userId: user.id, 
+        groupId, 
+        status: { [Op.in]: ['co-host', 'host'] }
+      }
   });
   if (!hostOrCohost) {
       return requireProperAuth(res);
@@ -169,7 +173,7 @@ const partOfAnEvent = async (req, res, next) => {
   const user = getUserFromToken(req);
   const eventId = +req.params.eventId;
   const userAttendance = await Attendance.findOne({
-      where: { userId: user.id, eventId, status: { [Op.in]: [["attending", "co-host", "host"]] } }
+      where: { userId: user.id, eventId, status: { [Op.in]: ["attending", "co-host", "host"] } }
   });
   if (!userAttendance) {
       return requireProperAuth(res);
