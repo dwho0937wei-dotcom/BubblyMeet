@@ -71,6 +71,7 @@ const eventImageExists = async function (req, res, next) {
         })
     }
 
+    req.imageType = "Event";
     return next();
 }
 
@@ -85,6 +86,7 @@ const groupImageExists = async function (req, res, next) {
         })
     }
 
+    req.imageType = "Group";
     return next();
 }
 

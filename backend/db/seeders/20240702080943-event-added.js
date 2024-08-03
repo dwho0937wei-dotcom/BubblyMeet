@@ -47,7 +47,7 @@ module.exports = {
         "name": "Tennis Singles",
         "type": "In person",
         "startDate": "2021-11-20 20:00:00",
-        "endDate": "2021-11-19 22:00:00",
+        "endDate": "2021-11-20 22:00:00",
         "description": "This is a fun Tennis Singles",
         "capacity": 50,
         "price": 20

@@ -1,7 +1,7 @@
 // backend/utils/auth.js
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Group, Venue, Event, EventImage, Membership, Attendance } = require('../db/models');
+const { User, Group, Venue, Event, EventImage, GroupImage, Membership, Attendance } = require('../db/models');
 const { getUserFromToken } = require('./helper');
 const { Op } = require('sequelize');
 
@@ -150,9 +150,15 @@ const hostOrCohostOfGroup = async (req, res, next) => {
     groupId = +event.dataValues.groupId
   }
   else if (req.params.imageId){
-    const image = await EventImage.findByPk(+req.params.imageId);
-    const event = await image.getEvent();
-    groupId = +event.dataValues.groupId;
+    if (req.imageType === "Event") {
+      const eventImage = await EventImage.findByPk(+req.params.imageId);
+      const event = await eventImage.getEvent();
+      groupId = +event.dataValues.groupId;
+    }
+    else if (req.imageType === "Group") {
+      const groupImage = await GroupImage.findByPk(+req.params.imageId);
+      groupId = +groupImage.dataValues.groupId;
+    }
   }
 
   const hostOrCohost = await Membership.findOne({

@@ -271,8 +271,8 @@ router.get('/', async (req, res) => {
     let { page, size, name, type, startDate } = req.query;
 
     // Setting the page and size
-    if (!page || page > 10) page = 1;
-    if (!size || size > 20) size = 20;
+    if (isNaN(page) || page > 10) page = 1;
+    if (isNaN(size) || size > 20) size = 20;
     if (page < 1 || size < 1) return queryBadRequest(res);
     // Applying the page and size
     eventCriteria.limit = size;
@@ -283,11 +283,15 @@ router.get('/', async (req, res) => {
     eventCriteria.where = {};
     if (name) eventCriteria.where.name = name;
     if (type) eventCriteria.where.type = type;
-    if (startDate) eventCriteria.where.startDate = startDate;
+    if (startDate) eventCriteria.where.startDate = {
+        [Op.and]: {
+            [Op.gte]: new Date(startDate + " 00:00:00"),
+            [Op.lte]: new Date(startDate + " 23:59:59.999")
+        }
+    }
 
     // Finding and paginating all events
-    res.status(200);
-    const events = await Event.findAll(eventCriteria);
+    let events = await Event.findAll(eventCriteria);
 
     // Aggregate using JavaScript instead
     for (const event of events) {
@@ -304,9 +308,22 @@ router.get('/', async (req, res) => {
             }
         });
         event.dataValues.previewImage = previewImage.dataValues.url;
+
+        // Changing the date format of both startDate and endDate
+        // from "(year-month-day)T(hour:minute:second).000Z"
+        // to "(year-month-day) (hour:minute:second)"
+        let { startDate: eventStartDate, endDate: eventEndDate } = event.dataValues;
+        const changedDateFormats = [eventStartDate, eventEndDate].map(date => {
+            date = date.toISOString().split('T');
+            date[1] = date[1].split('.')[0];
+            date = date.join(' ');
+            return date;
+        })
+        event.dataValues.startDate = changedDateFormats[0];
+        event.dataValues.endDate = changedDateFormats[1];
     }
 
-    return res.json({Events: events});
+    return res.status(200).json({Events: events});
 })
 
 module.exports = router;

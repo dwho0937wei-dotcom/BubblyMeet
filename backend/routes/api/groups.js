@@ -160,7 +160,7 @@ router.get('/:groupId/members', groupExists, async (req, res) => {
             isOrganizer = true;
         }
         const sameCoHost = await Membership.findOne({
-            groupId, userId: user.id, status: 'co-host'
+            where: { groupId, userId: user.id, status: 'co-host' },
         });
         if (sameCoHost) {
             isCoHost = true;
@@ -171,6 +171,7 @@ router.get('/:groupId/members', groupExists, async (req, res) => {
         attributes: ['id', 'firstName', 'lastName'],
         joinTableAttributes: ['status']
     };
+
     if (!isOrganizer && !isCoHost) {
         memberCriteria.where = 
         {
@@ -179,7 +180,7 @@ router.get('/:groupId/members', groupExists, async (req, res) => {
             }
         }
     }
-    const members = await group.getMembers(memberCriteria);
+    const members = await group.getMember(memberCriteria);
 
     res.status(200);
     res.json({ Members: members });
