@@ -14,10 +14,9 @@ router.put('/:venueId', restoreUser, requireAuth2, validateVenue, venueExists, h
     const { address, city, state, lat, lng } = req.body;
     await venue.set({
         address, city, state, lat, lng
-    });
-    await venue.save();
-    res.status(200);
-    res.json(venue);
+    }).save();
+    delete venue.dataValues.updatedAt;
+    return res.status(200).json(venue);
 })
 
 module.exports = router;
