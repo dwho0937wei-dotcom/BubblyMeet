@@ -129,17 +129,16 @@ const validateEvent = [
         .isInt()
         .withMessage('Capacity must be an integer'),
     check('price')
-        .exists({ checkFalsy: true })
-        .isFloat({ min: 0 })
-        // .isDecimal({ decimal_digits: 2 })
+        .exists({ checkFalsy: true }).withMessage("Price is invalid")
+        .isFloat({ min: 0 }).withMessage("Price is invalid")
         .custom(price => {
             const places = price.toString().split('.');
             if (places.length > 1 && places[1].length > 2) {
-                throw new Error();
+                throw new Error("Price is invalid");
             }
             return true;
         })
-        .withMessage('Price is invalid'),
+        .withMessage("Price is invalid"),
     check('description')
         .exists({ checkFalsy: true })
         .notEmpty()
@@ -150,9 +149,9 @@ const validateEvent = [
         .withMessage('Start date must be in the future'),
     check('endDate')
         .exists({ checkFalsy: true })
-        .custom((_endDate, { req }) => {
+        .custom((endDate, { req }) => {
             const startDate = req.body.startDate;
-            if (!check('endDate').isAfter(startDate)) {
+            if (endDate <= startDate) {
                 throw new Error();
             }
             return true;
