@@ -104,7 +104,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userE
     }
     return res.status(200).json({
         id: membershipToUpdate.id,
-        userId: membershipToUpdate.userId,
+        memberId: membershipToUpdate.userId,
         groupId: membershipToUpdate.groupId,
         status: membershipToUpdate.status
     });
