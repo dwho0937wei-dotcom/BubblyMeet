@@ -81,7 +81,7 @@ router.put('/:groupId/membership', restoreUser, requireAuth2, groupExists, userE
         return res.status(400).json({
             message: "Bad Request",
             errors: {
-                status: "Cannot change a membership to pending"
+                status: "Cannot change a membership status to pending"
             }
         })
     }
