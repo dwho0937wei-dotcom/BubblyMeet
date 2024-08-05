@@ -282,29 +282,60 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
         where: { groupId },
         include: [
             {
-                model: User,
-                as: 'Attendee',
-                attributes: []
-            },
-            {
                 model: Venue,
                 attributes: ['id', 'city', 'state']
-            },
-            {
-                model: EventImage,
-                where: {preview: true},
-                attributes: [],
             },
             {
                 model: Group,
                 attributes: ['id', 'name', 'city', 'state']
             }
+        ],
+        attributes: [
+            "id",
+            "groupId",
+            "venueId",
+            "name",
+            "type",
+            "startDate",
+            "endDate"
         ]
     });
 
-    // for (const event of events) {
 
-    // }
+    // Aggregate using JavaScript instead
+    for (const event of events) {
+        // For counting number of attendance in each event
+        const numAttending = await event.countAttendee();
+        event.dataValues.numAttending = numAttending;
+
+        // And extracting each event's preview image
+        const eventId = event.dataValues.id;
+        const previewImage = await EventImage.findOne({
+            where: { 
+                eventId,
+                preview: true,
+            }
+        });
+        if (previewImage) {
+            event.dataValues.previewImage = previewImage.dataValues.url;
+        }
+        else {
+            event.dataValues.previewImage = null;
+        }
+
+        // Changing the date format of both startDate and endDate
+        // from "(year-month-day)T(hour:minute:second).000Z"
+        // to "(year-month-day) (hour:minute:second)"
+        let { startDate: eventStartDate, endDate: eventEndDate } = event.dataValues;
+        const changedDateFormats = [eventStartDate, eventEndDate].map(date => {
+            date = date.toISOString().split('T');
+            date[1] = date[1].split('.')[0];
+            date = date.join(' ');
+            return date;
+        })
+        event.dataValues.startDate = changedDateFormats[0];
+        event.dataValues.endDate = changedDateFormats[1];
+    }
 
     return res.status(200).json({Events: events});
 })

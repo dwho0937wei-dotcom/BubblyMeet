@@ -221,9 +221,24 @@ router.get('/:eventId', eventExists, async (req, res) => {
         ],
         attributes: {
             exclude: ['createdAt', 'updatedAt'],
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), 'numAttending']]
+            include: [
+                [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), 'numAttending']
+            ]
         }
     });
+
+    // Changing the date format of both startDate and endDate
+    // from "(year-month-day)T(hour:minute:second).000Z"
+    // to "(year-month-day) (hour:minute:second)"
+    let { startDate: eventStartDate, endDate: eventEndDate } = event.dataValues;
+    const changedDateFormats = [eventStartDate, eventEndDate].map(date => {
+        date = date.toISOString().split('T');
+        date[1] = date[1].split('.')[0];
+        date = date.join(' ');
+        return date;
+    })
+    event.dataValues.startDate = changedDateFormats[0];
+    event.dataValues.endDate = changedDateFormats[1];
 
     return res.status(200).json(event);
 })
@@ -307,7 +322,12 @@ router.get('/', async (req, res) => {
                 preview: true,
             }
         });
-        event.dataValues.previewImage = previewImage.dataValues.url;
+        if (previewImage) {
+            event.dataValues.previewImage = previewImage.dataValues.url;
+        }
+        else {
+            event.dataValues.previewImage = null;
+        }
 
         // Changing the date format of both startDate and endDate
         // from "(year-month-day)T(hour:minute:second).000Z"
