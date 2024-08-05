@@ -268,6 +268,19 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
 
         // Deleting unneeded membership details
         delete group.dataValues.Membership;
+
+        // Changing the date format of both createdAt & updatedAt
+        // from "(year-month-day)T(hour:minute:second).000Z"
+        // to "(year-month-day) (hour:minute:second)"
+        let { createdAt, updatedAt } = group.dataValues;
+        const changedDateFormats = [createdAt, updatedAt].map(date => {
+            date = date.toISOString().split('T');
+            date[1] = date[1].split('.')[0];
+            date = date.join(' ');
+            return date;
+        })
+        group.dataValues.createdAt = changedDateFormats[0];
+        group.dataValues.updatedAt = changedDateFormats[1];
     }
 
     return res.json({Groups: groups});
@@ -345,6 +358,20 @@ router.put('/:groupId', restoreUser, requireAuth2, validateGroup, groupExists, h
     const group = await Group.findByPk(req.params.groupId);
     const { name, about, type, private, city, state } = req.body;
     await group.set({ name, about, type, private, city, state }).save();
+
+    // Changing the date format of both createdAt & updatedAt
+    // from "(year-month-day)T(hour:minute:second).000Z"
+    // to "(year-month-day) (hour:minute:second)"
+    let { createdAt, updatedAt } = group.dataValues;
+    const changedDateFormats = [createdAt, updatedAt].map(date => {
+        date = date.toISOString().split('T');
+        date[1] = date[1].split('.')[0];
+        date = date.join(' ');
+        return date;
+    })
+    group.dataValues.createdAt = changedDateFormats[0];
+    group.dataValues.updatedAt = changedDateFormats[1];
+
     return res.status(200).json(group);
 })
 
@@ -372,8 +399,21 @@ router.get('/:groupId', groupExists, async (req, res) => {
     });
     organizer = organizer.toJSON();
     group.dataValues.Organizer = organizer;
-    res.status(200);
-    res.json(group);
+
+    // Changing the date format of both createdAt & updatedAt
+    // from "(year-month-day)T(hour:minute:second).000Z"
+    // to "(year-month-day) (hour:minute:second)"
+    let { createdAt, updatedAt } = group.dataValues;
+    const changedDateFormats = [createdAt, updatedAt].map(date => {
+        date = date.toISOString().split('T');
+        date[1] = date[1].split('.')[0];
+        date = date.join(' ');
+        return date;
+    })
+    group.dataValues.createdAt = changedDateFormats[0];
+    group.dataValues.updatedAt = changedDateFormats[1];
+
+    return res.status(200).json(group);
 })
 
 // Delete the group specified by its id
@@ -402,6 +442,19 @@ router.post('/', restoreUser, requireAuth2, validateGroup, async (req, res) => {
         groupId: newGroup.dataValues.id,
         status: "host"
     })
+
+    // Changing the date format of both createdAt & updatedAt
+    // from "(year-month-day)T(hour:minute:second).000Z"
+    // to "(year-month-day) (hour:minute:second)"
+    let { createdAt, updatedAt } = newGroup.dataValues;
+    const changedDateFormats = [createdAt, updatedAt].map(date => {
+        date = date.toISOString().split('T');
+        date[1] = date[1].split('.')[0];
+        date = date.join(' ');
+        return date;
+    })
+    newGroup.dataValues.createdAt = changedDateFormats[0];
+    newGroup.dataValues.updatedAt = changedDateFormats[1];
     
     return res.status(201).json(newGroup);
 })
@@ -441,6 +494,19 @@ router.get('/', async (req, res) => {
         else {
             group.dataValues.previewImage = null;
         }
+
+        // Changing the date format of both createdAt & updatedAt
+        // from "(year-month-day)T(hour:minute:second).000Z"
+        // to "(year-month-day) (hour:minute:second)"
+        let { createdAt, updatedAt } = group.dataValues;
+        const changedDateFormats = [createdAt, updatedAt].map(date => {
+            date = date.toISOString().split('T');
+            date[1] = date[1].split('.')[0];
+            date = date.join(' ');
+            return date;
+        })
+        group.dataValues.createdAt = changedDateFormats[0];
+        group.dataValues.updatedAt = changedDateFormats[1];
     }
 
     res.json({Groups: groups});
