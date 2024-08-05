@@ -181,6 +181,20 @@ router.put('/:eventId', restoreUser, requireAuth2, validateEvent, venueExists, e
     await event.set({
         venueId, name, type, capacity, price, description, startDate, endDate
     }).save();
+
+    // Changing the date format of both startDate and endDate
+    // from "(year-month-day)T(hour:minute:second).000Z"
+    // to "(year-month-day) (hour:minute:second)"
+    let { startDate: eventStartDate, endDate: eventEndDate } = event.dataValues;
+    const changedDateFormats = [eventStartDate, eventEndDate].map(date => {
+        date = date.toISOString().split('T');
+        date[1] = date[1].split('.')[0];
+        date = date.join(' ');
+        return date;
+    })
+    event.dataValues.startDate = changedDateFormats[0];
+    event.dataValues.endDate = changedDateFormats[1];
+
     return res.status(200).json({
         id: event.id,
         venueId: event.venueId,
