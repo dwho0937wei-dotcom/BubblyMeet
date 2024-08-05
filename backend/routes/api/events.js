@@ -221,11 +221,12 @@ router.get('/:eventId', eventExists, async (req, res) => {
         ],
         attributes: {
             exclude: ['createdAt', 'updatedAt'],
-            include: [
-                [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), 'numAttending']
-            ]
         }
     });
+
+    // For counting number of attendance in the event
+    const numAttending = await event.countAttendee();
+    event.dataValues.numAttending = numAttending;
 
     // Changing the date format of both startDate and endDate
     // from "(year-month-day)T(hour:minute:second).000Z"
