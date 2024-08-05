@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     }
 
     const user = getUserFromToken(req);
-    return res.json(user);
+    return res.json({ user });
 })
 
 // Login user
