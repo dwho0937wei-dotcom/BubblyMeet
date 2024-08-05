@@ -264,7 +264,12 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
                 preview: true,
             }
         })
-        group.dataValues.previewImage = previewImage.dataValues.url;
+        if (previewImage) {
+            group.dataValues.previewImage = previewImage.dataValues.url;
+        }
+        else {
+            group.dataValues.previewImage = null;
+        }
 
         // Deleting unneeded membership details
         delete group.dataValues.Membership;
@@ -313,7 +318,6 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
             "endDate"
         ]
     });
-
 
     // Aggregate using JavaScript instead
     for (const event of events) {
