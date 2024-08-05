@@ -213,11 +213,6 @@ router.get('/:eventId', eventExists, async (req, res) => {
                 attributes: ['id', 'url', 'preview'],
                 separate: true
             },
-            {
-                model: User,
-                as: 'Attendee',
-                attributes: []
-            }
         ],
         attributes: {
             exclude: ['createdAt', 'updatedAt'],
