@@ -299,14 +299,6 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
                 model: Group,
                 attributes: ['id', 'name', 'city', 'state']
             }
-        ],
-        attributes: {
-            include: [
-                [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"]
-            ]
-        },
-        group: [
-            "Event.id"
         ]
     });
 
