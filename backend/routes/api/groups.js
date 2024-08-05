@@ -277,9 +277,6 @@ router.get('/current', restoreUser, requireAuth2, async (req, res) => {
 router.get('/:groupId/events', groupExists, async (req, res) => {
     const groupId = req.params.groupId;
 
-    // Verify the specified group's existence
-    const group = await Group.findByPk(groupId);
-
     // Find all events related to the specified group
     const events = await Event.findAll({
         where: { groupId },
@@ -304,15 +301,20 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
             }
         ],
         attributes: {
-            include: [[Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"],     
-                      [Sequelize.fn("", Sequelize.col("EventImages.url")), "previewImage"]]
+            include: [
+                [Sequelize.fn("COUNT", Sequelize.col("Attendee.id")), "numAttending"]
+            ]
         },
         group: [
-            'Event.id',
+            "Event.id"
         ]
     });
-    res.status(200);
-    return res.json({Events: events});
+
+    // for (const event of events) {
+
+    // }
+
+    return res.status(200).json({Events: events});
 })
 
 // Edit a group
