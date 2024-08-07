@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 const {
   Model
-} = require('sequelize');
+} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     /**
@@ -12,26 +12,26 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Group.hasMany(models.Event, {
-        foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        foreignKey: "groupId",
+        onDelete: "CASCADE"
       });
       Group.belongsTo(models.User, {
         as: "Host",
-        foreignKey: 'organizerId'
+        foreignKey: "organizerId"
       });
       Group.belongsToMany(models.User, {
         as: "Member",
         through: models.Membership,
-        foreignKey: 'groupId',
-        otherKey: 'userId'
+        foreignKey: "groupId",
+        otherKey: "userId"
       });
       Group.hasMany(models.Venue, {
-        foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        foreignKey: "groupId",
+        onDelete: "CASCADE"
       });
       Group.hasMany(models.GroupImage, {
-        foreignKey: 'groupId',
-        onDelete: 'CASCADE'
+        foreignKey: "groupId",
+        onDelete: "CASCADE"
       });
     }
   }
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     organizerId: {
       type: DataTypes.INTEGER,
-      references: {model: 'Users'}
+      references: {model: "Users"}
     },
     name: {
       type: DataTypes.STRING,
@@ -61,10 +61,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     type: {
-      type: DataTypes.ENUM('Online', 'In person'),
+      type: DataTypes.ENUM("Online", "In person", "In Person"),
       allowNull: false,
       validate: {
-        isIn: [['Online', 'In person']]
+        isIn: [["Online", "In person", "In Person"]]
       }
     },
     private: {
@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Group',
+    modelName: "Group",
   });
   return Group;
 };

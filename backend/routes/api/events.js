@@ -307,7 +307,14 @@ router.get('/', async (req, res) => {
         // then filter events matching these attributes.
     eventCriteria.where = {};
     if (name) eventCriteria.where.name = name;
-    if (type) eventCriteria.where.type = type;
+    if (type) {
+        if (type.toLowerCase() === "in person") {
+            eventCriteria.where.type = { [Op.in]: ["In person", "In Person"] };
+        }
+        else if (type.toLowerCase() === "online") {
+            eventCriteria.where.type = "Online"
+        }
+    }
     if (startDate) eventCriteria.where.startDate = {
         [Op.and]: {
             [Op.gte]: new Date(startDate + " 00:00:00"),

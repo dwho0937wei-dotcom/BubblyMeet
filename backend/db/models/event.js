@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 const {
   Model
-} = require('sequelize');
+} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -12,20 +12,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Event.hasMany(models.EventImage, {
-        foreignKey: 'eventId',
-        onDelete: 'CASCADE'
+        foreignKey: "eventId",
+        onDelete: "CASCADE"
       });
       Event.belongsTo(models.Venue, {
-        foreignKey: 'venueId'
+        foreignKey: "venueId"
       });
       Event.belongsTo(models.Group, {
-        foreignKey: 'groupId'
+        foreignKey: "groupId"
       });
       Event.belongsToMany(models.User,  {
         through: models.Attendance,
-        foreignKey: 'eventId',
-        otherKey: 'userId',
-        as: 'Attendee'
+        foreignKey: "eventId",
+        otherKey: "userId",
+        as: "Attendee"
       });
     }
   }
@@ -39,13 +39,13 @@ module.exports = (sequelize, DataTypes) => {
     venueId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Venues'
+        model: "Venues"
       }
     },
     groupId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Groups'
+        model: "Groups"
       }
     },
     name: {
@@ -63,10 +63,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     type: {
-      type: DataTypes.ENUM('Online', 'In person'),
+      type: DataTypes.ENUM("Online", "In person", "In Person"),
       allowNull: false,
       validate: {
-        isIn: [['Online', 'In person']]
+        isIn: [["Online", "In person", "In Person"]]
       }
     },
     capacity: {
@@ -96,14 +96,14 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isFuture(value) {
           if (new Date(value) <= new Date(this.startDate)) {
-            throw new Error('The end date must be after the start date.')
+            throw new Error("The end date must be after the start date.")
           }
         }
       }
     }
   }, {
     sequelize,
-    modelName: 'Event',
+    modelName: "Event",
   });
   return Event;
 };

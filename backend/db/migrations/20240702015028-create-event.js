@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
 options.tableName = "Events";
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
@@ -19,16 +19,16 @@ module.exports = {
       venueId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Venues'
+          model: "Venues"
         },
-        onDelete: 'SET NULL'
+        onDelete: "SET NULL"
       },
       groupId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Groups'
+          model: "Groups"
         },
-        onDelete: 'CASCADE'
+        onDelete: "CASCADE"
       },
       name: {
         type: Sequelize.STRING,
@@ -39,7 +39,7 @@ module.exports = {
         allowNull: false
       },
       type: {
-        type: Sequelize.ENUM('Online', 'In person'),
+        type: Sequelize.ENUM("Online", "In person", "In Person"),
         allowNull: false
       },
       capacity: {
@@ -61,12 +61,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     });
   },
