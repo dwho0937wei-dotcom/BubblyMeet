@@ -315,12 +315,19 @@ router.get('/', async (req, res) => {
             eventCriteria.where.type = "Online"
         }
     }
-    if (startDate) eventCriteria.where.startDate = {
-        [Op.and]: {
-            [Op.gte]: new Date(startDate + " 00:00:00"),
-            [Op.lte]: new Date(startDate + " 23:59:59.999")
+    if (startDate) {
+        if (new Date(startDate).toString() === "Invalid Date") {
+            return queryBadRequest(res);
         }
-    }
+        else {
+            eventCriteria.where.startDate = {
+                [Op.and]: {
+                    [Op.gte]: new Date(startDate + " 00:00:00"),
+                    [Op.lte]: new Date(startDate + " 23:59:59.999")
+                }
+            }
+        }
+    } 
 
     // Finding and paginating all events
     let events = await Event.findAll(eventCriteria);
