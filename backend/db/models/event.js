@@ -80,7 +80,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT(21, 2),
       allowNull: false,
       validate: {
-        isNumeric: true
+        isNumeric: true,
+        twoDecimalPlacesMax(value) {
+          const strValue = value.toString();
+          const places = strValue.split(".");
+          if (places[1].length > 2) {
+            throw new Error("Price should NOT have more than two decimal places!")
+          }
+        }
       }
     },
     startDate: {
