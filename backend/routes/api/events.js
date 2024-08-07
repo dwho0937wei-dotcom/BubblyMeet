@@ -296,9 +296,9 @@ router.get('/', async (req, res) => {
     let { page, size, name, type, startDate } = req.query;
 
     // Setting the page and size
-    if (isNaN(page) || page > 10) page = 1;
-    if (isNaN(size) || size > 20) size = 20;
-    if (page < 1 || size < 1) return queryBadRequest(res);
+    if (page > 10) page = 1;
+    if (size > 20) size = 20;
+    if (isNaN(page) || page < 1 || isNaN(size) || size < 1) return queryBadRequest(res);
     // Applying the page and size
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);
