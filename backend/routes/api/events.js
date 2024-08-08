@@ -296,8 +296,8 @@ router.get('/', validateEventQuery, async (req, res) => {
     let { page, size, name, type, startDate } = req.query;
 
     // Setting the page and size
-    if (page > 10) page = 1;
-    if (size > 20) size = 20;
+    if (!page || page > 10) page = 1;
+    if (!size || size > 20) size = 20;
     // Applying the page and size
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);

@@ -171,10 +171,12 @@ const validateAttendance = [
 
 const validateEventQuery = [
     check("page")
+        .optional({ value: "undefined" })
         .exists({ checkFalsy: true })
         .isInt({ min: 1 })
         .withMessage("Page must be greater than or equal to 1"),
     check("size")
+        .optional({ value: "undefined" })
         .exists({ checkFalsy: true })
         .isInt({ min: 1 })
         .withMessage("Size must be greater than or equal to 1"),
