@@ -298,9 +298,6 @@ router.get('/', validateEventQuery, async (req, res) => {
     // Setting the page and size
     if (page > 10) page = 1;
     if (size > 20) size = 20;
-    // if (isNaN(page) || page < 1 || isNaN(size) || size < 1) {
-    //     return queryBadRequest(res);
-    // }
     // Applying the page and size
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);
@@ -318,17 +315,12 @@ router.get('/', validateEventQuery, async (req, res) => {
         }
     }
     if (startDate) {
-        // if (new Date(startDate).toString() === "Invalid Date") {
-        //     return queryBadRequest(res);
-        // }
-        // else {
         eventCriteria.where.startDate = {
             [Op.and]: {
                 [Op.gte]: new Date(startDate + " 00:00:00"),
                 [Op.lte]: new Date(startDate + " 23:59:59.999")
             }
         }
-        // }
     } 
 
     // Finding and paginating all events
