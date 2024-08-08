@@ -182,12 +182,12 @@ const validateEventQuery = [
 
     oneOf([
         check("name").optional().isEmpty(),
-        check("name").optional().isString().notEmpty()
+        check("name").optional().notEmpty()
     ], "Name must be a string"),
 
     oneOf([
         check("type").optional().isEmpty(),
-        check("type").optional()
+        check("type").optional().isString()
         .custom(type => {
             const expectedInputs = ["online", "in person"];
             return expectedInputs.includes(type.toLowerCase());
