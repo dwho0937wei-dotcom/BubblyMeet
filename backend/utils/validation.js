@@ -11,8 +11,17 @@ const handleValidationErrors = (req, res, next) => {
     const errors = {};
     validationErrors
       .array()
-      .forEach(error => errors[error.path] = error.msg);
-
+      .forEach(error => {
+        // console.log(error);
+        if (error.path) {
+            errors[error.path] = error.msg;
+        }
+        else if (error.nestedErrors) {
+            // console.log(error.nestedErrors[0][0]);
+            errors[error.nestedErrors[0][0].path] = error.msg;
+        }
+      });
+    
     const err = Error("Bad Request");
     err.errors = errors;
     err.status = 400;
@@ -171,33 +180,32 @@ const validateAttendance = [
 
 const validateEventQuery = [
     oneOf([
-        check("page").optional().isEmpty().withMessage("Page must be greater than or equal to 1"),
-        check("page").optional().isInt({ min: 1 }).withMessage("Page must be greater than or equal to 1")
+        check("page").optional().isEmpty(),
+        check("page").optional().isInt({ min: 1 })
     ], { message: "Page must be greater than or equal to 1" }),
 
     oneOf([
-        check("size").optional().isEmpty().withMessage("Size must be greater than or equal to 1"),
-        check("size").optional().isInt({ min: 1 }).withMessage("Size must be greater than or equal to 1")
+        check("size").optional().isEmpty(),
+        check("size").optional().isInt({ min: 1 })
     ], { message: "Size must be greater than or equal to 1" }),
 
     oneOf([
-        check("name").optional().isEmpty().withMessage("Name must be a string"),
-        check("name").optional().notEmpty().withMessage("Name must be a string")
+        check("name").optional().isEmpty(),
+        check("name").optional().notEmpty()
     ], { message: "Name must be a string" }),
 
     oneOf([
-        check("type").optional().isEmpty().withMessage("Type must be 'Online' or 'In Person'"),
+        check("type").optional().isEmpty(),
         check("type").optional().isString()
         .custom(type => {
             const expectedInputs = ["online", "in person"];
             return expectedInputs.includes(type.toLowerCase());
         })
-        .withMessage("Type must be 'Online' or 'In Person'")
     ], { message: "Type must be 'Online' or 'In Person'" }),
 
     oneOf([
-        check("startDate").optional().isEmpty().withMessage("Start date must be a valid datetime"),
-        check("startDate").optional().custom(startDate => new Date(startDate).toString() !== "Invalid Date").withMessage("Start date must be a valid datetime")
+        check("startDate").optional().isEmpty(),
+        check("startDate").optional().custom(startDate => new Date(startDate).toString() !== "Invalid Date")
     ], { message: "Start date must be a valid datetime" }),
     
     handleValidationErrors
