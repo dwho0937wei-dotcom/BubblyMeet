@@ -1,10 +1,10 @@
 const express = require('express');
 const { Op } = require('sequelize');
 
-const { User, Group, Membership, Sequelize, Venue, Event, Attendance, EventImage } = require('../../db/models');
+const { Group, Membership, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth, partOfAnEvent, hostOrCohostOfGroup } = require('../../utils/auth');
 const { getUserFromToken, venueExists, eventExists, userExists } = require('../../utils/helper');
-const { validateEvent, validateAttendance } = require('../../utils/validation');
+const { validateEvent, validateAttendance, validateEventQuery } = require('../../utils/validation');
 
 const router = express.Router();
 
@@ -264,7 +264,7 @@ router.delete('/:eventId', restoreUser, requireAuth2, eventExists, hostOrCohostO
 })
 
 // Get all events
-router.get('/', async (req, res) => {
+router.get('/', validateEventQuery, async (req, res) => {
     // Setting up the criteria for finding all the events
     const eventCriteria = {
         include: [
@@ -298,7 +298,9 @@ router.get('/', async (req, res) => {
     // Setting the page and size
     if (page > 10) page = 1;
     if (size > 20) size = 20;
-    if (isNaN(page) || page < 1 || isNaN(size) || size < 1) return queryBadRequest(res);
+    // if (isNaN(page) || page < 1 || isNaN(size) || size < 1) {
+    //     return queryBadRequest(res);
+    // }
     // Applying the page and size
     eventCriteria.limit = size;
     eventCriteria.offset = size * (page - 1);
@@ -316,17 +318,17 @@ router.get('/', async (req, res) => {
         }
     }
     if (startDate) {
-        if (new Date(startDate).toString() === "Invalid Date") {
-            return queryBadRequest(res);
-        }
-        else {
-            eventCriteria.where.startDate = {
-                [Op.and]: {
-                    [Op.gte]: new Date(startDate + " 00:00:00"),
-                    [Op.lte]: new Date(startDate + " 23:59:59.999")
-                }
+        // if (new Date(startDate).toString() === "Invalid Date") {
+        //     return queryBadRequest(res);
+        // }
+        // else {
+        eventCriteria.where.startDate = {
+            [Op.and]: {
+                [Op.gte]: new Date(startDate + " 00:00:00"),
+                [Op.lte]: new Date(startDate + " 23:59:59.999")
             }
         }
+        // }
     } 
 
     // Finding and paginating all events

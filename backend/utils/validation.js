@@ -169,11 +169,40 @@ const validateAttendance = [
     handleValidationErrors
 ];
 
+const validateEventQuery = [
+    check("page")
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1 })
+        .withMessage("Page must be greater than or equal to 1"),
+    check("size")
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1 })
+        .withMessage("Size must be greater than or equal to 1"),
+    check("name")
+        .optional({ values: "undefined" })
+        .isString()
+        .withMessage("Name must be a string"),
+    check("type")
+        .optional({ value: "undefined" })
+        .isString()
+        .custom(type => {
+            const expectedInputs = ["online", "in person"];
+            return expectedInputs.includes(type.toLowerCase());
+        })
+        .withMessage("Type must be 'Online' or 'In Person'"),
+    check("startDate")
+        .optional({ value: "undefined" })
+        .isDate()
+        .withMessage("Start date must be a valid datetime"),
+    handleValidationErrors
+];
+
 module.exports = {
   validateLogin,
   validateSignUp,
   validateGroup,
   validateVenue,
   validateEvent,
-  validateAttendance
+  validateAttendance,
+  validateEventQuery
 };
