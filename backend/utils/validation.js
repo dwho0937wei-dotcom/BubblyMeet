@@ -170,31 +170,35 @@ const validateAttendance = [
 ];
 
 const validateEventQuery = [
-    check("page")
-        .optional({ checkFalsy: true })
-        .isInt({ min: 1 })
-        .withMessage("Page must be greater than or equal to 1"),
-    check("size")
-        .optional({ checkFalsy: true })
-        .isInt({ min: 1 })
-        .withMessage("Size must be greater than or equal to 1"),
-    check("name")
-        .optional({ values: "undefined" })
-        .isString()
-        .notEmpty()
-        .withMessage("Name must be a string"),
-    check("type")
-        .optional({ value: "undefined" })
-        .isString()
+    oneOf([
+        check("page").optional().isEmpty(),
+        check("page").optional().isInt({ min: 1 })
+    ], "Page must be greater than or equal to 1"),
+
+    oneOf([
+        check("size").optional().isEmpty(),
+        check("size").optional().isInt({ min: 1 })
+    ], "Size must be greater than or equal to 1"),
+
+    oneOf([
+        check("name").optional().isEmpty(),
+        check("name").optional().isString().notEmpty()
+    ], "Name must be a string"),
+
+    oneOf([
+        check("type").optional().isEmpty(),
+        check("type").optional()
         .custom(type => {
             const expectedInputs = ["online", "in person"];
             return expectedInputs.includes(type.toLowerCase());
         })
-        .withMessage("Type must be 'Online' or 'In Person'"),
-    check("startDate")
-        .optional({ value: "undefined" })
-        .custom(startDate => new Date(startDate).toString() !== "Invalid Date")
-        .withMessage("Start date must be a valid datetime"),
+    ], "Type must be 'Online' or 'In Person'"),
+
+    oneOf([
+        check("startDate").optional().isEmpty(),
+        check("startDate").optional().custom(startDate => new Date(startDate).toString() !== "Invalid Date")
+    ], "Start date must be a valid datetime"),
+    
     handleValidationErrors
 ];
 
