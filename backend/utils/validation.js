@@ -181,6 +181,7 @@ const validateEventQuery = [
     check("name")
         .optional({ values: "undefined" })
         .isString()
+        .notEmpty()
         .withMessage("Name must be a string"),
     check("type")
         .optional({ value: "undefined" })
@@ -192,7 +193,7 @@ const validateEventQuery = [
         .withMessage("Type must be 'Online' or 'In Person'"),
     check("startDate")
         .optional({ value: "undefined" })
-        .isDate()
+        .custom(startDate => new Date(startDate).toString() !== "Invalid Date")
         .withMessage("Start date must be a valid datetime"),
     handleValidationErrors
 ];
