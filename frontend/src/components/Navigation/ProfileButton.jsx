@@ -1,13 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { FaUserCircle } from 'react-icons/fa';
+import * as sessionActions from '../../store/session';
+import { useDispatch } from "react-redux";
 
 function ProfileButton({ user }) {
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
+    const dispatch = useDispatch();
 
     const toggleMenu = e => {
         e.stopPropagation();
         setShowMenu(!showMenu);
+    }
+
+    const logout = (e) => {
+        e.preventDefault();
+        dispatch(sessionActions.logout());
     }
 
     useEffect(() => {
@@ -35,6 +43,9 @@ function ProfileButton({ user }) {
                 <li>{user.username}</li>
                 <li>{user.firstName} {user.lastName}</li>
                 <li>{user.email}</li>
+                <li>
+                <button onClick={logout}>Log Out</button>
+                </li>
             </ul>
         </>
     );
