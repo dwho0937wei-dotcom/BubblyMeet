@@ -45,7 +45,7 @@ const GroupDetailsPage = () => {
             >
                 Join this group
             </button>
-            {alert.joinButton}
+            {' '}{alert.joinButton}
 
             {/* Organizer Section */}
             <h1>Organizer</h1>
