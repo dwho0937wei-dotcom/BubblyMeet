@@ -16,7 +16,7 @@ const loadAllGroups = list => ({
 const loadGroup = group => ({
     type: LOAD_GROUP,
     group
-})
+});
 
 // ------------------------------------ //
 //!       Thunk Action Creators
@@ -39,10 +39,7 @@ export const getGroup = (groupId) => async dispatch => {
 }
 
 // ------------------------------------ //
-const initialState = {
-    groupList: [],
-    currentGroup: {},
-};
+const initialState = {};
 
 const groupReducer = (state = initialState, action) => {
     switch (action.type) {

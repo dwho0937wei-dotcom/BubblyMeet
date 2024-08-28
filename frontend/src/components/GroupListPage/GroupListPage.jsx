@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, NavLink } from 'react-router-dom'
 import { getAllGroups } from "../../store/group";
@@ -6,13 +6,18 @@ import './GroupListPage.css';
 
 const GroupListPage = () => {
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(getAllGroups());
     }, [dispatch]);
 
     const allGroupsObj = useSelector(state => state.group.groupList);
-    const allGroupsArr = Object.values(allGroupsObj);
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
+        if (allGroupsObj) {
+            setIsLoaded(true);
+        }
+    }, [allGroupsObj, setIsLoaded]);
+    const allGroupsArr = isLoaded && Object.values(allGroupsObj);
 
     return (
         <>
@@ -23,17 +28,18 @@ const GroupListPage = () => {
                 <NavLink to="/groups">Groups</NavLink>
             </h1>
             <ul>
-                {allGroupsArr.map(group => (
-                    <Link 
-                        to={`/groups/${group.id}`}
-                        key={group.id}
-                        className="item"
-                    >
-                        <li>
-                            <h2>{group.name}</h2>
-                            <p>{group.about}</p>
-                        </li>
-                    </Link>
+                {isLoaded && 
+                    allGroupsArr.map(group => (
+                        <Link 
+                            to={`/groups/${group.id}`}
+                            key={group.id}
+                            className="item"
+                        >
+                            <li>
+                                <h2>{group.name}</h2>
+                                <p>{group.about}</p>
+                            </li>
+                        </Link>
                 ))}
             </ul>
         </>
