@@ -35,17 +35,16 @@ const router = createBrowserRouter([
         element: <LandingPage />
       },
       {
-        path: '/groups',
+        path: 'groups',
         element: <GroupListPage />
       },
       {
-        path: '/groups/:groupId',
+        path: 'groups/:groupId',
         element: <GroupDetailsPage />
       },
-      {
-        path: '/events',
-        
-      }
+      // {
+      //   path: 'events'
+      // }
     ]
   }
 ]);

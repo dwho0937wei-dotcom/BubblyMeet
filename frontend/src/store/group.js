@@ -3,45 +3,69 @@ import { csrfFetch } from "./csrf";
 // ------------------------------------ //
 //!       Action Types
 // ------------------------------------ //
-const LOAD_GROUP = 'group/LOAD_GROUP';
+const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
+const LOAD_GROUP = '/group/LOAD_GROUP';
 
 // ------------------------------------ //
 //!       Action Creators
 // ------------------------------------ //
-const loadGroup = list => ({
-    type: LOAD_GROUP,
+const loadAllGroups = list => ({
+    type: LOAD_ALL_GROUPS,
     list
 });
+const loadGroup = group => ({
+    type: LOAD_GROUP,
+    group
+})
 
 // ------------------------------------ //
 //!       Thunk Action Creators
 // ------------------------------------ //
-export const getGroup = () => async dispatch => {
+export const getAllGroups = () => async dispatch => {
     const response = await csrfFetch(`/api/groups`);
 
     if (response.ok) {
         const list = await response.json();
-        dispatch(loadGroup(list));
+        dispatch(loadAllGroups(list));
+    }
+}
+export const getGroup = (groupId) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${groupId}`);
+
+    if (response.ok) {
+        const group = await response.json();
+        dispatch(loadGroup(group));
     }
 }
 
 // ------------------------------------ //
-const initialState = {};
+const initialState = {
+    groupList: [],
+    currentGroup: {},
+};
 
 const groupReducer = (state = initialState, action) => {
     switch (action.type) {
-        case LOAD_GROUP: {
+        case LOAD_ALL_GROUPS: {
             const allGroups = {};
             action.list.Groups.forEach(group => {
                 allGroups[group.id] = group;
             });
             return {
-                ...allGroups,
-                ...initialState
+                ...state,
+                groupList: allGroups,
             };
         }
-        default: 
+        case LOAD_GROUP: {
+            const group = {...action.group};
+            return {
+                ...state,
+                currentGroup: group
+            }
+        }
+        default: {
             return state;
+        }
     }
 }
 

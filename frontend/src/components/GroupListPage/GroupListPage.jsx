@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, NavLink } from 'react-router-dom'
-import { getGroup } from "../../store/group";
+import { getAllGroups } from "../../store/group";
 import './GroupListPage.css';
 
 const GroupListPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getGroup());
+        dispatch(getAllGroups());
     }, [dispatch]);
 
-    const allGroupsObj = useSelector(state => state.group);
+    const allGroupsObj = useSelector(state => state.group.groupList);
     const allGroupsArr = Object.values(allGroupsObj);
 
     return (

@@ -8,26 +8,24 @@ const GroupDetailsPage = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getGroup())
-    }, [dispatch]);
+        dispatch(getGroup(groupId))
+    }, [dispatch, groupId]);
 
-    const allGroupsObj = useSelector(state => state.group);
-    const allGroupsArr = Object.values(allGroupsObj);
-    const group = allGroupsArr.find(group => group.id === +groupId);
+    const group = useSelector(state => state.group.currentGroup);
 
     return (
         <>
             {/* Group Section */}
             <NavLink to="/groups">Groups</NavLink>
             <h1>{group.name}</h1>
-            <h3>{group.city}</h3>
+            <h3>{group.city}, {group.state}</h3>
             <h3>## events * {!group.private ? 'Public' : 'Private'}</h3>
-            <h3>Organized by {"<Firstname> <Lastname>"}</h3>
+            <h3>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</h3>
             <button>Join this group</button>
 
             {/* Organizer Section */}
             <h1>Organizer</h1>
-            <h3>Firstname Lastname</h3>
+            <h3>{group.Organizer.firstName} {group.Organizer.lastName}</h3>
 
             {/* About Section */}
             <h1>What {"we're"} about</h1>
