@@ -26,7 +26,6 @@ export const getGroup = () => async dispatch => {
 }
 
 // ------------------------------------ //
-
 const initialState = {};
 
 const groupReducer = (state = initialState, action) => {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { getGroup } from "../../store/group";
 import './GroupListPage.css';
 
@@ -16,7 +16,12 @@ const GroupListPage = () => {
 
     return (
         <>
-            <h1>Welcome to the Group List Page!</h1>
+            <h1>
+                <NavLink to="/events">Events</NavLink>
+            </h1>
+            <h1>
+                <NavLink to="/groups">Groups</NavLink>
+            </h1>
             <ul>
                 {allGroupsArr.map(group => (
                     <Link 
