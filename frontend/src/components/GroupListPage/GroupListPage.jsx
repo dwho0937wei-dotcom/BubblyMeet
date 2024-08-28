@@ -20,7 +20,7 @@ const GroupListPage = () => {
             <ul>
                 {allGroupsArr.map(group => (
                     <Link 
-                        to={`/group/${group.id}`}
+                        to={`/groups/${group.id}`}
                         key={group.id}
                         className="item"
                     >

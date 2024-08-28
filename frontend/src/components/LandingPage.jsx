@@ -4,7 +4,7 @@ const LandingPage = () => {
     return (
         <>
             <h1>Welcome to the Landing Page!</h1>
-            <NavLink to="/group">See all groups</NavLink>
+            <NavLink to="/groups">See all groups</NavLink>
         </>
     )
 }
