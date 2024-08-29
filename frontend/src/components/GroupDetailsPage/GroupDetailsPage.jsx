@@ -40,7 +40,7 @@ const GroupDetailsPage = () => {
             <NavLink to="/groups">Groups</NavLink>
             {/* Group Section */}
             <div>
-                <img src={imageUrl} alt="Group's Preview Image" />
+                <img src={imageUrl} alt="Group Preview Image" />
             </div>
             <h1>{isLoaded ? group.name : "Loading..."}</h1>
             <h3>
