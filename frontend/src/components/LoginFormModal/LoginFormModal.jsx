@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
@@ -16,10 +16,24 @@ function LoginFormModal() {
         setErrors({});
         return dispatch(sessionActions.login({ credential, password })).then(closeModal)
         .catch(async (res) => {
-            const data = await res.json();
-            if (data && data.errors) setErrors(data.errors);
+            // const data = await res.json();
+            // console.log(data)
+            // if (data && data.errors) setErrors(data.errors);
+            setErrors({ credential: "The provided credentials were invalid"})
         });
     };
+
+    useEffect(() => {
+        setErrors({});
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (
+            (!emailRegex.test(credential) && credential.length < 4) 
+            || password.length < 6
+           ) 
+        {
+            setErrors({ credential: "The provided credentials were invalid" })
+        }
+    }, [credential, password, setErrors]);
 
     return (
         <>
@@ -44,7 +58,7 @@ function LoginFormModal() {
                     />
                 </label>
                 {errors.credential && <p>{errors.credential}</p>}
-                <button type="submit">Log In</button>
+                <button type="submit" disabled={errors.credential}>Log In</button>
             </form>
         </>
     );
