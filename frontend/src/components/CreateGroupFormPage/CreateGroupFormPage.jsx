@@ -19,6 +19,19 @@ function CreateGroupFormPage() {
     async function handleSubmit(event) {
         event.preventDefault();
 
+        let validateErrors = {};
+        if (location.length === 0) {
+            validateErrors.location = "Location is required";
+        }
+        if (
+            !imageUrl.endsWith('.png') &&
+            !imageUrl.endsWith('.jpg') &&
+            !imageUrl.endsWith('.jpeg')
+        ) {
+            validateErrors.imageUrl = "Image URL must end in .png, .jpg, or .jpeg";
+        }
+        const noValidateErrors = Object.values(validateErrors).length === 0;
+
         const [city, state] = location.split(', ');
         const payload = {
             name,
@@ -29,12 +42,15 @@ function CreateGroupFormPage() {
             state
         }
 
-        const newGroup = await dispatch(createGroupThunk(payload));
-        if (!newGroup.errors) {
+        const newGroup = await dispatch(createGroupThunk(payload)).catch(errors => errors.json());
+        if (!newGroup.errors && noValidateErrors) {
             navigate(`/groups/${newGroup.id}`);
         }
         else {
-            setErrors(newGroup.errors);
+            if (newGroup.errors) {
+                validateErrors = {...validateErrors, ...newGroup.errors};
+            }
+            setErrors(validateErrors);
         }
     }
 
@@ -56,6 +72,9 @@ function CreateGroupFormPage() {
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="City, STATE"
                     />
+                    <div className="errors">
+                        {errors.location || errors.city || errors.state}
+                    </div>
                 </div>
                 <div>
                     {/* Group Name */}
@@ -68,6 +87,9 @@ function CreateGroupFormPage() {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="What is your group name?"
                     />
+                    <div className="errors">
+                        {errors.name}
+                    </div>
                 </div>
                 <div>
                     {/* Group Description */}
@@ -90,6 +112,9 @@ function CreateGroupFormPage() {
                         onChange={(e) => setAbout(e.target.value)}
                         placeholder="Please write at least 30 characters"
                     />
+                    <div className="errors">
+                        {errors.about}
+                    </div>
                 </div>
                 <div>
                     {/* Type, Private?, Preview Image */}
@@ -106,6 +131,9 @@ function CreateGroupFormPage() {
                             <option value="In person">In person</option>
                             <option value="Online">Online</option>
                         </select>
+                        <div className="errors">
+                            {errors.type}
+                        </div>
 
                         <dt>Is this group private or public?</dt>
                         <select 
@@ -118,6 +146,9 @@ function CreateGroupFormPage() {
                             <option value={true}>Private</option>
                             <option value={false}>Public</option>
                         </select>
+                        <div className="errors">
+                            {errors.private}
+                        </div>
 
                         <dt>Please add an image url for your group below:</dt>
                         <input 
@@ -127,6 +158,9 @@ function CreateGroupFormPage() {
                             onChange={(e) => setImageUrl(e.target.value)}
                             placeholder="Image Url"
                         />
+                        <div className="errors">
+                            {errors.imageUrl}
+                        </div>
                     </dl>
                 </div>
                 <button>Create group</button>
