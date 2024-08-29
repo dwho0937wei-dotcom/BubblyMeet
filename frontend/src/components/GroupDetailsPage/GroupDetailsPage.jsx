@@ -1,3 +1,4 @@
+import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
@@ -25,10 +26,22 @@ const GroupDetailsPage = () => {
         }
     }, [setIsLoaded, group]);
 
+    const previewImage = isLoaded && group.GroupImages.find(img => img.preview);
+    let imageUrl;
+    if (previewImage && isUrl(previewImage.url)) {
+        imageUrl = previewImage.url;
+    }
+    else {
+        imageUrl = "https://cdn-icons-png.flaticon.com/256/681/681443.png"
+    }
+
     return (
         <>
-            {/* Group Section */}
             <NavLink to="/groups">Groups</NavLink>
+            {/* Group Section */}
+            <div>
+                <img src={imageUrl} alt="Group's Preview Image" />
+            </div>
             <h1>{isLoaded ? group.name : "Loading..."}</h1>
             <h3>
                 {isLoaded ? group.city : "Loading..."}{', '} 

@@ -56,25 +56,25 @@ module.exports = {
       // Eagle Union
       {
         groupId: EagleUnion.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/b/b2/Eagle_Union-logo.png/revision/latest?cb=20230317170325',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/b/b2/Eagle_Union-logo.png',
         preview: true
       },
       // Royal Navy
       {
         groupId: RoyalNavy.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/7/73/Royal_Navy-logo.png/revision/latest?cb=20230317170329',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/7/73/Royal_Navy-logo.png',
         preview: true
       },
       // Sakura Empire
       {
         groupId: SakuraEmpire.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/2/25/Sakura_Empire-logo.png/revision/latest?cb=20230317170334',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/2/25/Sakura_Empire-logo.png',
         preview: true
       },
       // Iron Blood
       {
         groupId: IronBlood.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/6/6e/Ironblood-logo.png/revision/latest?cb=20230317170338',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/6/6e/Ironblood-logo.png',
         preview: true
       },
       // Dragon Empery
@@ -86,25 +86,25 @@ module.exports = {
       // Sardegna Empire
       {
         groupId: SardegnaEmpire.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/d/de/Sardenga_Empire-logo.png/revision/latest?cb=20230317170203',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/d/de/Sardenga_Empire-logo.png',
         preview: true
       },
       // Vichya Dominion
       {
         groupId: VichyaDominion.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/1/1f/Vichya_Dominion.png/revision/latest?cb=20230317165952',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/1/1f/Vichya_Dominion.png',
         preview: true
       },
       // Iris Libre
       {
         groupId: IrisLibre.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/4/4d/Iris_Libre.png/revision/latest?cb=20230317170756',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/4/4d/Iris_Libre.png',
         preview: true
       },
       // Northern Parliament
       {
         groupId: NorthernParliament.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/8/88/Northern_Parliament-logo.png/revision/latest?cb=20230317170348',
+        url: 'https://static.wikia.nocookie.net/bhlx/images/8/88/Northern_Parliament-logo.png',
         preview: true
       },
       // Siren
