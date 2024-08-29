@@ -19,8 +19,6 @@ const EventListPage = () => {
     }, [eventListObj, setIsLoaded]);
     const eventListArr = isLoaded && Object.values(eventListObj);
 
-    console.log(eventListArr);
-
     return (
         <>
             <h1>
