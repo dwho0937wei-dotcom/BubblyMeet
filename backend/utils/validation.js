@@ -38,13 +38,14 @@ const handleValidationErrors = (req, res, next) => {
 
 // Validate User
 const validateLogin = [
-  check('credential')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage('Email or username is required'),
+  oneOf([
+      check("credential").isEmail(),
+      check("credential").isLength({ min: 4 })
+  ], { message: "Credential must either be an email or a username with at least 4 characters" }),
   check('password')
       .exists({ checkFalsy: true })
-      .withMessage('Password is required'),
+      .isLength({ min: 6 })
+      .withMessage('Password is required and needs to be at least 6 characters'),
   handleValidationErrors
 ];
 
@@ -202,7 +203,6 @@ const validateEventQuery = [
             return expectedInputs.includes(type.toLowerCase());
         })
     ], { message: "Type must be 'Online' or 'In Person'" }),
-
     oneOf([
         check("startDate").optional().isEmpty(),
         check("startDate").custom(startDate => new Date(startDate).toString() !== "Invalid Date")

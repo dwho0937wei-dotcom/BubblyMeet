@@ -9,8 +9,9 @@ function Navigation({ isLoaded }) {
     return (
         <ul>
             <li>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/">MeetIsHere</NavLink>
             </li>
+            <NavLink to="/groups/new">Start a new group</NavLink>
             {isLoaded && (
                 <li>
                     <ProfileButton user={sessionUser} />
