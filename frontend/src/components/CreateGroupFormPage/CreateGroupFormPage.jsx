@@ -1,16 +1,41 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { createGroupThunk } from "../../store/group";
 import './CreateGroupFormPage.css';
 
 function CreateGroupFormPage() {
     const [location, setLocation] = useState('');
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [about, setAbout] = useState('');
     const [type, setType] = useState('Unselected');
     const [privacy, setPrivacy] = useState('Unselected');
     const [imageUrl, setImageUrl] = useState('');
+    const [errors, setErrors] = useState({});
 
-    function handleSubmit() {
-        return;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const [city, state] = location.split(', ');
+        const payload = {
+            name,
+            about,
+            type,
+            private: privacy,
+            city,
+            state
+        }
+
+        const newGroup = await dispatch(createGroupThunk(payload));
+        if (!newGroup.errors) {
+            navigate(`/groups/${newGroup.id}`);
+        }
+        else {
+            setErrors(newGroup.errors);
+        }
     }
 
     return (
@@ -60,9 +85,9 @@ function CreateGroupFormPage() {
                         </li>
                     </ol>
                     <textarea 
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        id="about"
+                        value={about}
+                        onChange={(e) => setAbout(e.target.value)}
                         placeholder="Please write at least 30 characters"
                     />
                 </div>
