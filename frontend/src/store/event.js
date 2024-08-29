@@ -3,25 +3,27 @@ import { csrfFetch } from "./csrf";
 // ------------------------------------ //
 //!       Action Types
 // ------------------------------------ //
-const LOAD_EVENT = 'event/LOAD_EVENT';
+const LOAD_ALL_EVENTS = 'event/LOAD_ALL_EVENTS';
+
 
 // ------------------------------------ //
 //!       Action Creators
 // ------------------------------------ //
-const loadEvent = list => {
-    type: LOAD_EVENT,
+const loadAllEvent = list => ({
+    type: LOAD_ALL_EVENTS,
     list
-}
+});
+
 
 // ------------------------------------ //
 //!       Thunk Action Creators
 // ------------------------------------ //
-export const getEvent = () => async dispatch => {
+export const getAllEvents = () => async dispatch => {
     const response = await csrfFetch(`/api/events`);
 
     if (response.ok) {
         const list = await response.json();
-        dispatch(loadEvent(list));
+        dispatch(loadAllEvent(list));
     }
 }
 
@@ -30,9 +32,20 @@ const initialState = {};
 
 const eventReducer = (state = initialState, action) => {
     switch (action.type) {
-        case LOAD_EVENT: {
-            const allEvents = {};
-            console.log(action);
+        case LOAD_ALL_EVENTS: {
+            const eventList = {};
+            action.list.Events.forEach(event => {
+                eventList[event.id] = event;
+            })
+            console.log("Event List:", eventList);
+            return {
+                ...state,
+                eventList: {...eventList}
+            };
         }
+        default:
+            return state;
     }
 }
+
+export default eventReducer;

@@ -287,6 +287,7 @@ router.get('/', validateEventQuery, async (req, res) => {
             'venueId',
             'name',
             'type',
+            'description',
             'startDate',
             'endDate',
         ]

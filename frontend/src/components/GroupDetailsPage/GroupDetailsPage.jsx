@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
-import { getGroup } from '../store/group';
+import { getGroup } from '../../store/group';
 
 const GroupDetailsPage = () => {
     const { groupId } = useParams();
@@ -17,7 +17,7 @@ const GroupDetailsPage = () => {
         setAlert(newAlert);
     }
 
-    const group = useSelector(state => state.group.currentGroup);
+    const group = useSelector(state => state.groups.currentGroup);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         if (group) {

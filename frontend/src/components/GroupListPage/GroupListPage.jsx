@@ -10,7 +10,7 @@ const GroupListPage = () => {
         dispatch(getAllGroups());
     }, [dispatch]);
 
-    const allGroupsObj = useSelector(state => state.group.groupList);
+    const allGroupsObj = useSelector(state => state.groups.groupList);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         if (allGroupsObj) {
@@ -33,7 +33,7 @@ const GroupListPage = () => {
                         <Link 
                             to={`/groups/${group.id}`}
                             key={group.id}
-                            className="item"
+                            className="groupItem"
                         >
                             <li>
                                 <h2>{group.name}</h2>
