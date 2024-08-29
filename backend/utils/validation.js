@@ -71,30 +71,45 @@ const validateSignUp = [
 
 // Validate Group
 const validateGroup = [
-  check('name')
-      .exists({ checkFalsy: true })
-      .isLength({ max: 60 })
-      .withMessage('Name must be 60 characters or less'),
-  check('about')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 50 })
-      .withMessage('About must be 50 characters or more'),
-  check('type')
-      .exists({ checkFalsy: true })
-      .isIn(['Online', 'In person'])
-      .withMessage("Type must be 'Online' or 'In person'"),
-  check('private')
-      .exists({ checkNull: true })
-      .isBoolean()
-      .withMessage('Private must be a boolean'),
-  check('city')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage('City is required'),
-  check('state')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage('State is required'),
+    // check('name')
+    //     .exists({ checkFalsy: true })
+    //     .isLength({ max: 60 })
+    //     .withMessage('Name must be 60 characters or less'),
+    check('name')
+        .exists({ checkFalsy: true })
+        .withMessage('Name is required'),
+    // check('about')
+    //     .exists({ checkFalsy: true })
+    //     .isLength({ min: 50 })
+    //     .withMessage('About must be 50 characters or more'),
+    check('about')
+        .exists({ checkFalsy: true })
+        .isLength({ min: 30 })
+        .withMessage('Description must be at least 30 characters long'),
+    // check('type')
+    //     .exists({ checkFalsy: true })
+    //     .isIn(['Online', 'In person'])
+    //     .withMessage("Type must be 'Online' or 'In person'"),
+    check('type')
+        .exists({ checkFalsy: true })
+        .isIn(['Online', 'In person'])
+        .withMessage("Group Type is required"),
+    // check('private')
+    //     .exists({ checkNull: true })
+    //     .isBoolean()
+    //     .withMessage('Private must be a boolean'),
+    check('private')
+        .exists({ checkNull: true })
+        .isBoolean()
+        .withMessage('Visibility Type is required'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('City is required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('State is required'),
   handleValidationErrors
 ];
 
