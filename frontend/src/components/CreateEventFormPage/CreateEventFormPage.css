@@ -1,0 +1,10 @@
+#description {
+    height: 200px;
+    width: 600px;
+    vertical-align: top;
+    text-align: left;
+}
+
+.errors {
+    color: red;
+}
