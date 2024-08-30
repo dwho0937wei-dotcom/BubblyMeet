@@ -314,6 +314,7 @@ router.get('/:groupId/events', groupExists, async (req, res) => {
             "venueId",
             "name",
             "type",
+            "description",
             "startDate",
             "endDate"
         ]

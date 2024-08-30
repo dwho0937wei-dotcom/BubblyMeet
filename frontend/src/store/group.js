@@ -6,6 +6,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
 const LOAD_GROUP = '/group/LOAD_GROUP';
 const CREATE_GROUP = '/group/CREATE_GROUP';
+const LOAD_ALL_GROUP_EVENTS = '/group/LOAD_ALL_GROUP_EVENTS';
 
 // ------------------------------------ //
 //!       Action Creators
@@ -18,10 +19,14 @@ const loadGroup = group => ({
     type: LOAD_GROUP,
     group
 });
-const createGroup = group => ({
+const createGroup = newGroup => ({
     type: CREATE_GROUP,
-    group
+    newGroup
 })
+const loadAllGroupEvents = events => ({
+    type: LOAD_ALL_GROUP_EVENTS,
+    events
+});
 
 // ------------------------------------ //
 //!       Thunk Action Creators
@@ -59,6 +64,15 @@ export const createGroupThunk = body => async dispatch => {
         return errors;
     }
 }
+export const getAllGroupEvents = (groupId) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${groupId}/events`);
+
+    if (response.ok) {
+        const groupEvents = await response.json();
+        dispatch(loadAllGroupEvents(groupEvents));
+        return groupEvents;
+    }
+}
 
 // ------------------------------------ //
 const initialState = {};
@@ -83,9 +97,18 @@ const groupReducer = (state = initialState, action) => {
             }
         }
         case CREATE_GROUP: {
-            console.log("CREATE_GROUP reducer activated!")
-            console.log(action);
-            return state;
+            const lastCreatedGroup = {...action.newGroup};
+            return {
+                ...state,
+                lastCreatedGroup
+            };
+        }
+        case LOAD_ALL_GROUP_EVENTS: {
+            const currentGroupEvents = [...action.events.Events];
+            return {
+                ...state,
+                currentGroupEvents
+            }
         }
         default: {
             return state;
