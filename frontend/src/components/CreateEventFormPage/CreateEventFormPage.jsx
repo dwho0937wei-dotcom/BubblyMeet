@@ -35,6 +35,16 @@ function CreateEventFormPage() {
     //! Event for submitting
     function handleSubmit(e) {
         e.preventDefault();
+
+        let validateErrors = {};
+        if (
+            !imageUrl.endsWith('.png') &&
+            !imageUrl.endsWith('.jpg') &&
+            !imageUrl.endsWith('.jpeg')
+        ) {
+            validateErrors.imageUrl = "Image URL must end in .png, .jpg, or .jpeg";
+        }
+
         console.log("You've clicked the button!");
     } 
 
