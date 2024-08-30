@@ -83,6 +83,13 @@ const GroupDetailsPage = () => {
         }
     }
 
+    //! Handling event from "Update" button
+    function clickUpdate() {
+        if (isLoaded) {
+            navigate(`/groups/${group.id}/edit`)
+        }
+    }
+
     //! Buttons to display based on whether the user is an organizer or not
     const user = useSelector(state => state.session.user);
     function displayGroupButton() {
@@ -90,7 +97,7 @@ const GroupDetailsPage = () => {
             return (
                 <>
                     <button onClick={clickCreateEvent}>Create event</button>{' '}
-                    <button>Update</button>{' '}
+                    <button onClick={clickUpdate}>Update</button>{' '}
                     <button>Delete</button>
                 </>
             )
