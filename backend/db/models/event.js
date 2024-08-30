@@ -71,9 +71,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     capacity: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       validate: {
-        isInt: true
+        custom(value) {
+          if (value !== null && value !== Infinity && !Number.isInteger(value)) {
+            throw new Error('The capacity must either be null, an integer, or infinity!');
+          }
+        }
       }
     },
     price: {
