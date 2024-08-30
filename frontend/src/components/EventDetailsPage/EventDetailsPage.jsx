@@ -8,7 +8,7 @@ const EventDetailsPage = () => {
     const { eventId } = useParams();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getEventDetails(eventId));
+        dispatch(getEventDetails(eventId)).catch(errors => errors.json());
     }, [dispatch, eventId]);
 
     const event = useSelector(state => state.events.currentEvent);

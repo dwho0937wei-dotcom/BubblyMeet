@@ -1,7 +1,7 @@
 const express = require('express');
 const { Op } = require('sequelize');
 
-const { Group, Membership, Venue, Event, Attendance, EventImage } = require('../../db/models');
+const { User, Group, Membership, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const { userLoggedIn, restoreUser, requireAuth2, requireProperAuth, partOfAnEvent, hostOrCohostOfGroup } = require('../../utils/auth');
 const { getUserFromToken, venueExists, eventExists, userExists } = require('../../utils/helper');
 const { validateEvent, validateAttendance, validateEventQuery } = require('../../utils/validation');
@@ -236,6 +236,21 @@ router.get('/:eventId', eventExists, async (req, res) => {
     // For counting number of attendance in the event
     const numAttending = await event.countAttendee();
     event.dataValues.numAttending = numAttending;
+
+    // Find the host of the event
+    const hostAttendant = await Attendance.findOne({
+        where: {
+            eventId,
+            status: 'host'
+        },
+    });
+    const hostUser = await User.findByPk(hostAttendant.userId, {
+        attributes: [
+            'firstName',
+            'lastName',
+        ]
+    });
+    event.dataValues.eventHost = hostUser;
 
     // Changing the date format of both startDate and endDate
     // from "(year-month-day)T(hour:minute:second).000Z"
