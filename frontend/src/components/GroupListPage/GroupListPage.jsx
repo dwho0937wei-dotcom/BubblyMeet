@@ -1,3 +1,4 @@
+import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, NavLink } from 'react-router-dom'
@@ -19,6 +20,9 @@ const GroupListPage = () => {
     }, [allGroupsObj, setIsLoaded]);
     const allGroupsArr = isLoaded && Object.values(allGroupsObj);
 
+    const groupImageFillIn = "https://cdn-icons-png.flaticon.com/256/681/681443.png"
+
+
     return (
         <>
             <h1>
@@ -27,7 +31,7 @@ const GroupListPage = () => {
             <h1>
                 <NavLink to="/groups">Groups</NavLink>
             </h1>
-            <ul>
+
                 {isLoaded && 
                     allGroupsArr.map(group => (
                         <Link 
@@ -35,13 +39,14 @@ const GroupListPage = () => {
                             key={group.id}
                             className="groupItem"
                         >
-                            <li>
-                                <h2>{group.name}</h2>
-                                <p>{group.about}</p>
-                            </li>
+                            <h1>----------------------------------------------</h1>
+                            <img src={isUrl(group.previewImage) ? group.previewImage : groupImageFillIn} alt={`${group.name} Preview Image`} />
+                            <h2>{group.name}</h2>
+                            <h3>{group.city}, {group.state}</h3>
+                            <p>{group.about}</p>
                         </Link>
                 ))}
-            </ul>
+
         </>
     )
 }

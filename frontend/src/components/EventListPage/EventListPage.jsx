@@ -1,3 +1,4 @@
+import isUrl from 'is-url';
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
@@ -19,6 +20,8 @@ const EventListPage = () => {
     }, [eventListObj, setIsLoaded]);
     const eventListArr = isLoaded && Object.values(eventListObj);
 
+    const eventImageFillIn = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg"
+
     return (
         <>
             <h1>
@@ -27,7 +30,6 @@ const EventListPage = () => {
             <h1>
                 <NavLink to="/groups">Groups</NavLink>
             </h1>
-            <ul>
                 {isLoaded && 
                     eventListArr.map(event => (
                         <Link 
@@ -35,15 +37,14 @@ const EventListPage = () => {
                             key={event.id}
                             className="eventItem"
                         >
-                            <li>
-                                <h3>{event.startDate}</h3>
-                                <h2>{event.name}</h2>
-                                <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
-                                <p>{event.description}</p>
-                            </li>
+                            <h1>----------------------------------------------</h1>
+                            <h3>{event.startDate}</h3>
+                            <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
+                            <h2>{event.name}</h2>
+                            <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
+                            <p>{event.description}</p>
                         </Link>
                 ))}
-            </ul>
         </>
     )
 }
