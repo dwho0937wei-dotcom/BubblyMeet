@@ -1,7 +1,7 @@
 import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { getAllGroupEvents, getGroup } from '../../store/group';
 
 const GroupDetailsPage = () => {
@@ -13,13 +13,6 @@ const GroupDetailsPage = () => {
         dispatch(getGroup(groupId));
         dispatch(getAllGroupEvents(groupId));
     }, [dispatch, groupId]);
-
-    //! Alert for the "Join this group" button coming soon...
-    const [alert, setAlert] = useState({});
-    function clickJoin() {
-        const newAlert = { joinButton: "Feature Coming Soon..." }
-        setAlert(newAlert);
-    }
 
     //! Extracting the group itself with its hosted events
     const group = useSelector(state => state.groups.currentGroup);
@@ -73,6 +66,43 @@ const GroupDetailsPage = () => {
     //! Event preview image fill-in
     const eventImageFillIn = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg";
 
+    //! Alert for the "Join this group" button coming soon...
+    const [alert, setAlert] = useState({});
+    function clickJoin() {
+        const newAlert = { joinButton: "Feature Coming Soon..." }
+        setAlert(newAlert);
+    }
+
+    //! Handling event from "Create event" button
+    const navigate = useNavigate();
+    function clickCreateEvent() {
+        if (isLoaded) {
+            navigate(`/groups/${group.id}/events`);
+        }
+    }
+
+    //! Buttons to display based on whether the user is an organizer or not
+    const user = useSelector(state => state.session.user);
+    function displayGroupButton() {
+        if (isLoaded && user && user.id === group.organizerId) {
+            return (
+                <>
+                    <button onClick={clickCreateEvent}>Create event</button>{' '}
+                    <button>Update</button>{' '}
+                    <button>Delete</button>
+                </>
+            )
+        }
+        else {
+            return (
+                <>
+                    <button onClick={clickJoin}>Join this group</button>
+                    {' '}{alert.joinButton}
+                </>
+            )
+        }
+    }
+
     return (
         <>
             <NavLink to="/groups">Groups</NavLink>
@@ -91,12 +121,7 @@ const GroupDetailsPage = () => {
                 {isLoaded ? group.Organizer.firstName : "Loading..."}{' '} 
                 {isLoaded ? group.Organizer.lastName : "Loading..."}
             </h3>
-            <button 
-                onClick={clickJoin}
-            >
-                Join this group
-            </button>
-            {' '}{alert.joinButton}
+            {displayGroupButton()}
 
             {/* Organizer Section */}
             <h1>Organizer</h1>

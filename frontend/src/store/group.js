@@ -7,6 +7,7 @@ const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
 const LOAD_GROUP = '/group/LOAD_GROUP';
 const CREATE_GROUP = '/group/CREATE_GROUP';
 const LOAD_ALL_GROUP_EVENTS = '/group/LOAD_ALL_GROUP_EVENTS';
+const CREATE_EVENT = '/group/CREATE_EVENT';
 
 // ------------------------------------ //
 //!       Action Creators
@@ -27,6 +28,10 @@ const loadAllGroupEvents = events => ({
     type: LOAD_ALL_GROUP_EVENTS,
     events
 });
+const createEvent = newEvent => ({
+    type: CREATE_EVENT,
+    newEvent
+})
 
 // ------------------------------------ //
 //!       Thunk Action Creators
@@ -73,6 +78,23 @@ export const getAllGroupEvents = (groupId) => async dispatch => {
         return groupEvents;
     }
 }
+export const createEventThunk = (groupId, body) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${groupId}/events`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+        const newEvent = await response.json();
+        dispatch(createEvent(newEvent));
+        return newEvent;
+    }
+    else {
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
 
 // ------------------------------------ //
 const initialState = {};
@@ -109,6 +131,13 @@ const groupReducer = (state = initialState, action) => {
                 ...state,
                 currentGroupEvents
             }
+        }
+        case CREATE_EVENT: {
+            const lastCreatedEvent = {...action.newEvent};
+            return {
+                ...state,
+                lastCreatedEvent
+            };
         }
         default: {
             return state;
