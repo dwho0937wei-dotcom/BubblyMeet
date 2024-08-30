@@ -8,8 +8,9 @@ import LandingPage from './components/LandingPage';
 import GroupListPage from './components/GroupListPage';
 import GroupDetailsPage from './components/GroupDetailsPage';
 import EventListPage from './components/EventListPage';
-import EventDetailsPage from './components/EventDetailsPage/EventDetailsPage';
+import EventDetailsPage from './components/EventDetailsPage';
 import CreateGroupFormPage from './components/CreateGroupFormPage';
+import CreateEventFormPage from './components/CreateEventFormPage/CreateEventFormPage';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: 'events/:eventId',
         element: <EventDetailsPage />
+      },
+      {
+        path: 'groups/:groupId/events',
+        element: <CreateEventFormPage />
       }
     ]
   }
