@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createGroupThunk } from "../../store/group";
+import { createGroupThunk, addGroupImageThunk } from "../../store/group";
 import './CreateGroupFormPage.css';
 
 function CreateGroupFormPage() {
@@ -44,6 +44,7 @@ function CreateGroupFormPage() {
 
         const newGroup = await dispatch(createGroupThunk(payload)).catch(errors => errors.json());
         if (!newGroup.errors && noValidateErrors) {
+            dispatch(addGroupImageThunk(imageUrl, newGroup.id))
             navigate(`/groups/${newGroup.id}`);
         }
         else {
@@ -67,6 +68,7 @@ function CreateGroupFormPage() {
                     <p>MeetIsHere groups meet locally, in person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
                     <input
                         id="location"
+                        className="singleLineTextBox"
                         type="text"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
@@ -82,6 +84,7 @@ function CreateGroupFormPage() {
                     <p>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
                     <input
                         id="name"
+                        className="singleLineTextBox"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -153,6 +156,7 @@ function CreateGroupFormPage() {
                         <dt>Please add an image url for your group below:</dt>
                         <input 
                             id="imageUrl"
+                            className="singleLineTextBox"
                             type="text" 
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}

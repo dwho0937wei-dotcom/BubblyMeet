@@ -23,9 +23,9 @@ const createGroup = newGroup => ({
     type: CREATE_GROUP,
     newGroup
 })
-const addGroupImage = newGroupImage => ({
+const addGroupImage = newGroupPreviewImage => ({
     type: ADD_GROUP_IMAGE,
-    newGroupImage
+    newGroupPreviewImage
 })
 
 // ------------------------------------ //
@@ -64,12 +64,12 @@ export const createGroupThunk = body => async dispatch => {
         return errors;
     }
 }
-export const addGroupImageThunk = (imgUrl, groupId) => async dispatch => {
-    const body = { url: imgUrl, preview: true }
+export const addGroupImageThunk = (imgUrl, groupId, preview=true) => async dispatch => {
+    const body = { url: imgUrl, preview };
     const response = await csrfFetch(`/api/groups/${groupId}/images`, {
         method: 'POST',
         body: JSON.stringify(body)
-    })
+    });
 
     if (response.ok) {
         const newGroupImage = await response.json();
