@@ -141,47 +141,75 @@ const validateVenue = [
 // Validate Event
 const today = new Date().toISOString();
 const validateEvent = [
+    // check('name')
+    //     .exists({ checkFalsy: true })
+    //     .isLength({ min: 5 })
+    //     .withMessage('Name must be at least 5 characters'),
     check('name')
         .exists({ checkFalsy: true })
-        .isLength({ min: 5 })
-        .withMessage('Name must be at least 5 characters'),
+        .withMessage('Name is required'),
+    // check('type')
+    //     .exists({ checkFalsy: true })
+    //     .isIn(['Online', 'In person'])
+    //     .withMessage("Type must be Online or In person"),
     check('type')
         .exists({ checkFalsy: true })
         .isIn(['Online', 'In person'])
-        .withMessage("Type must be Online or In person"),
-    check('capacity')
-        .exists({ checkFalsy: true })
-        .isInt()
-        .withMessage('Capacity must be an integer'),
+        .withMessage("Event Type is required"),
+    // check('capacity')
+    //     .exists({ checkFalsy: true })
+    //     .isInt()
+    //     .withMessage('Capacity must be an integer'),
+    // check('price')
+    //     .exists({ checkFalsy: true }).withMessage("Price is invalid")
+    //     .isFloat({ min: 0 }).withMessage("Price is invalid")
+    //     .custom(price => {
+    //         const places = price.toString().split('.');
+    //         if (places.length > 1 && places[1].length > 2) {
+    //             throw new Error("Price is invalid");
+    //         }
+    //         return true;
+    //     })
+    //     .withMessage("Price is invalid"),
     check('price')
-        .exists({ checkFalsy: true }).withMessage("Price is invalid")
-        .isFloat({ min: 0 }).withMessage("Price is invalid")
+        .exists({ checkFalsy: true }).withMessage("Price is required")
+        .isFloat({ min: 0 }).withMessage("Price is required")
         .custom(price => {
             const places = price.toString().split('.');
             if (places.length > 1 && places[1].length > 2) {
-                throw new Error("Price is invalid");
+                throw new Error("Price is required");
             }
             return true;
         })
-        .withMessage("Price is invalid"),
+        .withMessage("Price is required"),
+    // check('description')
+    //     .exists({ checkFalsy: true })
+    //     .notEmpty()
+    //     .withMessage('Description is required'),
     check('description')
         .exists({ checkFalsy: true })
-        .notEmpty()
-        .withMessage('Description is required'),
+        .isLength({ min: 30 })
+        .withMessage('Description must be at least 30 characters long'),
+    // check('startDate')
+    //     .exists({ checkFalsy: true })
+    //     .isAfter(today)
+    //     .withMessage('Start date must be in the future'),
     check('startDate')
         .exists({ checkFalsy: true })
-        .isAfter(today)
-        .withMessage('Start date must be in the future'),
+        .withMessage('Event start is required'),
+    // check('endDate')
+    //     .exists({ checkFalsy: true })
+    //     .custom((endDate, { req }) => {
+    //         const startDate = req.body.startDate;
+    //         if (endDate <= startDate) {
+    //             throw new Error();
+    //         }
+    //         return true;
+    //     })
+    //     .withMessage('End date is less than start date'),
     check('endDate')
         .exists({ checkFalsy: true })
-        .custom((endDate, { req }) => {
-            const startDate = req.body.startDate;
-            if (endDate <= startDate) {
-                throw new Error();
-            }
-            return true;
-        })
-        .withMessage('End date is less than start date'),
+        .withMessage('Event end is required'),
     handleValidationErrors
 ];
 
