@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getGroup } from "../../store/group"
-import { createEventThunk } from "../../store/event";
+import { createEventThunk, addEventImageThunk } from "../../store/event";
 import "./CreateEventFormPage.css";
 
 function CreateEventFormPage() {
@@ -33,6 +33,7 @@ function CreateEventFormPage() {
     }, [group, setIsLoaded])
 
     //! Event for submitting
+    const navigate = useNavigate();
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -59,7 +60,8 @@ function CreateEventFormPage() {
         const newEvent = await dispatch(createEventThunk(groupId, payload)).catch(errors => errors.json());
 
         if (!newEvent.errors && noValidateErrors) {
-            return;
+            dispatch(addEventImageThunk(newEvent.id, imageUrl));
+            navigate(`/events/${newEvent.id}`)
         }
         else {
             setErrors({...newEvent.errors, ...validateErrors});

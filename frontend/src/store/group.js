@@ -64,7 +64,7 @@ export const createGroupThunk = body => async dispatch => {
         return errors;
     }
 }
-export const addGroupImageThunk = (imgUrl, groupId, preview=true) => async dispatch => {
+export const addGroupImageThunk = (groupId, imgUrl, preview=true) => async dispatch => {
     const body = { url: imgUrl, preview };
     const response = await csrfFetch(`/api/groups/${groupId}/images`, {
         method: 'POST',

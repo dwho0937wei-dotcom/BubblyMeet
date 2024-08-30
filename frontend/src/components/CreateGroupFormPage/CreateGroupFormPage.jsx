@@ -44,7 +44,7 @@ function CreateGroupFormPage() {
 
         const newGroup = await dispatch(createGroupThunk(payload)).catch(errors => errors.json());
         if (!newGroup.errors && noValidateErrors) {
-            dispatch(addGroupImageThunk(imageUrl, newGroup.id))
+            dispatch(addGroupImageThunk(newGroup.id, imageUrl))
             navigate(`/groups/${newGroup.id}`);
         }
         else {

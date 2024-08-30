@@ -203,7 +203,8 @@ router.post('/:groupId/images', restoreUser, requireAuth2, groupExists, hostOfGr
 })
 
 // Create an event for a group specified by its id
-router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, venueExists, hostOrCohostOfGroup, async (req, res) => {
+// router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, venueExists, hostOrCohostOfGroup, async (req, res) => {
+router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupExists, hostOrCohostOfGroup, async (req, res) => {
     // Identify current user
     const user = getUserFromToken(req);
 
@@ -214,6 +215,7 @@ router.post('/:groupId/events', restoreUser, requireAuth2, validateEvent, groupE
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 
     // Create an event
+    console.log(price);
     const newEvent = await Event.create({
         venueId, groupId, name, type, capacity, price, description, startDate, endDate
     });
