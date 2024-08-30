@@ -39,8 +39,9 @@ const EventDetailsPage = () => {
             <h3>Hosted by {"<Firstname> <Lastname>"}</h3>
 
             {/* GroupBox */}
-            <h3>{isLoaded && event.Group.name}</h3>
+            <h3>Host Group: {isLoaded && event.Group.name}</h3>
             <h3>
+                {"Visibility: "} 
                 {isLoaded && 
                     (event.Group.private ? "Private" : "Public")
                 }
@@ -48,16 +49,16 @@ const EventDetailsPage = () => {
 
             {/* Time, Price, & Type Box */}
             <div>
-                <h3>START {isLoaded && event.startDate}</h3>
-                <h3>END {isLoaded && event.endDate}</h3>
+                <h3>Start Date: {isLoaded && event.startDate}</h3>
+                <h3>End Date: {isLoaded && event.endDate}</h3>
             </div>
             <h3>
-                PRICE {
+                Price: {
                         isLoaded && 
                             (event.price === 0 ? "FREE" : event.price)
                       }
             </h3>
-            <h3>TYPE {isLoaded && event.type}</h3>
+            <h3>Type: {isLoaded && event.type}</h3>
 
             {/* Description Box */}
             <div>

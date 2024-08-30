@@ -2,7 +2,8 @@ import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
-import { getAllGroupEvents, getGroup } from '../../store/group';
+import { getAllGroupEvents } from '../../store/event';
+import { getGroup } from '../../store/group';
 
 const GroupDetailsPage = () => {
     const { groupId } = useParams();
@@ -16,7 +17,7 @@ const GroupDetailsPage = () => {
 
     //! Extracting the group itself with its hosted events
     const group = useSelector(state => state.groups.currentGroup);
-    const groupEvents = useSelector(state => state.groups.currentGroupEvents);
+    const groupEvents = useSelector(state => state.events.currentGroupEvents);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         if (group && groupEvents) {
