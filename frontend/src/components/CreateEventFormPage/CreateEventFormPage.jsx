@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getGroup } from "../../store/group"
+import { createEventThunk } from "../../store/event";
 import "./CreateEventFormPage.css";
 
 function CreateEventFormPage() {
@@ -9,7 +10,6 @@ function CreateEventFormPage() {
 
     const [name, setName] = useState('');
     const [type, setType] = useState('Unselected');
-    const [privacy, setPrivacy] = useState('Unselected');
     const [price, setPrice] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -33,10 +33,10 @@ function CreateEventFormPage() {
     }, [group, setIsLoaded])
 
     //! Event for submitting
-    function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit(event) {
+        event.preventDefault();
 
-        let validateErrors = {};
+        const validateErrors = {};
         if (
             !imageUrl.endsWith('.png') &&
             !imageUrl.endsWith('.jpg') &&
@@ -44,8 +44,26 @@ function CreateEventFormPage() {
         ) {
             validateErrors.imageUrl = "Image URL must end in .png, .jpg, or .jpeg";
         }
+        const noValidateErrors = Object.keys(validateErrors).length === 0;
 
-        console.log("You've clicked the button!");
+        const payload = {
+            venueId: null,
+            name,
+            type,
+            capacity: Infinity,
+            price,
+            description,
+            startDate,
+            endDate
+        }
+        const newEvent = await dispatch(createEventThunk(groupId, payload)).catch(errors => errors.json());
+
+        if (!newEvent.errors && noValidateErrors) {
+            return;
+        }
+        else {
+            setErrors({...newEvent.errors, ...validateErrors});
+        }
     } 
 
     return (
@@ -57,18 +75,19 @@ function CreateEventFormPage() {
                 <p>What is the name of the event?</p>
                 <input
                     id="name"
+                    className="singleLineTextBox"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="What is your group name?"
+                    placeholder="Event Name"
                 />
                 <div className="errors">
                     {errors.name}
                 </div>
                 <h1>-------------------------------------------</h1>
 
-                {/* Type, Visibility, & Price */}
-                <p>Is this an in person or online group?</p>
+                {/* Type & Price */}
+                <p>Is this an in-person or online event?</p>
                 <select 
                     name="type" 
                     value={type}
@@ -83,28 +102,14 @@ function CreateEventFormPage() {
                     {errors.type}
                 </div>
 
-                <p>Is this group private or public?</p>
-                <select 
-                    name="private" 
-                    value={privacy} 
-                    onChange={(e) => setPrivacy(e.target.value)}
-                    required
-                >
-                    <option value="Unselected" disabled hidden>(select one)</option>
-                    <option value={true}>Private</option>
-                    <option value={false}>Public</option>
-                </select>
-                <div className="errors">
-                    {errors.private}
-                </div>
-
                 <p>What is the price for your event?</p>
                 <input
-                    id="name"
+                    id="price"
+                    className="singleLineTextBox"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    placeholder="0"
+                    placeholder={0}
                 />
                 <div className="errors">
                     {errors.price}
@@ -113,10 +118,12 @@ function CreateEventFormPage() {
 
                 <p>When does your event start?</p>
                 <input
-                    id="name"
-                    type="datetime-local"
+                    id="startDate"
+                    className="singleLineTextBox"
+                    type="text"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
+                    placeholder="MM/DD/YYYY HH/mm AM"
                 />
                 <div className="errors">
                     {errors.startDate}
@@ -124,23 +131,26 @@ function CreateEventFormPage() {
 
                 <p>When does your event end?</p>
                 <input
-                    id="name"
-                    type="datetime-local"
+                    id="endDate"
+                    className="singleLineTextBox"
+                    type="text"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
+                    placeholder="MM/DD/YYYY HH/mm PM"
                 />
                 <div className="errors">
                     {errors.endDate}
                 </div>
                 <h1>-------------------------------------------</h1>
 
-                <p>Please add an image url for your group below:</p>
+                <p>Please add an image url for your event below:</p>
                 <input 
                     id="imageUrl"
+                    className="singleLineTextBox"
                     type="url" 
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="Image Url"
+                    placeholder="Image URL"
                 />
                 <div className="errors">
                     {errors.imageUrl}
@@ -152,7 +162,7 @@ function CreateEventFormPage() {
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Please include at least 30 characters"
+                    placeholder="Please include at least 30 characters."
                 />
                 <div className="errors">
                     {errors.description}

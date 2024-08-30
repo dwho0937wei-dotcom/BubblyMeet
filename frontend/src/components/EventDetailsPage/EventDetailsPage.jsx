@@ -36,7 +36,7 @@ const EventDetailsPage = () => {
                 <img src={imageUrl} alt="Event Preview Image" />
             </div>
             <h1>{isLoaded && event.name}</h1>
-            <h3>Hosted by {`${event.eventHost.firstName} ${event.eventHost.lastName}`}</h3>
+            <h3>Hosted by {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
 
             {/* GroupBox */}
             <h3>Host Group: {isLoaded && event.Group.name}</h3>
