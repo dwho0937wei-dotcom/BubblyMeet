@@ -31,7 +31,8 @@ const GroupDetailsPage = () => {
     if (isLoaded && groupEvents.length > 0) {
         groupEvents.forEach(event => {
             const endDate = event.endDate;
-            const today = new Date();
+            const today = new Date().toISOString();
+
             if (endDate > today) {
                 upcomingEvents.push(event);
             }
