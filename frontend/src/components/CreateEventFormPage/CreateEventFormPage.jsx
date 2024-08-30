@@ -64,6 +64,7 @@ function CreateEventFormPage() {
             navigate(`/events/${newEvent.id}`)
         }
         else {
+            console.log({...newEvent.errors, ...validateErrors});
             setErrors({...newEvent.errors, ...validateErrors});
         }
     } 
