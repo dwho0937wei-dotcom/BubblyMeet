@@ -1,4 +1,3 @@
-import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
@@ -20,13 +19,7 @@ const EventDetailsPage = () => {
     }, [event, setIsLoaded])
 
     const previewImage = isLoaded && event.EventImages.find(img => img.preview);
-    let imageUrl;
-    if (previewImage && isUrl(previewImage.url)) {
-        imageUrl = previewImage.url;
-    }
-    else {
-        imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg"
-    }
+    const imageFillIn = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg";
 
     return (
         <>
@@ -34,8 +27,8 @@ const EventDetailsPage = () => {
             {/* Top Section */}
             <div>
                 <img 
-                    src={imageUrl} 
-                    alt="Event Preview Image" 
+                    src={isLoaded && previewImage.url ? previewImage.url : imageFillIn} 
+                    alt={isLoaded && previewImage.url} 
                 />
             </div>
             <h1>{isLoaded && event.name}</h1>
