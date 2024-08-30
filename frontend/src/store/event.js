@@ -7,6 +7,7 @@ const LOAD_ALL_EVENTS = 'event/LOAD_ALL_EVENTS';
 const LOAD_EVENT_DETAILS = 'event/LOAD_EVENT_DETAILS';
 const LOAD_ALL_GROUP_EVENTS = '/group/LOAD_ALL_GROUP_EVENTS';
 const CREATE_EVENT = '/group/CREATE_EVENT';
+const ADD_EVENT_IMAGE = '/event/ADD_EVENT_IMAGE';
 
 // ------------------------------------ //
 //!       Action Creators
@@ -26,6 +27,10 @@ const loadAllGroupEvents = events => ({
 const createEvent = newEvent => ({
     type: CREATE_EVENT,
     newEvent
+})
+const addEventImage = newEventImage => ({
+    type: ADD_EVENT_IMAGE,
+    newEventImage
 })
 
 // ------------------------------------ //
@@ -73,6 +78,24 @@ export const createEventThunk = (groupId, body) => async dispatch => {
         return errors;
     }
 }
+export const addEventImageThunk = (eventId, imageUrl, preview=true) => async dispatch => {
+    const body = { url: imageUrl, preview };
+    const response = await csrfFetch(`/api/events/${eventId}/images`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+        const newEventImage = await response.json();
+        dispatch(addEventImage(newEventImage));
+        return newEventImage;
+    }
+    else{
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
 
 // ------------------------------------ //
 const initialState = {};
@@ -109,6 +132,13 @@ const eventReducer = (state = initialState, action) => {
                 ...state,
                 lastCreatedEvent
             };
+        }
+        case ADD_EVENT_IMAGE: {
+            const lastCreatedEventImage = {...action.newEventImage};
+            return {
+                ...state,
+                lastCreatedEventImage
+            }
         }
         default:
             return state;
