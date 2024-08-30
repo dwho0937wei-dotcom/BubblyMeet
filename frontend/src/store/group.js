@@ -6,8 +6,9 @@ import { csrfFetch } from "./csrf";
 const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
 const LOAD_GROUP = '/group/LOAD_GROUP';
 const CREATE_GROUP = '/group/CREATE_GROUP';
-const ADD_GROUP_IMAGE = '/group/ADD_GROUP_IMAGE';
 const UPDATE_GROUP = '/group/UPDATE_GROUP';
+const ADD_GROUP_IMAGE = '/group/ADD_GROUP_IMAGE';
+const REMOVE_GROUP_IMAGE = 'group/REMOVE_GROUP_IMAGE';
 
 // ------------------------------------ //
 //!       Action Creators
@@ -24,14 +25,17 @@ const createGroup = newGroup => ({
     type: CREATE_GROUP,
     newGroup
 })
-const addGroupImage = newGroupPreviewImage => ({
-    type: ADD_GROUP_IMAGE,
-    newGroupPreviewImage
-})
 const updateGroup = editedGroup => ({
     type: UPDATE_GROUP,
     editedGroup
 })
+const addGroupImage = newGroupPreviewImage => ({
+    type: ADD_GROUP_IMAGE,
+    newGroupPreviewImage
+})
+const removeGroupImage = () => ({
+    type: REMOVE_GROUP_IMAGE
+});
 
 // ------------------------------------ //
 //!       Thunk Action Creators
@@ -69,6 +73,23 @@ export const createGroupThunk = body => async dispatch => {
         return errors;
     }
 }
+export const updateGroupThunk = (groupId, body) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'PUT',
+        body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+        const editedGroup = await response.json();
+        dispatch(updateGroup(editedGroup));
+        return editedGroup;
+    }
+    else {
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
 export const addGroupImageThunk = (groupId, imgUrl, preview=true) => async dispatch => {
     const body = { url: imgUrl, preview };
     const response = await csrfFetch(`/api/groups/${groupId}/images`, {
@@ -87,23 +108,19 @@ export const addGroupImageThunk = (groupId, imgUrl, preview=true) => async dispa
         return errors;
     }
 }
-export const updateGroupThunk = (groupId, body) => async dispatch => {
-    const response = await csrfFetch(`/api/groups/${groupId}`, {
-        method: 'PUT',
-        body: JSON.stringify(body)
+export const removeGroupImageThunk = imageId => async dispatch => {
+    const response = await csrfFetch(`/api/group-images/${imageId}`, {
+        method: 'DELETE'
     });
-
     if (response.ok) {
-        const editedGroup = await response.json();
-        dispatch(updateGroup(editedGroup));
-        return editedGroup;
+        dispatch(removeGroupImage());
     }
     else {
         const errors = await response.json();
         console.log(errors.errors);
         return errors;
     }
-}
+} 
 
 // ------------------------------------ //
 const initialState = {};
@@ -147,6 +164,11 @@ const groupReducer = (state = initialState, action) => {
                 ...state,
                 lastUpdatedGroup
             }
+        }
+        case REMOVE_GROUP_IMAGE: {
+            const newState = {...state};
+            delete newState.lastAddedGroupImage;
+            return newState;
         }
         default: {
             return state;
