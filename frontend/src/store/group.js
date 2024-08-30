@@ -6,6 +6,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
 const LOAD_GROUP = '/group/LOAD_GROUP';
 const CREATE_GROUP = '/group/CREATE_GROUP';
+const ADD_GROUP_IMAGE = '/group/ADD_GROUP_IMAGE';
 
 // ------------------------------------ //
 //!       Action Creators
@@ -22,7 +23,10 @@ const createGroup = newGroup => ({
     type: CREATE_GROUP,
     newGroup
 })
-
+const addGroupImage = newGroupImage => ({
+    type: ADD_GROUP_IMAGE,
+    newGroupImage
+})
 
 // ------------------------------------ //
 //!       Thunk Action Creators
@@ -60,7 +64,24 @@ export const createGroupThunk = body => async dispatch => {
         return errors;
     }
 }
+export const addGroupImageThunk = (imgUrl, groupId) => async dispatch => {
+    const body = { url: imgUrl, preview: true }
+    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
 
+    if (response.ok) {
+        const newGroupImage = await response.json();
+        dispatch(addGroupImage(newGroupImage));
+        return newGroupImage;
+    }
+    else {
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
 
 // ------------------------------------ //
 const initialState = {};
@@ -90,6 +111,13 @@ const groupReducer = (state = initialState, action) => {
                 ...state,
                 lastCreatedGroup
             };
+        }
+        case ADD_GROUP_IMAGE: {
+            const lastAddedGroupImage = {...action.newGroupImage};
+            return {
+                ...state,
+                lastAddedGroupImage
+            }
         }
         default: {
             return state;
