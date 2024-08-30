@@ -1,0 +1,14 @@
+#about {
+    height: 200px;
+    width: 600px;
+    vertical-align: top;
+    text-align: left;
+}
+
+.singleLineTextBox {
+    width: 600px;
+}
+
+.errors {
+    color: red;
+}

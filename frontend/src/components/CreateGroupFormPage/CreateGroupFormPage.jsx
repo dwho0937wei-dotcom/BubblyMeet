@@ -65,7 +65,7 @@ function CreateGroupFormPage() {
                 <div>
                     {/* Location */}
                     <h2>First, set your {"group's"} location.</h2>
-                    <p>MeetIsHere groups meet locally, in person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
+                    <p>MeetIsHere groups meet locally, in-person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
                     <input
                         id="location"
                         className="singleLineTextBox"
