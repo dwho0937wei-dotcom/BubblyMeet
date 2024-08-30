@@ -33,7 +33,10 @@ const EventDetailsPage = () => {
             <NavLink to="/events">Events</NavLink>
             {/* Top Section */}
             <div>
-                <img src={imageUrl} alt="Event Preview Image" />
+                <img 
+                    src={imageUrl} 
+                    alt="Event Preview Image" 
+                />
             </div>
             <h1>{isLoaded && event.name}</h1>
             <h3>Hosted by {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>

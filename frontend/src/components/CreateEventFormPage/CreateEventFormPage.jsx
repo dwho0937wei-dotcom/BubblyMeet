@@ -64,7 +64,6 @@ function CreateEventFormPage() {
             navigate(`/events/${newEvent.id}`)
         }
         else {
-            console.log({...newEvent.errors, ...validateErrors});
             setErrors({...newEvent.errors, ...validateErrors});
         }
     } 
@@ -150,7 +149,7 @@ function CreateEventFormPage() {
                 <input 
                     id="imageUrl"
                     className="singleLineTextBox"
-                    type="url" 
+                    type="text" 
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     placeholder="Image URL"
