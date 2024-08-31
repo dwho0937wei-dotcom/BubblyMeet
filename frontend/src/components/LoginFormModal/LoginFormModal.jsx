@@ -9,6 +9,7 @@ function LoginFormModal() {
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
+    const [isDisabled, setIsDisabled] = useState(true);
     const { closeModal } = useModal();
 
     const handleSubmit = (e) => {
@@ -20,19 +21,21 @@ function LoginFormModal() {
             // console.log(data)
             // if (data && data.errors) setErrors(data.errors);
         .catch(async () => {
-            setErrors({ credential: "The provided credentials were invalid"})
+            setErrors({ credential: "The provided credentials were invalid" })
         });
     };
     
     useEffect(() => {
-        setErrors({});
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (
             (!emailRegex.test(credential) && credential.length < 4) 
             || password.length < 6
            ) 
         {
-            setErrors({ credential: "The provided credentials were invalid" })
+            setIsDisabled(true);
+        }
+        else {
+            setIsDisabled(false);
         }
     }, [credential, password, setErrors]);
 
@@ -77,8 +80,8 @@ function LoginFormModal() {
                         required 
                     />
                 </label>
-                {errors.credential && <p>{errors.credential}</p>}
-                <button type="submit" disabled={errors.credential}>Log In</button>
+                {errors.credential && <p id="errorMessage">{errors.credential}</p>}
+                <button type="submit" disabled={isDisabled}>Log In</button>
             </form>
             <button onClick={loginDemo}>Log in as Demo User</button>
         </>
