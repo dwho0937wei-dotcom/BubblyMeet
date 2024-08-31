@@ -7,6 +7,7 @@ const LOAD_ALL_EVENTS = 'event/LOAD_ALL_EVENTS';
 const LOAD_EVENT_DETAILS = 'event/LOAD_EVENT_DETAILS';
 const LOAD_ALL_GROUP_EVENTS = '/group/LOAD_ALL_GROUP_EVENTS';
 const CREATE_EVENT = '/group/CREATE_EVENT';
+const DELETE_EVENT = '/group/DELETE_EVENT';
 const ADD_EVENT_IMAGE = '/event/ADD_EVENT_IMAGE';
 
 // ------------------------------------ //
@@ -27,6 +28,9 @@ const loadAllGroupEvents = events => ({
 const createEvent = newEvent => ({
     type: CREATE_EVENT,
     newEvent
+})
+const deleteEvent = () => ({
+    type: DELETE_EVENT
 })
 const addEventImage = newEventImage => ({
     type: ADD_EVENT_IMAGE,
@@ -71,6 +75,20 @@ export const createEventThunk = (groupId, body) => async dispatch => {
         const newEvent = await response.json();
         dispatch(createEvent(newEvent));
         return newEvent;
+    }
+    else {
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
+export const deleteEventThunk = eventId => async dispatch => {
+    const response = await csrfFetch(`/api/events${eventId}`, {
+        method: 'DELETE'
+    });
+    
+    if (response.ok) {
+        dispatch(deleteEvent())
     }
     else {
         const errors = await response.json();
@@ -132,6 +150,9 @@ const eventReducer = (state = initialState, action) => {
                 ...state,
                 lastCreatedEvent
             };
+        }
+        case DELETE_EVENT: {
+            return state;
         }
         case ADD_EVENT_IMAGE: {
             const lastCreatedEventImage = {...action.newEventImage};
