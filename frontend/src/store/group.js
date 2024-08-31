@@ -7,6 +7,7 @@ const LOAD_ALL_GROUPS = '/group/LOAD_ALL_GROUPS';
 const LOAD_GROUP = '/group/LOAD_GROUP';
 const CREATE_GROUP = '/group/CREATE_GROUP';
 const UPDATE_GROUP = '/group/UPDATE_GROUP';
+const DELETE_GROUP = '/group/DELETE_GROUP';
 const ADD_GROUP_IMAGE = '/group/ADD_GROUP_IMAGE';
 const REMOVE_GROUP_IMAGE = 'group/REMOVE_GROUP_IMAGE';
 
@@ -28,6 +29,9 @@ const createGroup = newGroup => ({
 const updateGroup = editedGroup => ({
     type: UPDATE_GROUP,
     editedGroup
+})
+const deleteGroup = () => ({
+    type: DELETE_GROUP
 })
 const addGroupImage = newGroupPreviewImage => ({
     type: ADD_GROUP_IMAGE,
@@ -83,6 +87,20 @@ export const updateGroupThunk = (groupId, body) => async dispatch => {
         const editedGroup = await response.json();
         dispatch(updateGroup(editedGroup));
         return editedGroup;
+    }
+    else {
+        const errors = await response.json();
+        console.log(errors.errors);
+        return errors;
+    }
+}
+export const deleteGroupThunk = (groupId) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'DELETE'
+    });
+
+    if (response.ok) {
+        dispatch(deleteGroup());
     }
     else {
         const errors = await response.json();
@@ -165,10 +183,11 @@ const groupReducer = (state = initialState, action) => {
                 lastUpdatedGroup
             }
         }
+        case DELETE_GROUP: {
+            return state;
+        }
         case REMOVE_GROUP_IMAGE: {
-            const newState = {...state};
-            delete newState.lastAddedGroupImage;
-            return newState;
+            return state;
         }
         default: {
             return state;

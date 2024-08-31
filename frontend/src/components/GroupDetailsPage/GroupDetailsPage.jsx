@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { getAllGroupEvents } from '../../store/event';
 import { getGroup } from '../../store/group';
+import OpenModalMenuItem from '../OpenModalButton';
+import DeleteGroupFormModal from '../DeleteGroupFormModal';
 
 const GroupDetailsPage = () => {
     const { groupId } = useParams();
@@ -98,7 +100,10 @@ const GroupDetailsPage = () => {
                 <>
                     <button onClick={clickCreateEvent}>Create event</button>{' '}
                     <button onClick={clickUpdate}>Update</button>{' '}
-                    <button>Delete</button>
+                    <OpenModalMenuItem
+                        buttonText="Delete"
+                        modalComponent={<DeleteGroupFormModal navigate={navigate} groupId={groupId}/>}
+                    />
                 </>
             )
         }
