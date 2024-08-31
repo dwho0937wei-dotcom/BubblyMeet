@@ -83,7 +83,7 @@ export const createEventThunk = (groupId, body) => async dispatch => {
     }
 }
 export const deleteEventThunk = eventId => async dispatch => {
-    const response = await csrfFetch(`/api/events${eventId}`, {
+    const response = await csrfFetch(`/api/events/${eventId}`, {
         method: 'DELETE'
     });
     

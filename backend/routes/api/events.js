@@ -246,6 +246,7 @@ router.get('/:eventId', eventExists, async (req, res) => {
     });
     const hostUser = await User.findByPk(hostAttendant.userId, {
         attributes: [
+            'id',
             'firstName',
             'lastName',
         ]

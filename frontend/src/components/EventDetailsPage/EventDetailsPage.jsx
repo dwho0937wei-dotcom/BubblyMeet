@@ -1,8 +1,10 @@
 import isUrl from 'is-url';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { getEventDetails } from "../../store/event";
+import OpenModalMenuItem from '../OpenModalButton';
+import DeleteEventFormModal from '../DeleteEventFormModal';
 
 const EventDetailsPage = () => {
     const { eventId } = useParams();
@@ -27,6 +29,21 @@ const EventDetailsPage = () => {
     }
     else {
         eventImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg"
+    }
+
+    //! Display the update/delete event buttons for the creator of this event
+    const navigate = useNavigate();
+    const user = useSelector(state => state.session.user);
+    const displayEventButtons = () => {
+        const creator = event.eventHost;
+        if (user.id === creator.id) {
+            return (
+                <OpenModalMenuItem
+                    buttonText="Delete"
+                    modalComponent={<DeleteEventFormModal navigate={navigate} eventId={eventId}/>}
+                />
+            )
+        }
     }
 
     return (
@@ -63,6 +80,9 @@ const EventDetailsPage = () => {
                       }
             </h3>
             <h3>Type: {isLoaded && event.type}</h3>
+
+            {/* Buttons for updating/deleting the event */}
+            {isLoaded && displayEventButtons()}
 
             {/* Description Box */}
             <div>
