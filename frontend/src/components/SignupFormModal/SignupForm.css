@@ -1,0 +1,8 @@
+.errors {
+    color: red;
+}
+
+.signUpElements {
+    display: flex;
+    flex-direction: column;
+}

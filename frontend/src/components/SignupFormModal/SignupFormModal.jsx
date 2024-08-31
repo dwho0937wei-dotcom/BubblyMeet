@@ -59,9 +59,9 @@ function SignupFormModal() {
 
     return (
         <>
-            <h1>Sign Up</h1>
+            <h1 className="signUpElements">Sign Up</h1>
             <form onSubmit={handleSubmit}>
-                <label>
+                <label className="signUpElements">
                     Email
                     <input 
                         type="text" 
@@ -70,8 +70,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                {errors.email && <p>{errors.email}</p>}
-                <label>
+                {errors.email && <p className='errors'>{errors.email}</p>}
+                <label className="signUpElements">
                     Username
                     <input 
                         type="text" 
@@ -80,8 +80,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                {errors.username && <p>{errors.username}</p>}
-                <label>
+                {errors.username && <p className='errors'>{errors.username}</p>}
+                <label className="signUpElements">
                     First Name
                     <input
                         type="text"
@@ -90,8 +90,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                    {errors.firstName && <p>{errors.firstName}</p>}
-                <label>
+                    {errors.firstName && <p className='errors'>{errors.firstName}</p>}
+                <label className="signUpElements">
                     Last Name
                     <input
                         type="text"
@@ -100,8 +100,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                    {errors.lastName && <p>{errors.lastName}</p>}
-                <label>
+                    {errors.lastName && <p className='errors'>{errors.lastName}</p>}
+                <label className="signUpElements">
                     Password
                     <input
                         type="password"
@@ -110,8 +110,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                    {errors.password && <p>{errors.password}</p>}
-                <label>
+                    {errors.password && <p className='errors'>{errors.password}</p>}
+                <label className="signUpElements">
                     Confirm Password
                     <input
                         type="password"
@@ -120,8 +120,8 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                    {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button type="submit" disabled={isDisabled}>Sign Up</button>
+                    {errors.confirmPassword && <p className='errors'>{errors.confirmPassword}</p>}
+                <button type="submit" disabled={isDisabled} className="signUpElements">Sign Up</button>
             </form>
         </>
     );
