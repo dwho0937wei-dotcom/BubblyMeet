@@ -13,13 +13,13 @@ const ADD_EVENT_IMAGE = '/event/ADD_EVENT_IMAGE';
 // ------------------------------------ //
 //!       Action Creators
 // ------------------------------------ //
-const loadAllEvent = list => ({
+const loadAllEvent = eventList => ({
     type: LOAD_ALL_EVENTS,
-    list
+    eventList
 });
-const loadEventDetails = event => ({
+const loadEventDetails = currentEvent => ({
     type: LOAD_EVENT_DETAILS,
-    event
+    currentEvent
 })
 const loadAllGroupEvents = events => ({
     type: LOAD_ALL_GROUP_EVENTS,

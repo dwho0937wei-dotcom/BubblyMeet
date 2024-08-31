@@ -24,6 +24,9 @@ module.exports = {
     const event1 = await Event.findOne({
       where: { name: "Tennis Group First Meet and Greet" }
     });
+    const event2 = await Event.findOne({
+      where: { name: "Tennis Singles" }
+    });
     const user1 = await User.findOne({
       where: { email: "john.smith@gmail.com" }
     });
@@ -31,6 +34,11 @@ module.exports = {
     await queryInterface.bulkInsert(options, [
       {
         "eventId": event1.id,
+        "userId": user1.id,
+        "status": "host"
+      },
+      {
+        "eventId": event2.id,
         "userId": user1.id,
         "status": "host"
       }
@@ -47,16 +55,26 @@ module.exports = {
     const event1 = await Event.findOne({
       where: { name: "Tennis Group First Meet and Greet" }
     });
+    const event2 = await Event.findOne({
+      where: { name: "Tennis Singles" }
+    });
     const user1 = await User.findOne({
       where: { email: "john.smith@gmail.com" }
     });
 
-    if (event1 && user1) {
-      await queryInterface.bulkDelete(options, {
-        "eventId": event1.id,
-        "userId": user1.id,
-        "status": "host"
-      });
+    if (event1 && event2 && user1) {
+      await queryInterface.bulkDelete(options, [
+        {
+          "eventId": event1.id,
+          "userId": user1.id,
+          "status": "host"
+        },
+        {
+          "eventId": event2.id,
+          "userId": user1.id,
+          "status": "host"
+        }
+      ]);
     }
   }
 };
