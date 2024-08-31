@@ -23,7 +23,7 @@ function LoginFormModal() {
             setErrors({ credential: "The provided credentials were invalid"})
         });
     };
-
+    
     useEffect(() => {
         setErrors({});
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,6 +35,25 @@ function LoginFormModal() {
             setErrors({ credential: "The provided credentials were invalid" })
         }
     }, [credential, password, setErrors]);
+
+    const loginDemo = (e) => {
+        e.preventDefault();
+        return dispatch(sessionActions.login({
+            credential: "DemoUser",
+            password: "randomPassword"
+        })).then(closeModal)
+        .catch(
+            () => {
+                return dispatch(sessionActions.signup({ 
+                    username: "DemoUser",
+                    firstName: "Demo",
+                    lastName: "User",
+                    email: "demo@user.io",
+                    password: "randomPassword"
+                })).then(closeModal)
+            }
+        )
+    }
 
     return (
         <>
@@ -61,6 +80,7 @@ function LoginFormModal() {
                 {errors.credential && <p>{errors.credential}</p>}
                 <button type="submit" disabled={errors.credential}>Log In</button>
             </form>
+            <button onClick={loginDemo}>Log in as Demo User</button>
         </>
     );
 }
