@@ -13,9 +13,11 @@ function Navigation({ isLoaded }) {
                     <img src="/favicon.ico" alt="App Academy Favicon" />
                     <h1>MeetIsHere</h1>
                 </NavLink>
-                {isLoaded && (
-                    <ProfileButton user={sessionUser} />
-                )}
+                <div>
+                    {isLoaded && (
+                        <ProfileButton user={sessionUser} />
+                    )}
+                </div>
             </div>
         </>
     );

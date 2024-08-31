@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
@@ -32,9 +33,11 @@ function ProfileButton({ user }) {
 
     const closeMenu = () => setShowMenu(false);
 
+    const navigate = useNavigate();
     const logout = (e) => {
         e.preventDefault();
         dispatch(sessionActions.logout());
+        navigate('/');
         closeMenu();
     }
 
