@@ -36,7 +36,7 @@ const EventDetailsPage = () => {
     const user = useSelector(state => state.session.user);
     const displayEventButtons = () => {
         const creator = event.eventHost;
-        if (user.id === creator.id) {
+        if (user && user.id === creator.id) {
             return (
                 <OpenModalMenuItem
                     buttonText="Delete"
