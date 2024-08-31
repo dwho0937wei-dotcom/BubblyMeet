@@ -1,11 +1,9 @@
-import { useParams, useSearchParams } from "react-router-dom"
-import { getGroup, updateGroupThunk, addGroupImageThunk } from "../../store/group"
+import { useNavigate, useParams } from "react-router-dom"
+import { getGroup, updateGroupThunk, addGroupImageThunk, removeGroupImageThunk } from "../../store/group"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function EditGroupFormPage() {
-    const [isLoaded, setIsLoaded] = useState(false);
-
     //! Loading the group to pre-populate values
     const { groupId } = useParams();
     const dispatch = useDispatch();
@@ -31,14 +29,64 @@ function EditGroupFormPage() {
             setType(group.type);
             setPrivacy(group.private);
             const groupPreviewImage = group.GroupImages.find(groupImage => groupImage.preview);
-            setImageUrl(groupPreviewImage.url);
-            setIsLoaded(true)
+            if (groupPreviewImage) {
+                setImageUrl(groupPreviewImage.url);
+            }
         }
     }, [group]);
 
-    const handleSubmit = (event) => {
+    const navigate = useNavigate();
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("You've clicked the submit button!");
+        const groupPreviewImage = group.GroupImages.find(groupImage => groupImage.preview);
+
+        let validateErrors = {};
+        if (location.length === 0) {
+            validateErrors.location = "Location is required";
+        }
+        if (
+            // 1st scenario in which you've typed an image URL different from the group's original preview image.
+            ((groupPreviewImage && groupPreviewImage.url !== imageUrl) ||
+            // 2nd scenario in which the group's preview image doesn't exist and that you've typed a non-empty image URL.
+                (!groupPreviewImage && imageUrl !== '')) &&
+            // If either one of these scenarios is true, then the image URL must end with either .png, .jpg, or .jpeg.
+            // Otherwise, you get an error.
+            !imageUrl.endsWith('.png') &&
+            !imageUrl.endsWith('.jpg') &&
+            !imageUrl.endsWith('.jpeg')
+        ) {
+            validateErrors.imageUrl = "Image URL must end in .png, .jpg, or .jpeg";
+        }
+        const noValidateErrors = Object.values(validateErrors).length === 0;
+
+        const [city, state] = location.split(', ');
+        const payload = {
+            name,
+            about,
+            type,
+            private: privacy,
+            city,
+            state
+        }
+
+        const editedGroup = await dispatch(updateGroupThunk(groupId, payload)).catch(errors => errors.json());
+        if (!editedGroup.errors && noValidateErrors) {
+            // Valid image URL of the 1st scenario
+            if (groupPreviewImage && groupPreviewImage.url !== imageUrl) {
+                // Replace the group preview image
+                dispatch(removeGroupImageThunk(groupPreviewImage.id))
+                dispatch(addGroupImageThunk(editedGroup.id, imageUrl));
+            }
+            // Valid image URL of the 2nd scenario
+            else if (!groupPreviewImage && imageUrl !== '') {
+                // Just add the group preview image
+                dispatch(addGroupImageThunk(editedGroup.id, imageUrl));
+            }
+            navigate(`/groups/${editedGroup.id}`);
+        }
+        else {
+            setErrors({...validateErrors, ...editedGroup.errors});
+        }
     } 
 
     return (
