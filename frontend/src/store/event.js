@@ -21,9 +21,9 @@ const loadEventDetails = currentEvent => ({
     type: LOAD_EVENT_DETAILS,
     currentEvent
 })
-const loadAllGroupEvents = events => ({
+const loadAllGroupEvents = groupEvents => ({
     type: LOAD_ALL_GROUP_EVENTS,
-    events
+    groupEvents
 });
 const createEvent = newEvent => ({
     type: CREATE_EVENT,
@@ -122,7 +122,7 @@ const eventReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_ALL_EVENTS: {
             const eventList = {};
-            action.list.Events.forEach(event => {
+            action.eventList.Events.forEach(event => {
                 eventList[event.id] = event;
             })
             return {
@@ -131,14 +131,14 @@ const eventReducer = (state = initialState, action) => {
             };
         }
         case LOAD_EVENT_DETAILS: {
-            const event = {...action.event}
+            const event = {...action.currentEvent}
             return {
                 ...state,
                 currentEvent: event
             }
         }
         case LOAD_ALL_GROUP_EVENTS: {
-            const currentGroupEvents = [...action.events.Events];
+            const currentGroupEvents = [...action.groupEvents.Events];
             return {
                 ...state,
                 currentGroupEvents
