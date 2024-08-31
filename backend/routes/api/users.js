@@ -11,6 +11,11 @@ const router = express.Router();
 router.post('/', validateSignUp, async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
 
+    const dupErrors = {
+        message: "User already exists",
+        errors: {}
+    };
+
     // Does email already exists?
     const dupEmail = await User.findOne({
         where: {
@@ -18,13 +23,14 @@ router.post('/', validateSignUp, async (req, res) => {
         }
     });
     if (dupEmail) {
-        res.status(500);
-        return res.json({
-            message: "User already exists",
-            errors: {
-                email: "User with that email already exists"
-            }
-        })
+        // res.status(500);
+        // return res.json({
+        //     message: "User already exists",
+        //     errors: {
+        //         email: "User with that email already exists"
+        //     }
+        // })
+        dupErrors.errors.email = "User with that email already exists";
     }
 
     // Does user already exists?
@@ -34,13 +40,19 @@ router.post('/', validateSignUp, async (req, res) => {
         }
     });
     if (dupUser) {
-        res.status(500);
-        return res.json({
-            message: "User already exists",
-            errors: {
-                username: "User with that username already exists"
-            }
-        });
+        // res.status(500);
+        // return res.json({
+        //     message: "User already exists",
+        //     errors: {
+        //         username: "User with that username already exists"
+        //     }
+        // });
+        dupErrors.errors.username = "User with that username already exists";
+    }
+
+    // Display any duplicate errors
+    if (Object.keys(dupErrors.errors).length > 0) {
+        return res.status(500).json(dupErrors);
     }
 
     // Creating new user
