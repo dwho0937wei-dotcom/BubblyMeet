@@ -53,19 +53,19 @@ const validateSignUp = [
   check('email')
       .exists({ checkFalsy: true })
       .isEmail()
-      .withMessage('Invalid email'),
+      .withMessage('The provided email is invalid'),
   check('username')
       .exists({ checkFalsy: true })
       .notEmpty()
-      .withMessage('Username is required'),
+      .withMessage('Username must be required'),
   check('firstName')
       .exists({ checkFalsy: true })
       .notEmpty()
-      .withMessage('First Name is required'),
+      .withMessage('First name must be required'),
   check('lastName')
       .exists({ checkFalsy: true })
       .notEmpty()
-      .withMessage('Last Name is required'),
+      .withMessage('Last name must be required'),
   handleValidationErrors
 ];
 
