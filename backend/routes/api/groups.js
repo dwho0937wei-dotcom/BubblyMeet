@@ -491,6 +491,10 @@ router.get('/', async (req, res) => {
         const numMembers = await group.countMember();
         group.dataValues.numMembers = numMembers;
 
+        // Count the number of events that the group hosted
+        const numEvents = await group.countEvents();
+        group.dataValues.numEvents = numEvents;
+
         // Get the group's preview image 
         const previewImage = await group.getGroupImages({
             where: { preview: true }
