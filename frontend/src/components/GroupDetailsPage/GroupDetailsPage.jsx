@@ -154,17 +154,24 @@ const GroupDetailsPage = () => {
                         <h1>Upcoming Events ({sortedUpcomingEvents.length})</h1>}
                     {sortedUpcomingEvents.length > 0 && 
                         sortedUpcomingEvents.map(event => {
+                            const [date, time] = event.startDate.split(" ");
                             return (
                                 <div key={event.id}>
-                                    <h3>-------------------------------------------------------------------------</h3>
-                                    <h4>{event.startDate}</h4>
-                                    <img 
-                                        src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
-                                        alt="Event Preview Image" 
-                                    />
-                                    <h3>{event.name}</h3>
-                                    <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
-                                    <p>{event.description}</p>
+                                     <h3>-------------------------------------------------------------------------</h3>
+                                    <NavLink to={`/events/${event.id}`} className="eventCard">
+                                        <div className="eventImageCaption">        
+                                            <img 
+                                                src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
+                                                alt="Event Preview Image" 
+                                            />
+                                            <div>
+                                                <h4>{date} &middot; {time}</h4>
+                                                <h3>{event.name}</h3>
+                                                <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
+                                            </div>
+                                            <p>{event.description}</p>
+                                        </div>
+                                    </NavLink>
                                 </div>
                             )
                         })
@@ -175,17 +182,24 @@ const GroupDetailsPage = () => {
                         <h1>Past Events ({sortedPastEvents.length})</h1>}
                     {sortedPastEvents.length > 0 &&
                         sortedPastEvents.map(event => {
+                            const [date, time] = event.startDate.split(" ");
                             return (
                                 <div key={event.id}>
                                     <h3>-------------------------------------------------------------------------</h3>
-                                    <h4>{event.startDate}</h4>
-                                    <img 
-                                        src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
-                                        alt="Event Preview Image" 
-                                    />
-                                    <h3>{event.name}</h3>
-                                    <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
-                                    <p>{event.description}</p>
+                                    <NavLink  to={`/events/${event.id}`} className="eventCard">
+                                        <div className="eventImageCaption">
+                                            <img 
+                                                src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
+                                                alt="Event Preview Image" 
+                                            />
+                                            <div>
+                                                <h4>{date} &middot; {time}</h4>
+                                                <h3>{event.name}</h3>
+                                                <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
+                                            </div>
+                                        </div>
+                                        <p>{event.description}</p>
+                                    </NavLink>
                                 </div>
                             )
                         })
