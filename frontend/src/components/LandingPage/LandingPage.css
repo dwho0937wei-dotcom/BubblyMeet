@@ -1,0 +1,64 @@
+#title {
+    color: rgb(255, 200, 0);
+}
+
+.landingPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#section_1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 1000px;
+
+    #title-intro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        #introText {
+            height: 100px;
+            width: 300px;
+        }
+    }
+
+    img {
+        height: 350px;
+    }
+}
+#section_2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#section_3 {
+    display: flex;
+    flex-direction: row;
+    height: 200px;
+    align-items: center;
+    width: 1000px;
+    justify-content: space-around;
+
+    .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.disabled {
+    color: gray;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.navNormal {
+    text-decoration: none;
+}
+
+.navNormal:hover {
+    text-decoration: underline;
+}
