@@ -1,7 +1,7 @@
 import isUrl from 'is-url';
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllEvents } from "../../store/event";
 import './EventListPage.css';
 
@@ -24,27 +24,22 @@ const EventListPage = () => {
 
     return (
         <>
-            <h1>
-                <NavLink to="/events">Events</NavLink>
-            </h1>
-            <h1>
-                <NavLink to="/groups">Groups</NavLink>
-            </h1>
-                {isLoaded && 
-                    eventListArr.map(event => (
-                        <Link 
-                            to={`/events/${event.id}`}
-                            key={event.id}
-                            className="eventItem"
-                        >
-                            <h1>----------------------------------------------</h1>
-                            <h3>{event.startDate}</h3>
-                            <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
-                            <h2>{event.name}</h2>
-                            <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
-                            <p>{event.description}</p>
-                        </Link>
-                ))}
+            <h3>Events in MeetIsHere</h3>
+            {isLoaded && 
+                eventListArr.map(event => (
+                    <Link 
+                        to={`/events/${event.id}`}
+                        key={event.id}
+                        className="eventItem"
+                    >
+                        <h1>----------------------------------------------</h1>
+                        <h3>{event.startDate}</h3>
+                        <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
+                        <h2>{event.name}</h2>
+                        <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
+                        <p>{event.description}</p>
+                    </Link>
+            ))}
         </>
     )
 }

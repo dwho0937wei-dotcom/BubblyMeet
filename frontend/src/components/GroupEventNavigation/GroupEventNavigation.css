@@ -1,0 +1,16 @@
+.GroupEventNav {
+    display: flex;
+    flex-direction: row;
+    h1 {
+        width: 120px
+    }
+
+    .gray {
+        color: gray;
+        text-decoration: none;
+    }
+    .teal {
+        color: teal;
+        text-decoration: underline;
+    }
+}

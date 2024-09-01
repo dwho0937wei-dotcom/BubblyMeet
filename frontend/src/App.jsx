@@ -12,6 +12,7 @@ import EventDetailsPage from './components/EventDetailsPage';
 import CreateGroupFormPage from './components/CreateGroupFormPage';
 import CreateEventFormPage from './components/CreateEventFormPage';
 import EditGroupFormPage from './components/EditGroupFormPage';
+import GroupEventNavigations from './components/GroupEventNavigation/GroupEventNavigations';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -40,8 +41,17 @@ const router = createBrowserRouter([
         element: <LandingPage />
       },
       {
-        path: 'groups',
-        element: <GroupListPage />
+        element: <GroupEventNavigations />,
+        children: [
+          {
+            path: 'groups',
+            element: <GroupListPage />
+          },
+          {
+            path: 'events',
+            element: <EventListPage />
+          }
+        ]
       },
       {
         path: 'groups/:groupId',
@@ -58,10 +68,6 @@ const router = createBrowserRouter([
       {
         path: 'groups/:groupId/edit',
         element: <EditGroupFormPage />
-      },
-      {
-        path: 'events',
-        element: <EventListPage />
       },
       {
         path: 'events/:eventId',
