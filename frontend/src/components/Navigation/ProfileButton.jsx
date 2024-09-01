@@ -8,40 +8,53 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 
 function ProfileButton({ user }) {
+    //! Menu
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
-
     const toggleMenu = e => {
         e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
         setShowMenu(!showMenu);
     }
-
     useEffect(() => {
         if (!showMenu) return;
-
         const closeMenu = e => {
             if (!ulRef.current?.contains(e.target)) {
                 setShowMenu(false);
             }
         };
-
         document.addEventListener('click', closeMenu);
-
         return () => document.removeEventListener("click", closeMenu);
     }, [showMenu]);
-
     const closeMenu = () => setShowMenu(false);
+    const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+    //! Logout
+    const [isLogout, setIsLogout] = useState(false);
     const navigate = useNavigate();
     const logout = (e) => {
         e.preventDefault();
         dispatch(sessionActions.logout());
-        navigate('/');
+        setIsLogout(true);
         closeMenu();
     }
+    useEffect(() => {
+        if (isLogout) {
+            navigate('/');
+        }
+    }, [isLogout, navigate]);
 
-    const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+    //! View Group
+    const [viewGroup, setViewGroup] = useState(false);
+    const groupClick = (e) => {
+        e.preventDefault();
+        setViewGroup(true);
+    }
+    useEffect(() => {
+        if (viewGroup) {
+            navigate('/groups');
+        }
+    }, [viewGroup, navigate]);
 
     return (
         <>
@@ -72,6 +85,9 @@ function ProfileButton({ user }) {
                                 onButtonClick={closeMenu}
                                 modalComponent={<SignupFormModal />}
                             />
+                        </li>
+                        <li>
+                            <button onClick={groupClick}>View groups</button>
                         </li>
                     </>
                 )}
