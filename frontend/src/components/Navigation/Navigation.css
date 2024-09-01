@@ -5,6 +5,7 @@
 #NavSection {
     display: flex;
     justify-content: space-between;
+    border-bottom: solid;
 }
 #HomeNav {
     img {

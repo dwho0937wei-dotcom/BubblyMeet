@@ -6,6 +6,7 @@ import { getAllGroupEvents } from '../../store/event';
 import { getGroup } from '../../store/group';
 import OpenModalMenuItem from '../OpenModalButton';
 import DeleteGroupFormModal from '../DeleteGroupFormModal';
+import "./GroupDetailsPage.css";
 
 const GroupDetailsPage = () => {
     const { groupId } = useParams();
@@ -98,19 +99,20 @@ const GroupDetailsPage = () => {
         if (isLoaded && user && user.id === group.organizerId) {
             return (
                 <>
-                    <button onClick={clickCreateEvent}>Create event</button>{' '}
-                    <button onClick={clickUpdate}>Update</button>{' '}
+                    <button onClick={clickCreateEvent} className="groupDetailsBtns">Create event</button>{' '}
+                    <button onClick={clickUpdate} className="groupDetailsBtns">Update</button>{' '}
                     <OpenModalMenuItem
+                        className="groupDetailsBtns"
                         buttonText="Delete"
                         modalComponent={<DeleteGroupFormModal navigate={navigate} groupId={groupId}/>}
                     />
                 </>
             )
         }
-        else {
+        else if (isLoaded && user) {
             return (
                 <>
-                    <button onClick={clickJoin}>Join this group</button>
+                    <button onClick={clickJoin} className='JoinGroupButton'>Join this group</button>
                     {' '}{alert.joinButton}
                 </>
             )
@@ -119,77 +121,77 @@ const GroupDetailsPage = () => {
 
     return (
         <>
-            <NavLink to="/groups">Groups</NavLink>
-            {/* Group Section */}
-            <div>
-                <img src={groupImageUrl} alt="Group Preview Image" />
+            <div className="GroupDetailsSection">
+                {"< "}<NavLink to="/groups">Groups</NavLink>
+                {/* Group Upper Section */}
+                <div className='GroupUpperSection'>
+                    <div>
+                        <img src={groupImageUrl} alt="Group Preview Image" />
+                    </div>
+                    <div>
+                        <h1>{isLoaded ? group.name : "Loading..."}</h1>
+                        <h3>
+                            {isLoaded ? group.city : "Loading..."}{', '} 
+                            {isLoaded ? group.state : "Loading..."}
+                        </h3>
+                        <h3>{isLoaded && groupEvents.length} events &middot; {isLoaded && !group.private ? 'Public' : 'Private'}</h3>
+                        <h3>
+                            {'Organized by: '}
+                            {isLoaded ? group.Organizer.firstName : "Loading..."}{' '} 
+                            {isLoaded ? group.Organizer.lastName : "Loading..."}
+                        </h3>
+                        {displayGroupButton()}
+                    </div>
+                </div>
+                
+                <div className="GroupLowerSection">
+                    {/* About Section */}
+                    <h1>What {"we're"} about</h1>
+                    <p>{isLoaded ? group.about : "Loading..."}</p>
+
+                    {/* Upcoming Event Section */}
+                    {sortedUpcomingEvents.length > 0 && 
+                        <h1>Upcoming Events ({sortedUpcomingEvents.length})</h1>}
+                    {sortedUpcomingEvents.length > 0 && 
+                        sortedUpcomingEvents.map(event => {
+                            return (
+                                <div key={event.id}>
+                                    <h3>-------------------------------------------------------------------------</h3>
+                                    <h4>{event.startDate}</h4>
+                                    <img 
+                                        src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
+                                        alt="Event Preview Image" 
+                                    />
+                                    <h3>{event.name}</h3>
+                                    <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
+                                    <p>{event.description}</p>
+                                </div>
+                            )
+                        })
+                    }
+
+                    {/* Past Event Section */}
+                    {sortedPastEvents.length > 0 && 
+                        <h1>Past Events ({sortedPastEvents.length})</h1>}
+                    {sortedPastEvents.length > 0 &&
+                        sortedPastEvents.map(event => {
+                            return (
+                                <div key={event.id}>
+                                    <h3>-------------------------------------------------------------------------</h3>
+                                    <h4>{event.startDate}</h4>
+                                    <img 
+                                        src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
+                                        alt="Event Preview Image" 
+                                    />
+                                    <h3>{event.name}</h3>
+                                    <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
+                                    <p>{event.description}</p>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
-            <h1>{isLoaded ? group.name : "Loading..."}</h1>
-            <h3>
-                {isLoaded ? group.city : "Loading..."}{', '} 
-                {isLoaded ? group.state : "Loading..."}
-            </h3>
-            <h3>{isLoaded && groupEvents.length} events * {isLoaded && !group.private ? 'Public' : 'Private'}</h3>
-            <h3>
-                {'Organized by '}
-                {isLoaded ? group.Organizer.firstName : "Loading..."}{' '} 
-                {isLoaded ? group.Organizer.lastName : "Loading..."}
-            </h3>
-            {displayGroupButton()}
-
-            {/* Organizer Section */}
-            <h1>Organizer</h1>
-            <h3>
-                {isLoaded ? group.Organizer.firstName : "Loading..."}{' '} 
-                {isLoaded ? group.Organizer.lastName : "Loading..."}
-            </h3>
-
-            {/* About Section */}
-            <h1>What {"we're"} about</h1>
-            <p>{isLoaded ? group.about : "Loading..."}</p>
-
-            {/* Upcoming Event Section */}
-            {sortedUpcomingEvents.length > 0 && 
-                <h1>Upcoming Events ({sortedUpcomingEvents.length})</h1>}
-            {sortedUpcomingEvents.length > 0 && 
-                sortedUpcomingEvents.map(event => {
-                    return (
-                        <div key={event.id}>
-                            <h3>-------------------------------------------------------------------------</h3>
-                            <h4>{event.startDate}</h4>
-                            <img 
-                                src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
-                                alt="Event Preview Image" 
-                            />
-                            <h3>{event.name}</h3>
-                            <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
-                            <p>{event.description}</p>
-                        </div>
-                    )
-                })
-            }
-
-            {/* Past Event Section */}
-            {sortedPastEvents.length > 0 && 
-                <h1>Past Events ({sortedPastEvents.length})</h1>}
-            {sortedPastEvents.length > 0 &&
-                sortedPastEvents.map(event => {
-                    return (
-                        <div key={event.id}>
-                            <h3>-------------------------------------------------------------------------</h3>
-                            <h4>{event.startDate}</h4>
-                            <img 
-                                src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
-                                alt="Event Preview Image" 
-                            />
-                            <h3>{event.name}</h3>
-                            <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
-                            <p>{event.description}</p>
-                        </div>
-                    )
-                })
-            }
-
         </>
     )
 }

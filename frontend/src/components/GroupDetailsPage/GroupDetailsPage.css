@@ -1,0 +1,27 @@
+.JoinGroupButton {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+.groupDetailsBtns {
+    background-color: darkgrey;
+}
+
+.GroupDetailsSection {
+    margin-left: 100px;
+}
+
+.GroupUpperSection {
+    display: flex;
+    flex-direction: row;
+    div img {
+        margin-right: 25px;
+    }
+}
+
+.GroupLowerSection {
+    display: flex;
+    flex-direction: column;
+}
+

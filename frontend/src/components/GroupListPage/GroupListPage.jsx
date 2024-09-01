@@ -37,8 +37,7 @@ const GroupListPage = () => {
                         <h2>{group.name}</h2>
                         <h3>{group.city}, {group.state}</h3>
                         <p>{group.about}</p>
-                        <h3>Hosted {group.numEvents} {group.numEvents > 1 ? "events" : "event"}</h3>
-                        <h3>{group.private ? "Private" : "Public"} Group</h3>
+                        <h3>Hosted {group.numEvents} {group.numEvents > 1 ? "events" : "event"} &middot; {group.private ? "Private" : "Public"} Group</h3>
                     </Link>
             ))}
         </>
