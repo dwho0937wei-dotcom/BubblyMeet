@@ -41,8 +41,9 @@ function ProfileButton({ user }) {
     useEffect(() => {
         if (isLogout) {
             navigate('/');
+            setIsLogout(false);
         }
-    }, [isLogout, navigate]);
+    }, [navigate, isLogout, setIsLogout]);
 
     //! View Group
     const [viewGroup, setViewGroup] = useState(false);
@@ -53,8 +54,9 @@ function ProfileButton({ user }) {
     useEffect(() => {
         if (viewGroup) {
             navigate('/groups');
+            setViewGroup(false);
         }
-    }, [viewGroup, navigate]);
+    }, [navigate, viewGroup, setViewGroup]);
 
     return (
         <>
