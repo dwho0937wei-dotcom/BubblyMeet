@@ -88,11 +88,11 @@ function ProfileButton({ user }) {
                                 modalComponent={<SignupFormModal />}
                             />
                         </li>
-                        <li>
-                            <button onClick={groupClick}>View groups</button>
-                        </li>
                     </>
                 )}
+                <li>
+                    <button onClick={groupClick}>View groups</button>
+                </li>
             </ul>
         </>
     );
