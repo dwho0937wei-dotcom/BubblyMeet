@@ -5,6 +5,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { getEventDetails } from "../../store/event";
 import OpenModalMenuItem from '../OpenModalButton';
 import DeleteEventFormModal from '../DeleteEventFormModal';
+import "./EventDetailsPage.css";
 
 const EventDetailsPage = () => {
     const { eventId } = useParams();
@@ -41,6 +42,7 @@ const EventDetailsPage = () => {
                 <OpenModalMenuItem
                     buttonText="Delete"
                     modalComponent={<DeleteEventFormModal navigate={navigate} eventId={eventId}/>}
+                    className="deleteBtn"
                 />
             )
         }
@@ -48,48 +50,57 @@ const EventDetailsPage = () => {
 
     return (
         <>
-            <NavLink to="/events">Events</NavLink>
+            {'< '}<NavLink to="/events">Events</NavLink>
             {/* Top Section */}
-            <div>
-                <img 
-                    src={eventImageUrl} 
-                    alt={eventImageUrl} 
-                />
-            </div>
             <h1>{isLoaded && event.name}</h1>
             <h3>Hosted by {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
+            
+            <div className="BottomSection">
+                {/* Event Image */}
+                <div className='ImgInfo'>
+                    <img 
+                        src={eventImageUrl} 
+                        alt={eventImageUrl} 
+                    />
 
-            {/* GroupBox */}
-            <h3>Host Group: {isLoaded && event.Group.name}</h3>
-            <h3>
-                {"Visibility: "} 
-                {isLoaded && 
-                    (event.Group.private ? "Private" : "Public")
-                }
-            </h3>
+                    <div>
+                        {/* Group Info Box */}
+                        <div className="InfoBox">
+                            <h3>Host Group: {isLoaded && event.Group.name}</h3>
+                            <h3>
+                                {"Visibility: "} 
+                                {isLoaded && 
+                                    (event.Group.private ? "Private" : "Public")
+                                }
+                            </h3>
+                        </div>
 
-            {/* Time, Price, & Type Box */}
-            <div>
-                <h3>Start Date: {isLoaded && event.startDate}</h3>
-                <h3>End Date: {isLoaded && event.endDate}</h3>
+                        {/* Event Info Box (Time, Price, & Type) */}
+                        <div className="InfoBox">
+                            <h3>Start Date: {isLoaded && event.startDate}</h3>
+                            <h3>End Date: {isLoaded && event.endDate}</h3>
+                            <h3>
+                                Price: {
+                                        isLoaded && 
+                                            (event.price === 0 ? "FREE" : event.price)
+                                    }
+                            </h3>
+                            <div className='TypeWithDelete'>
+                                <h3>Type: {isLoaded && event.type}</h3>
+                                {/* Buttons for updating/deleting the event */}
+                                {isLoaded && displayEventButtons()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                {/* Description Box */}
+                <div>
+                    <h1>Details</h1>
+                    <p>{isLoaded && event.description}</p>
+                </div>
             </div>
-            <h3>
-                Price: {
-                        isLoaded && 
-                            (event.price === 0 ? "FREE" : event.price)
-                      }
-            </h3>
-            <h3>Type: {isLoaded && event.type}</h3>
-
-            {/* Buttons for updating/deleting the event */}
-            {isLoaded && displayEventButtons()}
-
-            {/* Description Box */}
-            <div>
-                <h1>Details</h1>
-                <p>{isLoaded && event.description}</p>
-            </div>
-
         </>
     )
 }

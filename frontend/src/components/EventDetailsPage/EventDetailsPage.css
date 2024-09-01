@@ -1,0 +1,27 @@
+.BottomSection {
+    padding-top: 25px;
+    padding-left: 150px;
+    background-color: lightgrey;
+    height: 100dvh;
+}
+
+.ImgInfo {
+    display: flex;
+    flex-direction: row;
+}
+.InfoBox {
+    background-color: white;
+    width: fit-content;
+    margin-left: 15px;
+}
+.TypeWithDelete {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .deleteBtn {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+}
