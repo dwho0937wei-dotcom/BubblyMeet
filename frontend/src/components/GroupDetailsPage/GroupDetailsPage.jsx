@@ -48,13 +48,19 @@ const GroupDetailsPage = () => {
     // console.log("Past Events:", pastEvents);
 
     //! Sorting the events in descending order by their endDate
-    function sortEndDate(events) {
+    function sortUpcomingDates(events) {
         return events.sort((eventA, eventB) => {
-            return eventA.endDate < eventB.endDate ? 1 : -1;
+            return eventA.startDate - eventB.startDate;
         })
     }
-    const sortedUpcomingEvents = sortEndDate(upcomingEvents);
-    const sortedPastEvents = sortEndDate(pastEvents);
+    function sortPastDates(events) {
+        return events.sort((eventA, eventB) => {
+            return eventB.startDate - eventA.startDate;
+        })
+    }
+
+    const sortedUpcomingEvents = sortUpcomingDates(upcomingEvents);
+    const sortedPastEvents = sortPastDates(pastEvents);
     // console.log("Future Events:", sortedUpcomingEvents);
     // console.log("Past Events:", sortedPastEvents);
 
