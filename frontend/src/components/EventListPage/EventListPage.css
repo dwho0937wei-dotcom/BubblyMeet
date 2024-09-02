@@ -1,8 +1,16 @@
+.eventListPage {
+    display: flex;
+    flex-direction: column;
+    padding-left: 29dvw;
+    padding-right: 29dvw;
+}
+
 .eventItem {
     text-decoration: none;
     color: black;
     display: flex;
     flex-direction: column;
+    border-top: solid black;
 
     .ImgDetails {
         display: flex;
@@ -12,6 +20,12 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        img {
+            height: 200px;
+            width: 250px;
+            margin-right: 10px;
         }
     }
 }
