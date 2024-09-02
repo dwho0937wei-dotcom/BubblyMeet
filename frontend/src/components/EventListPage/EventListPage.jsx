@@ -25,6 +25,7 @@ const EventListPage = () => {
     return (
         <div className='eventListPage'>
             <h3>Events in MeetIsHere</h3>
+            <h4>{isLoaded && eventListArr.length} Total Events</h4>
             {isLoaded && 
                 eventListArr.map(event => {
                     const [startDate, startTime] = event.startDate.split(" ");
