@@ -178,7 +178,7 @@ const GroupDetailsPage = () => {
                                                 src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} 
                                                 alt="Event Preview Image" 
                                             />
-                                            <div>
+                                            <div className='caption'>
                                                 <h4>START: {startDate} &middot; {startTime}</h4>
                                                 <h4>END: {endDate} &middot; {endTime}</h4>
                                                 <h3>{event.name}</h3>
