@@ -1,3 +1,9 @@
+.deleteModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .red {
     background-color: red;
     border-color: red;
