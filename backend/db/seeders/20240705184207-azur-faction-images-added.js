@@ -56,25 +56,29 @@ module.exports = {
       // Eagle Union
       {
         groupId: EagleUnion.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/b/b2/Eagle_Union-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/b/b2/Eagle_Union-logo.png',
+        url: 'https://ih1.redbubble.net/image.5177741507.0536/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
         preview: true
       },
       // Royal Navy
       {
         groupId: RoyalNavy.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/7/73/Royal_Navy-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/7/73/Royal_Navy-logo.png',
+        url: 'https://ih1.redbubble.net/image.5177719478.9851/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
         preview: true
       },
       // Sakura Empire
       {
         groupId: SakuraEmpire.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/2/25/Sakura_Empire-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/2/25/Sakura_Empire-logo.png',
+        url: 'https://ih1.redbubble.net/image.5177798184.2325/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
         preview: true
       },
       // Iron Blood
       {
         groupId: IronBlood.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/6/6e/Ironblood-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/6/6e/Ironblood-logo.png',
+        url: 'https://ih1.redbubble.net/image.1705336988.4230/flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
         preview: true
       },
       // Dragon Empery
@@ -86,25 +90,29 @@ module.exports = {
       // Sardegna Empire
       {
         groupId: SardegnaEmpire.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/d/de/Sardenga_Empire-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/d/de/Sardenga_Empire-logo.png',
+        url: 'https://i.redd.it/2mtpyr7tzj771.png',
         preview: true
       },
       // Vichya Dominion
       {
         groupId: VichyaDominion.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/1/1f/Vichya_Dominion.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/1/1f/Vichya_Dominion.png',
+        url: 'https://pm1.aminoapps.com/7987/a59d703b16bf8323227c3695f5ac968da89e0a6fr1-224-224v2_00.jpg',
         preview: true
       },
       // Iris Libre
       {
         groupId: IrisLibre.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/4/4d/Iris_Libre.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/4/4d/Iris_Libre.png',
+        url: 'https://i.redd.it/avdz84itej771.png',
         preview: true
       },
       // Northern Parliament
       {
         groupId: NorthernParliament.id,
-        url: 'https://static.wikia.nocookie.net/bhlx/images/8/88/Northern_Parliament-logo.png',
+        // url: 'https://static.wikia.nocookie.net/bhlx/images/8/88/Northern_Parliament-logo.png',
+        url: 'https://ih1.redbubble.net/image.5385148257.7028/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
         preview: true
       },
       // Siren
