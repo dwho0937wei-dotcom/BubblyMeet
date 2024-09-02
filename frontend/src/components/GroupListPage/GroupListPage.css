@@ -12,6 +12,7 @@
     display: flex;
     flex-direction: column;
     border-top: solid black;
+    padding-top: 16px;
 
     .groupImgDetails {
         display: flex;
