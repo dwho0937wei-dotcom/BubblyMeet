@@ -53,6 +53,9 @@ const EventDetailsPage = () => {
     const [startDate, startTime] = isLoaded ? event.startDate.split(" ") : [isLoaded, isLoaded];
     const [endDate, endTime] = isLoaded ? event.endDate.split(" ") : [isLoaded, isLoaded];
 
+    //! Extracting the associated Group Preview Image
+    
+
     return (
         <>
             {'< '}<NavLink to="/events">Events</NavLink>
@@ -71,9 +74,8 @@ const EventDetailsPage = () => {
                     <div>
                         {/* Group Info Box */}
                         <div className="InfoBox">
-                            <h3>Host Group: {isLoaded && event.Group.name}</h3>
+                            <h3>{isLoaded && event.Group.name}</h3>
                             <h3>
-                                {"Visibility: "} 
                                 {isLoaded && 
                                     (event.Group.private ? "Private" : "Public")
                                 }

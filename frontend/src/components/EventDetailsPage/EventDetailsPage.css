@@ -8,6 +8,11 @@
 .ImgInfo {
     display: flex;
     flex-direction: row;
+
+    img {
+        height: 30dvh;
+        width: 40dvw;
+    }
 }
 .InfoBox {
     background-color: white;
