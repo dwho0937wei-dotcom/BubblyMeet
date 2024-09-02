@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteEventThunk } from "../../store/event";
 import './DeleteEventFormModal.css';
@@ -6,12 +6,13 @@ import './DeleteEventFormModal.css';
 function DeleteEventFormModal({ navigate, eventId }) {
     const { closeModal } = useModal();
     const dispatch = useDispatch();
-
+    
+    const hostGroupId = useSelector(state => state.events.currentEvent.Group.id);
     const deleteEvent = e => {
         e.preventDefault();
         return dispatch(deleteEventThunk(eventId))
             .then(() => {
-                navigate('/events');
+                navigate(`/groups/${hostGroupId}`);
                 closeModal();
             })
             .catch(async (res) => {
