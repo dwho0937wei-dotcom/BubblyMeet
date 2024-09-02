@@ -45,18 +45,33 @@ function ProfileButton({ user }) {
         }
     }, [navigate, isLogout, setIsLogout]);
 
-    //! View Group
-    const [viewGroup, setViewGroup] = useState(false);
+    //! View Groups
+    const [viewGroups, setViewGroups] = useState(false);
     const groupClick = (e) => {
         e.preventDefault();
-        setViewGroup(true);
+        setViewGroups(true);
     }
     useEffect(() => {
-        if (viewGroup) {
+        if (viewGroups) {
             navigate('/groups');
-            setViewGroup(false);
+            setViewGroups(false);
+            closeMenu();
         }
-    }, [navigate, viewGroup, setViewGroup]);
+    }, [navigate, viewGroups, setViewGroups]);
+
+    //! View Events
+    const [viewEvents, setViewEvents] = useState(false);
+    const eventClick = (e) => {
+        e.preventDefault();
+        setViewEvents(true);
+    }
+    useEffect(() => {
+        if (viewEvents) {
+            navigate('/events');
+            setViewEvents(false);
+            closeMenu();
+        }
+    }, [navigate, viewEvents, setViewEvents]);
 
     return (
         <>
@@ -92,6 +107,9 @@ function ProfileButton({ user }) {
                 )}
                 <li>
                     <button onClick={groupClick}>View groups</button>
+                </li>
+                <li>
+                    <button onClick={eventClick}>View events</button>
                 </li>
             </ul>
         </>
