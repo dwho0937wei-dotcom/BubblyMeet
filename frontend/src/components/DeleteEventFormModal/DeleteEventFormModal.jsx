@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteEventThunk } from "../../store/event";
+import './DeleteEventFormModal.css';
 
 function DeleteEventFormModal({ navigate, eventId }) {
     const { closeModal } = useModal();
@@ -30,10 +31,10 @@ function DeleteEventFormModal({ navigate, eventId }) {
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to remove this event?</p>
             <div>
-                <button onClick={deleteEvent}>Yes (Delete Event)</button>
+                <button onClick={deleteEvent} className="red">Yes (Delete Event)</button>
             </div>
             <div>
-                <button onClick={keepEvent}>No (Keep Event)</button>
+                <button onClick={keepEvent} className="darkGrey">No (Keep Event)</button>
             </div>
         </>
     )

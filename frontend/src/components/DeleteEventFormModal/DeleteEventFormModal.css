@@ -1,0 +1,11 @@
+.red {
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
+.darkGrey {
+    background-color: darkgrey;
+    border-color: darkgrey;
+    color: white;
+}
