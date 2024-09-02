@@ -12,3 +12,4 @@ Feature of joining groups & updating events coming soon...
 ⋅⋅2. Sequelize
 
 # Preview
+![alt text](image/ProjectPreviewImage.png)
