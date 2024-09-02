@@ -1,4 +1,32 @@
+.groupListPage {
+    display: flex;
+    flex-direction: column;
+    padding-left: 29dvw;
+    padding-right: 29dvw;
+}
+
 .groupItem {
     text-decoration: none;
     color: black;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    border-top: solid black;
+
+    .groupImgDetails {
+        display: flex;
+        flex-direction: row;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        img {
+            height: 200px;
+            width: 250px;
+            margin-right: 10px;
+        }
+    }
 }

@@ -23,7 +23,7 @@ const GroupListPage = () => {
     const groupImageFillIn = "https://cdn-icons-png.flaticon.com/256/681/681443.png"
 
     return (
-        <>
+        <div className='groupListPage'>
             <h3>Groups in MeetIsHere</h3>
             {isLoaded && 
                 allGroupsArr.map(group => (
@@ -32,15 +32,19 @@ const GroupListPage = () => {
                         key={group.id}
                         className="groupItem"
                     >
-                        <h1>----------------------------------------------</h1>
-                        <img src={isUrl(group.previewImage) ? group.previewImage : groupImageFillIn} alt={`${group.name} Preview Image`} />
-                        <h2>{group.name}</h2>
-                        <h3>{group.city}, {group.state}</h3>
-                        <p>{group.about}</p>
-                        <h3>Hosted {group.numEvents} {group.numEvents > 1 ? "events" : "event"} &middot; {group.private ? "Private" : "Public"} Group</h3>
+                        <div className='groupImgDetails'>
+                            <img src={isUrl(group.previewImage) ? group.previewImage : groupImageFillIn} alt={`${group.name} Preview Image`} />
+                            <div>
+                                <h2>{group.name}</h2>
+                                <h3>{group.city}, {group.state}</h3>
+                                <p>{group.about}</p>
+                                <h3>Hosted {group.numEvents} {group.numEvents > 1 ? "events" : "event"} &middot; {group.private ? "Private" : "Public"}</h3>
+                            </div>
+                        </div>
                     </Link>
-            ))}
-        </>
+                ))
+            }
+        </div>
     )
 }
 

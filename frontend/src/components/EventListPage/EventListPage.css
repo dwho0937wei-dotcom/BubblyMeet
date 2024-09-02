@@ -12,7 +12,7 @@
     flex-direction: column;
     border-top: solid black;
 
-    .ImgDetails {
+    .eventImgDetails {
         display: flex;
         flex-direction: row;
 

@@ -35,7 +35,7 @@ const EventListPage = () => {
                             className="eventItem"
                             key={event.id}
                         >
-                            <div className='ImgDetails'>
+                            <div className='eventImgDetails'>
                                 <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
                                 <div>
                                     <h3>{startDate} &middot; {startTime}</h3>
