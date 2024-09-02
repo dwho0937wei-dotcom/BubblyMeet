@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import "./ProfileButton.css";
 
 function ProfileButton({ user }) {
     //! Menu
@@ -74,10 +75,13 @@ function ProfileButton({ user }) {
     }, [navigate, viewEvents, setViewEvents]);
 
     return (
-        <>
-            <button onClick={toggleMenu}>
-                <FaUserCircle />
-            </button>
+        <div className="profile-menu">
+            <div className="profile-btn">
+                <button onClick={toggleMenu}>
+                    <FaUserCircle />
+                    {showMenu ? <FaAngleUp /> : <FaAngleDown />}
+                </button>
+            </div>
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (
                     <>
@@ -112,7 +116,7 @@ function ProfileButton({ user }) {
                     <button onClick={eventClick}>View events</button>
                 </li>
             </ul>
-        </>
+        </div>
     );
 }
 
