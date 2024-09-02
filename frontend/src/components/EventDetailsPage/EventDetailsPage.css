@@ -13,6 +13,21 @@
     background-color: white;
     width: fit-content;
     margin-left: 15px;
+    padding-left: 30px;
+}
+.DateTime {
+    display: flex;
+    flex-direction: row;
+
+    span {
+        display: flex;
+        align-items: center;
+        margin-right: 30px;
+    }
+}
+.StartEnd {
+    display: flex;
+    flex-direction: column;
 }
 .TypeWithDelete {
     display: flex;
@@ -23,5 +38,16 @@
         margin-top: 10px;
         margin-bottom: 10px;
         align-items: center;
+    }
+
+    div {
+        display: flex;
+        flex-direction: row;
+
+        span {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+        }
     }
 }

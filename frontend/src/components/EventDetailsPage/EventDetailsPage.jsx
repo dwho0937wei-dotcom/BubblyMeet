@@ -77,16 +77,32 @@ const EventDetailsPage = () => {
 
                         {/* Event Info Box (Time, Price, & Type) */}
                         <div className="InfoBox">
-                            <h3>Start Date: {isLoaded && event.startDate}</h3>
-                            <h3>End Date: {isLoaded && event.endDate}</h3>
+                            <div className="DateTime">
+                                <span className="fa-solid fa-clock"></span> 
+                                <div className="StartEnd">
+                                    <h3>
+                                        {" "}START{" "}
+                                        {isLoaded && event.startDate}
+                                    </h3>
+                                    <h3>{" "}END{" "}
+                                        {isLoaded && event.endDate}
+                                    </h3>
+                                </div>
+                            </div>
                             <h3>
-                                Price: {
+                                <div className='DateTime'>
+                                    <span className="fa-solid fa-dollar-sign"></span>
+                                    {
                                         isLoaded && 
                                             (event.price === 0 ? "FREE" : event.price)
                                     }
+                                </div>
                             </h3>
                             <div className='TypeWithDelete'>
-                                <h3>Type: {isLoaded && event.type}</h3>
+                                <div>
+                                    <span className="fa-solid fa-map-pin"></span>
+                                    <h3>{isLoaded && event.type}</h3>
+                                </div>
                                 {/* Buttons for updating/deleting the event */}
                                 {isLoaded && displayEventButtons()}
                             </div>
