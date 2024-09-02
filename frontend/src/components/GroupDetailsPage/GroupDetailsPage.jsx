@@ -36,7 +36,7 @@ const GroupDetailsPage = () => {
             const endDate = event.endDate;
             const today = new Date().toISOString();
 
-            if (endDate > today) {
+            if (endDate >= today) {
                 upcomingEvents.push(event);
             }
             else {
@@ -48,19 +48,24 @@ const GroupDetailsPage = () => {
     // console.log("Past Events:", pastEvents);
 
     //! Sorting the events in descending order by their endDate
-    function sortUpcomingDates(events) {
-        return events.sort((eventA, eventB) => {
-            return eventA.startDate - eventB.startDate;
-        })
+    function compareFn(eventA, eventB) {
+        if (eventA.endDate < eventB.endDate) {
+            return -1;
+        } else if (eventA.endDate > eventB.endDate) {
+            return 1;
+        } else if (eventA.startDate < eventB.startDate) {
+            return -1;
+        } else if (eventA.startDate > eventB.startDate) {
+            return 1;
+        }
+        return 0;
     }
-    function sortPastDates(events) {
-        return events.sort((eventA, eventB) => {
-            return eventB.startDate - eventA.startDate;
-        })
+    function sortDates(events) {
+        return events.sort(compareFn);
     }
 
-    const sortedUpcomingEvents = sortUpcomingDates(upcomingEvents);
-    const sortedPastEvents = sortPastDates(pastEvents);
+    const sortedUpcomingEvents = sortDates(upcomingEvents);
+    const sortedPastEvents = sortDates(pastEvents);
     // console.log("Future Events:", sortedUpcomingEvents);
     // console.log("Past Events:", sortedPastEvents);
 
@@ -160,7 +165,8 @@ const GroupDetailsPage = () => {
                         <h1>Upcoming Events ({sortedUpcomingEvents.length})</h1>}
                     {sortedUpcomingEvents.length > 0 && 
                         sortedUpcomingEvents.map(event => {
-                            const [date, time] = event.startDate.split(" ");
+                            const [startDate, startTime] = event.startDate.split(" ");
+                            const [endDate, endTime] = event.endDate.split(" ");
                             return (
                                 <div key={event.id}>
                                      <h3>-------------------------------------------------------------------------</h3>
@@ -171,12 +177,13 @@ const GroupDetailsPage = () => {
                                                 alt="Event Preview Image" 
                                             />
                                             <div>
-                                                <h4>{date} &middot; {time}</h4>
+                                                <h4>START: {startDate} &middot; {startTime}</h4>
+                                                <h4>END: {endDate} &middot; {endTime}</h4>
                                                 <h3>{event.name}</h3>
                                                 <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
                                             </div>
-                                            <p>{event.description}</p>
                                         </div>
+                                        <p>{event.description}</p>
                                     </NavLink>
                                 </div>
                             )
@@ -188,7 +195,8 @@ const GroupDetailsPage = () => {
                         <h1>Past Events ({sortedPastEvents.length})</h1>}
                     {sortedPastEvents.length > 0 &&
                         sortedPastEvents.map(event => {
-                            const [date, time] = event.startDate.split(" ");
+                            const [startDate, startTime] = event.startDate.split(" ");
+                            const [endDate, endTime] = event.endDate.split(" ");
                             return (
                                 <div key={event.id}>
                                     <h3>-------------------------------------------------------------------------</h3>
@@ -199,7 +207,8 @@ const GroupDetailsPage = () => {
                                                 alt="Event Preview Image" 
                                             />
                                             <div>
-                                                <h4>{date} &middot; {time}</h4>
+                                                <h4>START: {startDate} &middot; {startTime}</h4>
+                                                <h4>END: {endDate} &middot; {endTime}</h4>
                                                 <h3>{event.name}</h3>
                                                 <h4>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : "Remote"}</h4>
                                             </div>

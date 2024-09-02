@@ -1,6 +1,8 @@
 .eventItem {
     text-decoration: none;
     color: black;
+    display: flex;
+    flex-direction: column;
 
     .ImgDetails {
         display: flex;
