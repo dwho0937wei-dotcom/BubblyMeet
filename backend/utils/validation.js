@@ -189,7 +189,7 @@ const validateEvent = [
     check('description')
         .exists({ checkFalsy: true })
         .isLength({ min: 30 })
-        .withMessage('Description must be at least 30 characters long'),
+        .withMessage('Description needs 30 or more characters'),
     // check('startDate')
     //     .exists({ checkFalsy: true })
     //     .isAfter(today)
