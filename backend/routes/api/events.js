@@ -221,7 +221,8 @@ router.get('/:eventId', eventExists, async (req, res) => {
                     {
                         model: GroupImage,
                         attributes: ['url'],
-                        where: { preview: true }
+                        where: { preview: true },
+                        required: false
                     }
                 ]
             },
