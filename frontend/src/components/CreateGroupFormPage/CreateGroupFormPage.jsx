@@ -59,6 +59,7 @@ function CreateGroupFormPage() {
         <>
             {/* Header */}
             <h4>BECOME AN ORGANIZER</h4>
+            <h1>Start a New Group</h1>
             <h2>{"We'll"} walk you through a few steps to build your local community</h2>
             
             <form onSubmit={handleSubmit}>
@@ -96,7 +97,7 @@ function CreateGroupFormPage() {
                 </div>
                 <div>
                     {/* Group Description */}
-                    <h2>Now describe what your group will be about</h2>
+                    <h2>Describe the purpose of your group.</h2>
                     <p>People will see this when we promote your group, but {"you'll"} be able to add to it later, too.</p>
                     <ol>
                         <li>
@@ -167,7 +168,7 @@ function CreateGroupFormPage() {
                         </div>
                     </dl>
                 </div>
-                <button>Create group</button>
+                <button>Create Group</button>
             </form>
         </>
     )
