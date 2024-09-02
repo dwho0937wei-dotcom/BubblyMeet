@@ -47,6 +47,8 @@ const EventDetailsPage = () => {
             )
         }
     }
+    const [startDate, startTime] = isLoaded ? event.startDate.split(" ") : [isLoaded, isLoaded];
+    const [endDate, endTime] = isLoaded ? event.endDate.split(" ") : [isLoaded, isLoaded];
 
     return (
         <>
@@ -81,12 +83,30 @@ const EventDetailsPage = () => {
                                 <span className="fa-solid fa-clock"></span> 
                                 <div className="StartEnd">
                                     <h3>
-                                        {" "}START{" "}
-                                        {isLoaded && event.startDate}
+                                        <div>
+                                            START
+                                        </div>
+                                        <div>
+                                            END
+                                        </div>
                                     </h3>
-                                    <h3>{" "}END{" "}
-                                        {isLoaded && event.endDate}
+                                    <h3>
+                                        <div>
+                                            {startDate}
+                                        </div>
+                                        <div>
+                                            {endDate}
+                                        </div>
                                     </h3>
+                                    <h3>
+                                        <div>
+                                            {startTime}
+                                        </div>
+                                        <div>
+                                            {endTime}
+                                        </div>
+                                    </h3>
+                                   
                                 </div>
                             </div>
                             <h3>
