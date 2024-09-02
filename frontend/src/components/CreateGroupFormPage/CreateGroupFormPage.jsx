@@ -56,7 +56,7 @@ function CreateGroupFormPage() {
     }
 
     return (
-        <>
+        <div className="createGroupFormPage">
             {/* Header */}
             <h4>BECOME AN ORGANIZER</h4>
             <h1>Start a New Group</h1>
@@ -170,7 +170,7 @@ function CreateGroupFormPage() {
                 </div>
                 <button>Create Group</button>
             </form>
-        </>
+        </div>
     )
 }
 
