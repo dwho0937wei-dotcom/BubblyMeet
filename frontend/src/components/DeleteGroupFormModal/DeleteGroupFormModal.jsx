@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteGroupThunk } from "../../store/group";
+import "./DeleteGroupFormModal.css";
 
 function DeleteGroupFormModal({ navigate, groupId }) {
     const { closeModal } = useModal();
@@ -26,16 +27,15 @@ function DeleteGroupFormModal({ navigate, groupId }) {
     }
 
     return (
-        <>
+        <div className="deleteGroupModal">
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to remove this group?</p>
-            <div>
-                <button onClick={deleteGroup}>Yes (Delete Group)</button>
+            <div className="btns">
+                <button onClick={deleteGroup} className="red">Yes (Delete Group)</button>
+
+                <button onClick={keepGroup} className="darkGrey">No (Keep Group)</button>
             </div>
-            <div>
-                <button onClick={keepGroup}>No (Keep Group)</button>
-            </div>
-        </>
+        </div>
     )
 }
 
