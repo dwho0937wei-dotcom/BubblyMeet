@@ -39,11 +39,14 @@ const EventDetailsPage = () => {
         const creator = event.eventHost;
         if (user && user.id === creator.id) {
             return (
-                <OpenModalMenuItem
+                <div className="twoBtns">
+                    <button className="btn">Update</button>
+                    <OpenModalMenuItem
                     buttonText="Delete"
                     modalComponent={<DeleteEventFormModal navigate={navigate} eventId={eventId}/>}
-                    className="deleteBtn"
-                />
+                    className="btn"
+                    />
+                </div>
             )
         }
     }
@@ -55,7 +58,7 @@ const EventDetailsPage = () => {
             {'< '}<NavLink to="/events">Events</NavLink>
             {/* Top Section */}
             <h1>{isLoaded && event.name}</h1>
-            <h3>Hosted by {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
+            <h3>Hosted by: {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
             
             <div className="BottomSection">
                 {/* Event Image */}
@@ -92,21 +95,12 @@ const EventDetailsPage = () => {
                                     </h3>
                                     <h3>
                                         <div>
-                                            {startDate}
+                                            {startDate} &middot; {startTime}
                                         </div>
                                         <div>
-                                            {endDate}
+                                            {endDate} &middot; {endTime}
                                         </div>
                                     </h3>
-                                    <h3>
-                                        <div>
-                                            {startTime}
-                                        </div>
-                                        <div>
-                                            {endTime}
-                                        </div>
-                                    </h3>
-                                   
                                 </div>
                             </div>
                             <h3>
@@ -118,7 +112,7 @@ const EventDetailsPage = () => {
                                     }
                                 </div>
                             </h3>
-                            <div className='TypeWithDelete'>
+                            <div className='TypeWithBtns'>
                                 <div>
                                     <span className="fa-solid fa-map-pin"></span>
                                     <h3>{isLoaded && event.type}</h3>
@@ -133,7 +127,7 @@ const EventDetailsPage = () => {
 
                 {/* Description Box */}
                 <div>
-                    <h1>Details</h1>
+                    <h1>Description</h1>
                     <p>{isLoaded && event.description}</p>
                 </div>
             </div>

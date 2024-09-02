@@ -28,7 +28,7 @@
 .StartEnd {
     display: flex;
     flex-direction: row;
-    width: 250px;
+    width: 240px;
     justify-content: space-between;
 
     h3 {
@@ -38,15 +38,21 @@
         margin-bottom: 0;
     }
 }
-.TypeWithDelete {
+.TypeWithBtns {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
-    .deleteBtn {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        align-items: center;
+    .twoBtns {
+        display: flex;
+        justify-content: space-between;
+        width: 120px;
+
+        .btn {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
     }
 
     div {
