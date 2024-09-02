@@ -97,9 +97,9 @@ module.exports = (sequelize, DataTypes) => {
     startDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      validate: {
-        isAfter: new Date().toISOString()
-      }
+      // validate: {
+      //   isAfter: new Date().toISOString()
+      // }
     },
     endDate: {
       type: DataTypes.DATE,
