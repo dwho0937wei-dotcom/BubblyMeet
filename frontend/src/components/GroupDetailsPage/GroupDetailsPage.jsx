@@ -47,7 +47,7 @@ const GroupDetailsPage = () => {
     // console.log("Future Events:", upcomingEvents);
     // console.log("Past Events:", pastEvents);
 
-    //! Sorting the events in descending order by their endDate
+    //! Sorting the events by dates
     function compareFn(eventA, eventB) {
         if (eventA.endDate < eventB.endDate) {
             return -1;

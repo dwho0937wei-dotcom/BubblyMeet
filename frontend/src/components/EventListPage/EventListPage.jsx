@@ -22,13 +22,32 @@ const EventListPage = () => {
 
     const eventImageFillIn = "https://static.vecteezy.com/system/resources/thumbnails/021/957/793/small_2x/event-outline-icons-simple-stock-illustration-stock-vector.jpg"
 
+    //! Sorting the events by dates
+    function compareFn(eventA, eventB) {
+        if (eventA.endDate < eventB.endDate) {
+            return -1;
+        } else if (eventA.endDate > eventB.endDate) {
+            return 1;
+        } else if (eventA.startDate < eventB.startDate) {
+            return -1;
+        } else if (eventA.startDate > eventB.startDate) {
+            return 1;
+        }
+        return 0;
+    }
+    function sortDates(events) {
+        return events.sort(compareFn);
+    }
+    const sortedEventListArr = isLoaded && sortDates(eventListArr);
+
     return (
         <div className='eventListPage'>
             <h3>Events in MeetIsHere</h3>
             {/* <h4>{isLoaded && eventListArr.length} Total Events</h4> */}
             {isLoaded && 
-                eventListArr.map(event => {
+                sortedEventListArr.map(event => {
                     const [startDate, startTime] = event.startDate.split(" ");
+                    const [endDate, endTime] = event.endDate.split(" ");
                     return (
                         <Link 
                             to={`/events/${event.id}`}
@@ -38,7 +57,8 @@ const EventListPage = () => {
                             <div className='eventImgDetails'>
                                 <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
                                 <div>
-                                    <h3>{startDate} &middot; {startTime}</h3>
+                                    <h3>START: {startDate} &middot; {startTime}</h3>
+                                    <h3>END: {endDate} &middot; {endTime}</h3>
                                     <h2>{event.name}</h2>
                                     <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
                                 </div>
