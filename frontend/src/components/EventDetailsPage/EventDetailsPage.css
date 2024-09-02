@@ -91,12 +91,16 @@
     .twoBtns {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+
         width: 120px;
 
         .btn {
+            height: 21px;
             margin-top: 15px;
             margin-bottom: 15px;
-            align-items: center;
+
+            background-color: darkgrey;
         }
     }
 
