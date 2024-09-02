@@ -11,21 +11,22 @@
     display: flex;
     flex-direction: column;
     border-top: solid black;
+    padding-top: 16px;
 
-    .ImgDetails {
+    .eventImgDetails {
         display: flex;
         flex-direction: row;
-
-        div {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
 
         img {
             height: 200px;
             width: 250px;
             margin-right: 10px;
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
     }
 }
