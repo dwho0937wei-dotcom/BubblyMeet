@@ -4,12 +4,12 @@ Features of joining groups & updating events coming soon...
 
 # Technologies
 1. Frontend
-⋅⋅1. React
-⋅⋅2. Redux
-⋅⋅3. CSS
- 2. Backend
-⋅⋅1. Express
-⋅⋅2. Sequelize
+   1. React
+   2. Redux
+   3. CSS
+2. Backend
+   1. Express
+   2. Sequelize
 
 # Preview
 ![alt text](image/ProjectPreviewImage.png)
