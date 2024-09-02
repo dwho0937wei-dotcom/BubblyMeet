@@ -53,8 +53,10 @@ const EventDetailsPage = () => {
     const [startDate, startTime] = isLoaded ? event.startDate.split(" ") : [isLoaded, isLoaded];
     const [endDate, endTime] = isLoaded ? event.endDate.split(" ") : [isLoaded, isLoaded];
 
-    //! Extracting the associated Group Preview Image
-    
+    //! Extracting the associated Group Preview Image Url
+    //! If invalid url, have a valid default one fill in.
+    const group = isLoaded && event.Group;
+    const groupPreviewImage = isLoaded && group.GroupImages.length > 0 && isUrl(group.GroupImages[0].url) ? event.Group.GroupImages[0].url : "https://cdn-icons-png.flaticon.com/256/681/681443.png";
 
     return (
         <>
@@ -64,26 +66,28 @@ const EventDetailsPage = () => {
             <h3>Hosted by: {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
             
             <div className="BottomSection">
-                {/* Event Image */}
                 <div className='ImgInfo'>
+                    {/* Event Image */}
                     <img 
                         src={eventImageUrl} 
                         alt={eventImageUrl} 
                     />
-
                     <div>
                         {/* Group Info Box */}
-                        <div className="InfoBox">
-                            <h3>{isLoaded && event.Group.name}</h3>
-                            <h3>
-                                {isLoaded && 
-                                    (event.Group.private ? "Private" : "Public")
-                                }
-                            </h3>
-                        </div>
+                        <NavLink className="ImgInfoBox" to={`/groups/${group.id}`}>
+                            <img src={groupPreviewImage} alt="Group Preview Image" />
+                            <div className="InfoBox1">
+                                <h3>{isLoaded && event.Group.name}</h3>
+                                <h3>
+                                    {isLoaded && 
+                                        (event.Group.private ? "Private" : "Public")
+                                    }
+                                </h3>
+                            </div>
+                        </NavLink>
 
                         {/* Event Info Box (Time, Price, & Type) */}
-                        <div className="InfoBox">
+                        <div className="InfoBox2">
                             <div className="DateTime">
                                 <span className="fa-solid fa-clock"></span> 
                                 <div className="StartEnd">
@@ -125,7 +129,6 @@ const EventDetailsPage = () => {
                         </div>
                     </div>
                 </div>
-                
 
                 {/* Description Box */}
                 <div>
