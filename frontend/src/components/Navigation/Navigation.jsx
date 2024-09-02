@@ -10,7 +10,7 @@ function Navigation({ isLoaded }) {
         <>
             <div id='NavSection'>
                 <NavLink to="/" id="HomeNav">
-                    <img src="/favicon.ico" alt="App Academy Favicon" />
+                    <img src="/favicon_io/favicon.ico" alt="Gathering Favicon" />
                 </NavLink>
                 <div>
                     {isLoaded && (
