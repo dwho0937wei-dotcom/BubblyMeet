@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { FaUserCircle, FaAngleUp, FaAngleDown } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
@@ -75,8 +75,14 @@ function ProfileButton({ user }) {
     }, [navigate, viewEvents, setViewEvents]);
 
     return (
-        <div className="profile-menu">
-            <div className="profile-btn">
+        <div className="profile-section">
+            <div className="profile-nav-btn">
+                <NavLink
+                    to={user ? "/groups/new" : ""}
+                    className={user ? "navNormal" : "hidden"}
+                >
+                    Start a new group
+                </NavLink>
                 <button onClick={toggleMenu}>
                     <FaUserCircle />
                     {showMenu ? <FaAngleUp /> : <FaAngleDown />}

@@ -1,14 +1,23 @@
-.profile-menu {
+.profile-section {
     display: flex;
     flex-direction: column;
 
-    .profile-btn {
+    .profile-nav-btn {
         display: flex;
         justify-content: flex-end;
 
         button {
             display: flex;
             flex-direction: row;
+            margin-left: 20px;
         }
     }
+}
+
+.hidden {
+    display: none;
+}
+
+.navNormal {
+    text-decoration: none;
 }
