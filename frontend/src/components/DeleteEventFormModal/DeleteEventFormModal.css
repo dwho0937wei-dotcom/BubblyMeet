@@ -1,4 +1,12 @@
-.deleteModal {
+.deleteEventModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0px 6px 6px;
+}
+
+.btns {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,10 +16,16 @@
     background-color: red;
     border-color: red;
     color: white;
+
+    margin: 2px;
+    width: 100%;
 }
 
 .darkGrey {
     background-color: darkgrey;
     border-color: darkgrey;
     color: white;
+
+    margin: 2px;
+    width: 100%;
 }

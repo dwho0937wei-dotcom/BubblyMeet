@@ -28,13 +28,12 @@ function DeleteEventFormModal({ navigate, eventId }) {
     }
 
     return (
-        <div className="deleteModal">
+        <div className="deleteEventModal">
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to remove this event?</p>
-            <div>
+            <div className="btns">
                 <button onClick={deleteEvent} className="red">Yes (Delete Event)</button>
-            </div>
-            <div>
+
                 <button onClick={keepEvent} className="darkGrey">No (Keep Event)</button>
             </div>
         </div>
