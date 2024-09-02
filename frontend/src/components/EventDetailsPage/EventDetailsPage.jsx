@@ -60,11 +60,12 @@ const EventDetailsPage = () => {
 
     return (
         <>
-            {'< '}<NavLink to="/events">Events</NavLink>
-            {/* Top Section */}
-            <h1>{isLoaded && event.name}</h1>
-            <h3>Hosted by: {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
-            
+            <div className="UpperSection">
+                {'< '}<NavLink to="/events">Events</NavLink>
+                {/* Top Section */}
+                <h1>{isLoaded && event.name}</h1>
+                <h3>Hosted by: {`${isLoaded && event.eventHost.firstName} ${isLoaded && event.eventHost.lastName}`}</h3>
+            </div>
             <div className="BottomSection">
                 <div className='ImgInfo'>
                     {/* Event Image */}

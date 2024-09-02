@@ -8,8 +8,8 @@
     background-color: darkgrey;
 }
 
-.GroupDetailsSection {
-    margin-left: 100px;
+.groupNav {
+    padding-left: 100px;
 }
 
 .GroupUpperSection {
@@ -18,11 +18,16 @@
     div img {
         margin-right: 25px;
     }
+
+    padding-left: 100px;
 }
 
 .GroupLowerSection {
     display: flex;
     flex-direction: column;
+    background-color: lightgrey;
+
+    padding-left: 100px;
 }
 
 .eventCard {

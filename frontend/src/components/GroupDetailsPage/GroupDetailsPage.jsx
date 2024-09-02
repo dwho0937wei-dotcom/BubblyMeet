@@ -133,7 +133,9 @@ const GroupDetailsPage = () => {
     return (
         <>
             <div className="GroupDetailsSection">
-                {"< "}<NavLink to="/groups">Groups</NavLink>
+                <div className="groupNav">
+                    {"< "}<NavLink to="/groups" >Groups</NavLink>
+                </div>
                 {/* Group Upper Section */}
                 <div className='GroupUpperSection'>
                     <div>
