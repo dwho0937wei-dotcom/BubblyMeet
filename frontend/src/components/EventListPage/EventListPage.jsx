@@ -26,20 +26,29 @@ const EventListPage = () => {
         <>
             <h3>Events in MeetIsHere</h3>
             {isLoaded && 
-                eventListArr.map(event => (
-                    <Link 
-                        to={`/events/${event.id}`}
-                        key={event.id}
-                        className="eventItem"
-                    >
-                        <h1>----------------------------------------------</h1>
-                        <h3>{event.startDate}</h3>
-                        <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
-                        <h2>{event.name}</h2>
-                        <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
-                        <p>{event.description}</p>
-                    </Link>
-            ))}
+                eventListArr.map(event => {
+                    const [startDate, startTime] = event.startDate.split(" ");
+                    return (
+                        <div key={event.id}>  
+                            <h1>----------------------------------------------</h1>
+                            <Link 
+                                to={`/events/${event.id}`}
+                                className="eventItem"
+                            >
+                                <div className='ImgDetails'>
+                                    <img src={isUrl(event.previewImage) ? event.previewImage : eventImageFillIn} alt={`${event.name} Preview Image`} />
+                                    <div>
+                                        <h3>{startDate} &middot; {startTime}</h3>
+                                        <h2>{event.name}</h2>
+                                        <h3>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Remote'}</h3>
+                                    </div>
+                                </div>
+                                <p>{event.description}</p>
+                            </Link>
+                        </div>
+                    )
+                })
+            }
         </>
     )
 }

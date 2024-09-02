@@ -1,4 +1,15 @@
 .eventItem {
     text-decoration: none;
     color: black;
+
+    .ImgDetails {
+        display: flex;
+        flex-direction: row;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
 }
