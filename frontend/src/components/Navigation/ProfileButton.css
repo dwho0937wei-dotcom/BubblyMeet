@@ -14,6 +14,19 @@
     }
 }
 
+.profile-dropdown {
+    position: absolute;
+    top: 35px; right: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border-style: solid;
+    border-color: lightgrey;
+    background-color: white;
+}
+
 .hidden {
     display: none;
 }

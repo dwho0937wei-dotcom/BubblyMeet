@@ -28,7 +28,7 @@ function ProfileButton({ user }) {
         return () => document.removeEventListener("click", closeMenu);
     }, [showMenu]);
     const closeMenu = () => setShowMenu(false);
-    const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+    const ulClassName = showMenu ? "profile-dropdown" : "hidden"
 
     //! Logout
     const [isLogout, setIsLogout] = useState(false);
@@ -88,40 +88,40 @@ function ProfileButton({ user }) {
                     {showMenu ? <FaAngleUp /> : <FaAngleDown />}
                 </button>
             </div>
-            <ul className={ulClassName} ref={ulRef}>
+            <div className={ulClassName} ref={ulRef}>
                 {user ? (
                     <>
-                        <li>Hello, {user.firstName}</li>
-                        <li>{user.email}</li>
-                        <li>
+                        <div>Hello, {user.firstName}</div>
+                        <div>{user.email}</div>
+                        <div>
                             <button onClick={logout}>Log Out</button>
-                        </li>
+                        </div>
                     </>
                 ) : (
                     <>
-                        <li>
+                        <div>
                             <OpenModalMenuItem
                                 buttonText="Log In"
                                 onButtonClick={closeMenu}
                                 modalComponent={<LoginFormModal />}
                             />
-                        </li>
-                        <li>
+                        </div>
+                        <div>
                             <OpenModalMenuItem
                                 buttonText="Sign Up"
                                 onButtonClick={closeMenu}
                                 modalComponent={<SignupFormModal />}
                             />
-                        </li>
+                        </div>
                     </>
                 )}
-                <li>
+                <div>
                     <button onClick={groupClick}>View groups</button>
-                </li>
-                <li>
+                </div>
+                <div>
                     <button onClick={eventClick}>View events</button>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     );
 }
