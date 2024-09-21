@@ -5,10 +5,14 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <script src="https://kit.fontawesome.com/0793cfa114.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeetIsHere</title>
+    <title>Default Title</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="module">
+      import {TITLE} from "./src/index.js"
+      document.title = TITLE
+    </script>
   </body>
 </html>

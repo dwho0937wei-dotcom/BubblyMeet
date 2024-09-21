@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createGroupThunk, addGroupImageThunk } from "../../store/group";
 import './CreateGroupFormPage.css';
+import { TITLE } from "../../index"
 
 function CreateGroupFormPage() {
     const [location, setLocation] = useState('');
@@ -66,7 +67,7 @@ function CreateGroupFormPage() {
                 <div>
                     {/* Location */}
                     <h2>First, set your {"group's"} location.</h2>
-                    <p>MeetIsHere groups meet locally, in-person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
+                    <p>{`${TITLE}`} groups meet locally, in-person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
                     <input
                         id="location"
                         className="singleLineTextBox"

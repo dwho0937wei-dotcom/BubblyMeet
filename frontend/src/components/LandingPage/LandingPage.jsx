@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { NavLink } from "react-router-dom";
 import "./LandingPage.css"
+import { TITLE } from "../../index"
 
 const LandingPage = () => {
     const user = useSelector(state => state.session.user);
@@ -10,7 +11,7 @@ const LandingPage = () => {
             <div className="landingPage">
                 <div className="section" id="section_1">
                     <div id="title-intro">
-                        <h1 id="title">MeetIsHere</h1>
+                        <h1 id="title">{`${TITLE}`}</h1>
                         <p id="introText">Welcome to a place where many interesting and inspiring meetings shall take place!</p>
                     </div>
                     <div>
@@ -21,7 +22,7 @@ const LandingPage = () => {
                 <p>-------------------------------------------------------</p>
 
                 <div className="section" id="section_2">
-                    <h2>How Does MeetIsHere works</h2>
+                    <h2>How Does {`${TITLE}`} works</h2>
                     <p>Simply look at the following three self-explanatory options</p>
                 </div>
 
@@ -62,7 +63,7 @@ const LandingPage = () => {
                 <p>-------------------------------------------------------</p>
 
                 <div className="section" id="section_4">
-                    <button>Join MeetIsHere</button>
+                    <button>Join {`${TITLE}`}</button>
                 </div>
             </div>
         </>

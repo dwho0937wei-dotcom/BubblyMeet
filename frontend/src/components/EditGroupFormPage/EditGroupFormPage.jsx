@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { getGroup, updateGroupThunk, addGroupImageThunk, removeGroupImageThunk } from "../../store/group"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { TITLE } from "../../index"
 
 function EditGroupFormPage() {
     //! Loading the group to pre-populate values
@@ -99,7 +100,7 @@ function EditGroupFormPage() {
                 <div>
                     {/* Location */}
                     <h2>First, set your {"group's"} location.</h2>
-                    <p>MeetIsHere groups meet locally, in-person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
+                    <p>{`${TITLE}`} groups meet locally, in-person and online. {"We'll"} connect you with people in your area, and more can join you online.</p>
                     <input
                         id="location"
                         className="singleLineTextBox"

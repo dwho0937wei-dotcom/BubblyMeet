@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from 'react-router-dom'
 import { getAllGroups } from "../../store/group";
 import './GroupListPage.css';
+import { TITLE } from "../../index"
 
 const GroupListPage = () => {
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const GroupListPage = () => {
 
     return (
         <div className='groupListPage'>
-            <h3>Groups in MeetIsHere</h3>
+            <h3>Groups in {`${TITLE}`}</h3>
             {isLoaded && 
                 allGroupsArr.map(group => (
                     <Link 

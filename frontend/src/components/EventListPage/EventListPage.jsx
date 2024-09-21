@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllEvents } from "../../store/event";
 import './EventListPage.css';
+import { TITLE } from "../../index"
 
 const EventListPage = () => {
     const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const EventListPage = () => {
 
     return (
         <div className='eventListPage'>
-            <h3>Events in MeetIsHere</h3>
+            <h3>Events in {`${TITLE}`}</h3>
             {/* <h4>{isLoaded && eventListArr.length} Total Events</h4> */}
             {isLoaded && 
                 sortedEventListArr.map(event => {
