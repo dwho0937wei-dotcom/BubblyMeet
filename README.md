@@ -1,5 +1,5 @@
 # Intro
-Meet Is Here!!! 
+Want to bubbly group with new people and bubbly participate in events!
 
 This is where you can create groups and within these groups, you can create events associated to these groups as well.
 
@@ -15,4 +15,4 @@ Features of joining groups & updating events coming soon...
    2. Sequelize
 
 # Preview
-![alt text](image/ProjectPreviewImage.png)
+![alt text](image_preview/ProjectPreviewImage.png)
