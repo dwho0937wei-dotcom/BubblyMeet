@@ -18,7 +18,7 @@ in the directory where you want the new project to appear.
 Once the repo is cloned, run `cd <new-project-name> && npm install` to install
 dependencies. You will probably also want to run `git init`.
 
-To run the app, type `npm run dev` in the root directory.
+To run the app, type `npm run dev` in the root directory (../frontend).
 
 ## Reminders
 
