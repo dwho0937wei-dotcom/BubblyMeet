@@ -124,7 +124,7 @@ function CreateEventFormPage() {
                 type="text"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                placeholder="MM/DD/YYYY HH/mm AM"
+                placeholder="MM/DD/YYYY HH:mm AM"
             />
             <div className="errors">
                 {errors.startDate}
@@ -137,7 +137,7 @@ function CreateEventFormPage() {
                 type="text"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                placeholder="MM/DD/YYYY HH/mm PM"
+                placeholder="MM/DD/YYYY HH:mm PM"
             />
             <div className="errors">
                 {errors.endDate}
